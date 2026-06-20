@@ -1,1 +1,469 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CATALYST — 双子都市の世界</title>
+  <meta name="description" content="TRPGシステム「CATALYST」の世界観紹介。マギテックとケムテックが交差する双子都市アヴァリスとフューム、そして5つの勢力の物語。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <!-- Particle canvas background -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="nav-logo-gem">◆</span>
+        CATALYST
+      </div>
+      <ul class="nav-links">
+        <li><a href="#intro" class="nav-link">序章</a></li>
+        <li><a href="#cities" class="nav-link">双子都市</a></li>
+        <li><a href="#factions" class="nav-link">勢力</a></li>
+        <li><a href="#world" class="nav-link">世界の火種</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-scanlines"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">TRPG WORLD COMPENDIUM</div>
+      <h1 class="hero-title">
+        <span class="hero-title-main">CATALYST</span>
+        <span class="hero-title-sub">双子都市と5つの勢力</span>
+      </h1>
+      <p class="hero-desc">
+        マギテックの輝きと、ケムテックの毒煙。<br>
+        光と闇が交差するその境界線に、<br>
+        変革の<em>触媒</em>が宿る。
+      </p>
+      <div class="hero-cta">
+        <a href="#cities" class="btn-primary">世界を探索する</a>
+        <a href="#factions" class="btn-secondary">勢力を知る</a>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator">
+      <span>SCROLL</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Intro / World Overview -->
+  <section class="section intro-section" id="intro">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">WORLD OVERVIEW</div>
+        <h2 class="section-title">世界の概要</h2>
+        <div class="section-divider"><span></span><span class="gem">◆</span><span></span></div>
+      </div>
+
+      <div class="intro-grid">
+        <div class="intro-text">
+          <p class="intro-lead">
+            二つの都市が、共に生き、互いを喰らっている。
+          </p>
+          <p>
+            <strong>アヴァリス</strong>は「頂の都市」と呼ばれ、マギテック——神秘的なエネルギーと先進工学が融合した革命的技術——を駆使して繁栄する文明の灯台だ。精巧な橋で連結され、次元を越えるポータルが輝くその都市は、武器と機械を世界中に輸出する。
+          </p>
+          <p>
+            しかし金箔の下、緻密に組まれた橋のはるか下方、毒の煙に埋もれて——<strong>フューム</strong>が息を潜めている。「煙の都市」と呼ばれるこの地は、アヴァリスの繁栄を支えるための資源と命を、黙々と差し出し続ける。ケムテック（化学技術）、薬物、そして忘却によって、民衆は骨抜きにされてきた。
+          </p>
+          <p>
+            しかし、灰の下に何かが燻っている。<br>
+            <em>些細な火花が、触媒となりうる。</em>
+          </p>
+        </div>
+        <div class="intro-stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-label">マギテック</div>
+            <div class="stat-desc">神秘的エネルギーと先進工学の融合技術。アヴァリスの覇権を支える</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">☠</div>
+            <div class="stat-label">ケムテック</div>
+            <div class="stat-desc">化学的変異と禁忌の技術。フュームの反乱者たちの武器</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏛</div>
+            <div class="stat-label">2つの都市</div>
+            <div class="stat-desc">光輝くアヴァリスと煙に沈むフューム。支配と搾取の構造</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⚔</div>
+            <div class="stat-label">5つの勢力</div>
+            <div class="stat-desc">革命家、貴族、犯罪組織、反乱者、独立市民の複雑な駆け引き</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cities Section -->
+  <section class="section cities-section" id="cities">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">THE TWIN CITIES</div>
+        <h2 class="section-title">双子都市</h2>
+        <div class="section-divider"><span></span><span class="gem">◆</span><span></span></div>
+      </div>
+
+      <div class="cities-grid">
+
+        <!-- Avaris -->
+        <div class="city-card city-avaris" data-city="avaris">
+          <div class="city-card-bg"></div>
+          <div class="city-card-glow"></div>
+          <div class="city-emblem-wrap">
+            <div class="city-emblem-ring"></div>
+            <img src="catalystエンブレム_1.png" alt="アヴァリスの紋章" class="city-emblem">
+          </div>
+          <div class="city-card-content">
+            <div class="city-tag">CITY OF SUMMITS</div>
+            <h3 class="city-name">アヴァリス</h3>
+            <p class="city-name-fr">Avaris — La Cité des Sommets</p>
+            <div class="city-desc">
+              <p>
+                空高くそびえる「頂の都市」。マギテックの光を全身に纏い、文明の灯台として輝くアヴァリスは、革命的技術によって武器、機械、そして次元を越えるポータルを世界へ輸出する。
+              </p>
+              <p>
+                その権力は、強力な商業家族と評議会によって握られている。表向きは「啓蒙された文明」を掲げながら、実際には精密な抑圧と穏健派の操作によってフュームの搾取を維持する。
+              </p>
+            </div>
+            <div class="city-tags-row">
+              <span class="city-pill">マギテック</span>
+              <span class="city-pill">商業覇権</span>
+              <span class="city-pill">貴族政治</span>
+              <span class="city-pill">ポータル技術</span>
+            </div>
+            <div class="city-color-strip avaris-strip">
+              <span>ブルー・マギテック</span>
+              <span>ゴールド</span>
+              <span>クリスタル・ホワイト</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fyumh -->
+        <div class="city-card city-fyumh" data-city="fyumh">
+          <div class="city-card-bg"></div>
+          <div class="city-card-glow"></div>
+          <div class="city-emblem-wrap">
+            <div class="city-emblem-ring"></div>
+            <img src="catalystエンブレム_2.png" alt="フュームの紋章" class="city-emblem">
+          </div>
+          <div class="city-card-content">
+            <div class="city-tag">CITY OF SMOKE</div>
+            <h3 class="city-name">フューム</h3>
+            <p class="city-name-fr">Fyumh — La Cité des Fumées</p>
+            <div class="city-desc">
+              <p>
+                毒の煙と化学薬品の霧に包まれた「煙の都市」。アヴァリスの橋のはるか下方に沈むフュームは、何十年にもわたる疲弊、抑圧、そして諦念によって、闘争の記憶を封印されてきた。
+              </p>
+              <p>
+                ケム・バロン（化学男爵）たちが路地を支配し、ケムテックの違法改造、薬物、そして暗黒市場が横行する。しかし灰の下に、怒りの火が燻り続けている。
+              </p>
+            </div>
+            <div class="city-tags-row">
+              <span class="city-pill fyumh-pill">ケムテック</span>
+              <span class="city-pill fyumh-pill">化学男爵</span>
+              <span class="city-pill fyumh-pill">地下組織</span>
+              <span class="city-pill fyumh-pill">毒性環境</span>
+            </div>
+            <div class="city-color-strip fyumh-strip">
+              <span>グリーン・ケムテック</span>
+              <span>ラスト・オレンジ</span>
+              <span>スモーク・ブラック</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Versus divider -->
+      <div class="versus-row">
+        <div class="versus-line"></div>
+        <div class="versus-circle">
+          <span>VS</span>
+        </div>
+        <div class="versus-line"></div>
+      </div>
+
+      <div class="conflict-desc">
+        <p>アヴァリスはマギテックで覇権を強化しつつ、「啓蒙された文明」のイメージを傷つける全面戦争を避ける。<br>
+        フュームは評議会派（インデパンダン）とレフラクテールの間で引き裂かれながら、生き残りを模索する。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Factions Section -->
+  <section class="section factions-section" id="factions">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">THE FIVE FACTIONS</div>
+        <h2 class="section-title">5つの勢力</h2>
+        <div class="section-divider"><span></span><span class="gem">◆</span><span></span></div>
+        <p class="section-subtitle">それぞれの正義と、それぞれの絶望。あなたはどの旗印の下に立つ？</p>
+      </div>
+
+      <div class="factions-grid">
+
+        <!-- Faction 1: Le Progrès -->
+        <div class="faction-card" data-faction="progres">
+          <div class="faction-glow f1-glow"></div>
+          <div class="faction-header">
+            <div class="faction-emblem-wrap">
+              <img src="catalystエンブレム_3.png" alt="ル・プログレの紋章" class="faction-emblem">
+            </div>
+            <div class="faction-header-text">
+              <div class="faction-location">📍 アヴァリス</div>
+              <h3 class="faction-name">ル・プログレ</h3>
+              <p class="faction-name-fr">Le Progrès</p>
+            </div>
+          </div>
+          <div class="faction-body">
+            <div class="faction-tagline">「抵抗こそ進歩だ」</div>
+            <p class="faction-desc">
+              アヴァリスに生まれた地下抵抗組織。政府の抑圧と富裕な商業家族の影響力に立ち向かう。彼らは富裕層の計画を妨害し、正義を求める者たちと同盟を結ぶことで、アヴァリスの不平等に挑戦する。
+            </p>
+            <p class="faction-desc">
+              多くのメンバーがこの闘いの終わりを見えずにいるが、より良い未来への希望は、体制に敢然と立ち向かう者たちの間で今もなお生きている。
+            </p>
+            <div class="faction-traits">
+              <span class="trait">情熱的</span>
+              <span class="trait">理想主義</span>
+              <span class="trait">義侠心</span>
+              <span class="trait">忠誠</span>
+            </div>
+            <div class="faction-meter">
+              <div class="meter-label">影響力</div>
+              <div class="meter-bar"><div class="meter-fill f1-fill" style="width:55%"></div></div>
+              <div class="meter-label">危険度</div>
+              <div class="meter-bar"><div class="meter-fill f1-fill" style="width:45%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faction 2: Le Conseil -->
+        <div class="faction-card" data-faction="conseil">
+          <div class="faction-glow f2-glow"></div>
+          <div class="faction-header">
+            <div class="faction-emblem-wrap">
+              <img src="catalystエンブレム_4.png" alt="ル・コンセイユの紋章" class="faction-emblem">
+            </div>
+            <div class="faction-header-text">
+              <div class="faction-location">📍 アヴァリス</div>
+              <h3 class="faction-name">ル・コンセイユ</h3>
+              <p class="faction-name-fr">Le Conseil — Classe Aristocratique</p>
+            </div>
+          </div>
+          <div class="faction-body">
+            <div class="faction-tagline">「秩序こそ繁栄の礎」</div>
+            <p class="faction-desc">
+              アヴァリスの貴族と有力商業家族からなる支配階級。都市の方向性を決定する権力と資源を持ち、ル・プログレを支持するか商業的利益と安定に忠実であり続けるかの選択に常に直面する。
+            </p>
+            <p class="faction-desc">
+              大商業家族の世界は野心によって腐敗しているが、その決断一つが都市の運命を変える。忠誠は脆く、それが長期的にどこへ繋がるかを見極めることは難しい。
+            </p>
+            <div class="faction-traits">
+              <span class="trait">優雅</span>
+              <span class="trait">大胆</span>
+              <span class="trait">影響力</span>
+              <span class="trait">慎重</span>
+            </div>
+            <div class="faction-meter">
+              <div class="meter-label">影響力</div>
+              <div class="meter-bar"><div class="meter-fill f2-fill" style="width:85%"></div></div>
+              <div class="meter-label">危険度</div>
+              <div class="meter-bar"><div class="meter-fill f2-fill" style="width:30%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faction 3: La Pègre -->
+        <div class="faction-card" data-faction="pegre">
+          <div class="faction-glow f3-glow"></div>
+          <div class="faction-header">
+            <div class="faction-emblem-wrap">
+              <img src="catalystエンブレム_5.png" alt="ラ・ペーグルの紋章" class="faction-emblem">
+            </div>
+            <div class="faction-header-text">
+              <div class="faction-location">📍 フューム</div>
+              <h3 class="faction-name">ラ・ペーグル</h3>
+              <p class="faction-name-fr">La Pègre — Les Chem-Barons</p>
+            </div>
+          </div>
+          <div class="faction-body">
+            <div class="faction-tagline">「力なき者に変革はない」</div>
+            <p class="faction-desc">
+              フュームのケム・バロン（化学男爵）たちと彼らの下に連なる犯罪組織。強力なリーダーの下、先進技術と厳格な規律を用いてフューム全域への支配を拡大する。彼らは暴力こそが真の変革をもたらす唯一の手段だと信じる。
+            </p>
+            <p class="faction-desc">
+              フュームの路地裏、禁忌の医療実験、ケムテック密売——これらすべてが彼らの帝国を支える柱だ。
+            </p>
+            <div class="faction-traits">
+              <span class="trait">決然</span>
+              <span class="trait">冷酷</span>
+              <span class="trait">実用的</span>
+              <span class="trait">洞察力</span>
+            </div>
+            <div class="faction-meter">
+              <div class="meter-label">影響力</div>
+              <div class="meter-bar"><div class="meter-fill f3-fill" style="width:70%"></div></div>
+              <div class="meter-label">危険度</div>
+              <div class="meter-bar"><div class="meter-fill f3-fill" style="width:90%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faction 4: Les Indépendants -->
+        <div class="faction-card" data-faction="independants">
+          <div class="faction-glow f4-glow"></div>
+          <div class="faction-header">
+            <div class="faction-emblem-wrap">
+              <img src="catalystエンブレム_6.png" alt="レ・ザンデパンダンの紋章" class="faction-emblem">
+            </div>
+            <div class="faction-header-text">
+              <div class="faction-location">📍 フューム</div>
+              <h3 class="faction-name">レ・ザンデパンダン</h3>
+              <p class="faction-name-fr">Les Indépendants</p>
+            </div>
+          </div>
+          <div class="faction-body">
+            <div class="faction-tagline">「誰の旗にも従わない」</div>
+            <p class="faction-desc">
+              フュームの地下都市で鍛えられた独立市民たち。いかなる勢力にも与せず、危険と好機の間を独自の知恵で泳ぎ渡る。アヴァリスとフュームの間の争いには距離を置きながら、自分たちの存在を守り抜く。
+            </p>
+            <p class="faction-desc">
+              フュームの薄暗い路地はルールのない世界だ。外の勢力がここでは通用しない。住民たちは自分たちの機知と、急速な変化への適応力だけで生き延びる。
+            </p>
+            <div class="faction-traits">
+              <span class="trait">創造的</span>
+              <span class="trait">孤高</span>
+              <span class="trait">警戒心</span>
+              <span class="trait">回復力</span>
+            </div>
+            <div class="faction-meter">
+              <div class="meter-label">影響力</div>
+              <div class="meter-bar"><div class="meter-fill f4-fill" style="width:35%"></div></div>
+              <div class="meter-label">危険度</div>
+              <div class="meter-bar"><div class="meter-fill f4-fill" style="width:40%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faction 5: Les Réfractaires -->
+        <div class="faction-card faction-wide" data-faction="refractaires">
+          <div class="faction-glow f5-glow"></div>
+          <div class="faction-header">
+            <div class="faction-emblem-wrap">
+              <img src="catalystエンブレム_7.png" alt="レ・レフラクテールの紋章" class="faction-emblem">
+            </div>
+            <div class="faction-header-text">
+              <div class="faction-location">📍 フューム — ケムテック革命派</div>
+              <h3 class="faction-name">レ・レフラクテール</h3>
+              <p class="faction-name-fr">Les Réfractaires — Chemtech Révolutionnaire</p>
+            </div>
+          </div>
+          <div class="faction-body">
+            <div class="faction-tagline">「妥協は幻想だ。革命か、灰か」</div>
+            <p class="faction-desc">
+              フュームの毒の腸内から生まれた秘密地下運動。怒りと変異によって結ばれた彼らは、服従も妥協も拒絶する。アヴァリスを打倒するか、その代償を払わせるか、あるいはその廃墟の上に新たな世界を築くかを目指す。
+            </p>
+            <p class="faction-desc">
+              レフラクテールは解放を求めるイデオローグと、混乱の中に支配の機会を見出す群れのリーダーが混在する。彼らは皆、生きた・変異した・禁忌のケムテックを選んだ——鎖を断ち切り、新たな身体と新たな世界を鍛えるために。
+            </p>
+            <p class="faction-desc">
+              <em>フュームの暗闇の中、レフラクテールは灰の下の火種だ。反乱を自らの血管に、声に、行動に注入する。アヴァリスは交渉では倒れない——誰もが知っている。</em>
+            </p>
+            <div class="faction-traits">
+              <span class="trait">情熱</span>
+              <span class="trait">復讐心</span>
+              <span class="trait">ビジョナリー</span>
+              <span class="trait">執念</span>
+              <span class="trait">カリスマ</span>
+              <span class="trait">捉えどころなさ</span>
+            </div>
+            <div class="faction-meter">
+              <div class="meter-label">影響力</div>
+              <div class="meter-bar"><div class="meter-fill f5-fill" style="width:60%"></div></div>
+              <div class="meter-label">危険度</div>
+              <div class="meter-bar"><div class="meter-fill f5-fill" style="width:95%"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- World / Tensions Section -->
+  <section class="section world-section" id="world">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">IGNITION POINTS</div>
+        <h2 class="section-title">世界の火種</h2>
+        <div class="section-divider"><span></span><span class="gem">◆</span><span></span></div>
+        <p class="section-subtitle">触媒となりうる事件と、それを取り巻く陰謀の断片</p>
+      </div>
+
+      <div class="sparks-grid">
+        <div class="spark-card">
+          <div class="spark-icon">💡</div>
+          <h4>青い光の心臓</h4>
+          <p>子どもたちの秘密工房が焼け落ちた。唯一の生存者は「生きた青い光の心臓」について語る——それは何を意味するのか？</p>
+        </div>
+        <div class="spark-card">
+          <div class="spark-icon">🧱</div>
+          <h4>境界の壁</h4>
+          <p>評議会がフュームとの国境に壁を建設し始めた。「市民を守るため」という名目の裏に隠された真の目的とは？</p>
+        </div>
+        <div class="spark-card">
+          <div class="spark-icon">🔮</div>
+          <h4>マギテックの腐敗</h4>
+          <p>評議会の離反者がフュームに逃げ込んだ。マギテックが現実の織物を腐敗させているという証拠を持っていると彼女は主張する。</p>
+        </div>
+        <div class="spark-card">
+          <div class="spark-icon">👶</div>
+          <h4>発光する印</h4>
+          <p>生まれながらに額に発光する印を持つ赤ちゃんが現れた。その予言は何を語り、なぜ多くの者の欲望を引きつけるのか？</p>
+        </div>
+        <div class="spark-card">
+          <div class="spark-icon">⚗</div>
+          <h4>怒りのエネルギー</h4>
+          <p>科学者たちが人間の怒りを純粋なエネルギーに変換できる技術を開発したと主張する。誰がその研究に資金を提供したのか？</p>
+        </div>
+        <div class="spark-card">
+          <div class="spark-icon">👻</div>
+          <h4>死者の帰還</h4>
+          <p>死んだとされていたフュームの元革命的リーダーが戻ってきた。「本当の戦争はまだ始まっていない」と彼は言う。</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="nav-logo-gem">◆</span>
+        CATALYST
+      </div>
+      <p class="footer-sub">TRPG World Compendium — Catalyst JDR v0.12</p>
+      <p class="footer-credit">マギテックとケムテックが交差する世界のために</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
