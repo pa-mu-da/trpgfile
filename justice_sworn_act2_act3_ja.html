@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JUSTICE SWORN - ACT 1〜3 ルール・ムーブマニュアル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border-radius: 0 !important;
+}
+
+body {
+  background-color: #0c0c0c;
+  color: #ebebeb;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.8;
+  letter-spacing: 0.03em;
+  padding: 40px 20px 100px 20px;
+}
+
+.container {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+header {
+  border-bottom: 2px solid #ffffff;
+  padding-bottom: 24px;
+  margin-bottom: 40px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.doc-info {
+  font-size: 13px;
+  font-weight: 300;
+  color: #888888;
+}
+
+nav.toc {
+  background-color: #141414;
+  border: 1px solid #2a2a2a;
+  padding: 24px;
+  margin-bottom: 48px;
+}
+
+.toc-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888888;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 8px;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 700px) {
+  .toc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.toc-group h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.toc-group ul {
+  list-style: none;
+}
+
+.toc-group li {
+  margin-bottom: 4px;
+}
+
+.toc-group a {
+  color: #aaaaaa;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  transition: color 0.15s;
+}
+
+.toc-group a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+section.act {
+  margin-bottom: 64px;
+  border-top: 2px solid #333333;
+  padding-top: 32px;
+}
+
+.act-header {
+  margin-bottom: 32px;
+}
+
+.act-num {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #666666;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 8px;
+  margin-top: 36px;
+  margin-bottom: 20px;
+}
+
+h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 16px;
+  color: #cccccc;
+}
+
+p strong {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.block-text {
+  border-left: 2px solid #333333;
+  padding-left: 16px;
+  margin: 16px 0 24px 0;
+  color: #999999;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.card {
+  background-color: #141414;
+  border: 1px solid #222222;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid #222222;
+  padding-bottom: 8px;
+}
+
+.card-title .category {
+  font-size: 12px;
+  font-weight: 300;
+  color: #777777;
+}
+
+.move-entry {
+  background-color: #121212;
+  border: 1px solid #242424;
+  border-left: 3px solid #ffffff;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.move-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.move-trigger {
+  font-size: 14px;
+  font-weight: 500;
+  color: #bbbbbb;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #222222;
+}
+
+.move-options {
+  list-style: none;
+  margin-top: 10px;
+  margin-bottom: 14px;
+}
+
+.move-options li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.move-options li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: #666666;
+}
+
+.result-block {
+  margin-top: 12px;
+  border-top: 1px solid #1f1f1f;
+  padding-top: 12px;
+}
+
+.result-row {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.result-label {
+  font-weight: 700;
+  color: #ffffff;
+  margin-right: 8px;
+  display: inline-block;
+  min-width: 90px;
+}
+
+.result-desc {
+  color: #cccccc;
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px 0;
+  font-size: 14px;
+}
+
+table.data-table th, table.data-table td {
+  border: 1px solid #262626;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+table.data-table th {
+  background-color: #181818;
+  font-weight: 700;
+  color: #ffffff;
+  width: 25%;
+}
+
+table.data-table td {
+  background-color: #121212;
+  color: #cccccc;
+}
+
+.glossary-item {
+  border-bottom: 1px solid #222222;
+  padding: 14px 0;
+}
+
+.glossary-term {
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.glossary-desc {
+  font-size: 14px;
+  color: #aaaaaa;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.stat-box {
+  background-color: #141414;
+  border: 1px solid #222222;
+  padding: 16px;
+}
+
+.stat-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.stat-desc {
+  font-size: 13px;
+  color: #aaaaaa;
+}
+
+footer {
+  margin-top: 80px;
+  border-top: 1px solid #222222;
+  padding-top: 24px;
+  font-size: 12px;
+  font-weight: 300;
+  color: #666666;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>JUSTICE SWORN</h1>
+  <div class="doc-info">ACT 1〜ACT 3 基本ルール・キャラクター作成・ムーブマニュアル（日本語版）</div>
+</header>
+
+<nav class="toc">
+  <div class="toc-title">目次</div>
+  <div class="toc-grid">
+    <div class="toc-group">
+      <h4>ACT 1: 基本ルール</h4>
+      <ul>
+        <li><a href="#act1-howto">遊び方・必要なもの</a></li>
+        <li><a href="#act1-mechanics">メカニクスとステージ</a></li>
+        <li><a href="#act1-moves">ムーブの種類とロール</a></li>
+        <li><a href="#act1-actionroll">アクションロール・ゾロ目</a></li>
+        <li><a href="#act1-meter">メーター (Meter)</a></li>
+        <li><a href="#act1-progress">進行度トラックと難易度</a></li>
+        <li><a href="#act1-harm">負傷 (Harm) とその他</a></li>
+        <li><a href="#act1-core">追加コアルール（武器・ボス）</a></li>
+      </ul>
+    </div>
+    <div class="toc-group">
+      <h4>ACT 2: キャラクター作成</h4>
+      <ul>
+        <li><a href="#act2-principles">信念と心構え</a></li>
+        <li><a href="#act2-fighter">ファイターの作成</a></li>
+        <li><a href="#act2-stats">能力値 (STATS)</a></li>
+        <li><a href="#act2-gauges">体力・メーター・ステージ</a></li>
+        <li><a href="#act2-upgrades">アップグレード一覧</a></li>
+      </ul>
+    </div>
+    <div class="toc-group">
+      <h4>ACT 3: ムーブ集</h4>
+      <ul>
+        <li><a href="#act3-glossary">ムーブ用語集</a></li>
+        <li><a href="#act3-conflict">戦闘ムーブ</a></li>
+        <li><a href="#act3-advance">進行ムーブ</a></li>
+        <li><a href="#act3-meter">メータームーブ</a></li>
+        <li><a href="#act3-harm">被害ムーブ</a></li>
+        <li><a href="#act3-boss">ボスムーブ</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ========================================== -->
+<!-- ACT ONE -->
+<!-- ========================================== -->
+<section class="act" id="act1">
+  <div class="act-header">
+    <div class="act-num">ACT ONE</div>
+    <h2>基本ルール</h2>
+  </div>
+
+  <div class="block-text">
+    正義の街灯に照らし出され、拳を握りしめ、両腕を高く掲げる。靴に付着した他人の血、そして路上の壁を塗り潰す己の血。この街は己の接近に震え上がる。そして己もまた、震えを返すのだ。
+  </div>
+
+  <h3 id="act1-howto">遊び方と必要なもの</h3>
+
+  <div class="card">
+    <div class="card-title">遊び方 (How To Play)</div>
+    <p>『Justice Sworn』はいくつかのプレイスタイルで遊ぶことができる。ソロプレイ、または最大2人の友人との協力（Co-Op）モードに対応している。ゲームマスター（GM）は不要である。他のプレイヤーのゲームへ途中参加・途中離脱することも、しばらくソロで進めてからボス戦だけチームを組むこともできるため、形式にこだわる必要はない。</p>
+    <p>本作は Shawn Tomkin 氏による名作『Ironsworn』と同じ基本システムを採用している。『Justice Sworn』を遊ぶために『Ironsworn』を読む必要はない。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">必要なもの (What Do You Need)</div>
+    <p>燃えるような正義感、己の拳、そしてできれば何人かの仲間。また、以下の道具を用意しておくとよい。</p>
+    <ul class="move-options">
+      <li><strong>10面ダイス 2個 (2d10)</strong>（各プレイヤーにつき2個）: チャレンジダイス（Challenge dice）として使用する。</li>
+      <li><strong>6面ダイス 1個 (1d6)</strong>（各プレイヤーにつき1個）: アクションダイス（Action die）として使用する。</li>
+      <li><strong>オラクル用 10面ダイス 2個</strong>（任意）: ランダム表（d100）を振る際に使用する。</li>
+      <li><strong>キャラクターシート</strong>（各プレイヤーにつき1枚）。</li>
+      <li><strong>各種カウンター</strong>: キャラクターシートの各種トラックを記録するためのマーカー（ペーパークリップ、ビーズ、ダイス、コイン、他のゲームのトークンなど）。</li>
+    </ul>
+  </div>
+
+  <h3 id="act1-mechanics">メカニクスとステージ</h3>
+
+  <div class="card">
+    <div class="card-title">メカニクスと判定 (Mechanics and Resolution)</div>
+    <p>シャドウ・クランやエレクトロ99といったギャングから己と街を守るためエンジェル・シティのストリートを徘徊する際、常に心に留めておくべきは<strong>『Justice Sworn』がフィクション・ファースト（物語優先）のゲームである</strong>ということだ。何よりもまず、キャラクターが今何をして、何を考え、どう感じているのか、そしてその行動に対して世界がどう反応するのかを頭の中で鮮明に思い描く。必要に応じてメモを取り、常に「自分のキャラクターならどう動くか」に従って次の行動を決める。</p>
+    <p>とはいえ、本作で主に行うのは殴る、蹴る、投げる、掴む、そして悪党どもに最高にクールな暴力を叩き込むことだ。「自分のキャラクターならどう動くか」とは、すなわち「回転式エアリアル・スープレックスをぶちかますか、それともダブルバックハンドからの旋風昇龍炎脚を繰り出すか」を想像することを意味する。</p>
+    <p>こうした物語上の選択は、しばしばメカニクス上の処理（ダイスロールやメーターの消費など）へと繋がる。大半のダイスロールは次のように進行する：まず10面ダイスを2個（チャレンジダイス）振り、次に6面ダイスを1個（アクションダイス）振る。ルールが指定する能力値（STAT）と各種ボーナスをアクションダイスの出目に加算し、その合計値がチャレンジダイスの片方または両方を上回るかを確認する。そしてトリガーしたムーブのルールに従って結果を処理する。これが最も頻繁に使用する「アクションロール（Action Roll）」である。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ステージ (Stages)</div>
+    <p>街の中央には、空を支えようとするかのように聳え立つ超高層ビル「タワー」がある。その最上階には、強欲と残虐さに駆られ、街の首根っこを掴む男が君臨している。『Justice Sworn』における目的は、最高にイカした方法で奴をオフィスビルの窓から蹴り落とすことだ。だがその前に、奴の組織を解体し、正体を暴き、味方を増やし、街に平和を取り戻さなければならない。最終ボス（Final Boss）に挑む前に、いくつかのステージをクリアする必要がある。</p>
+    <p>典型的なゲームは <strong>3つのステージ</strong> で構成される。ステージとは、闇に覆われ悪が跋扈し、侵入者どもに乗っ取られた街の区画を指す。企業の支配者たちに雇われた汚職警官隊、秘密工作PMC、あるいは差別主義のストリートギャングども（すべてタワーの男の配下である）を蹴散らしながら進み、市民のためにストリートを解放し、拳と蹴りに導かれてそのステージのボスを完全に打倒するのが目標となる。</p>
+    <p>ステージをクリアするたびにキャラクターは成長し新たな能力を獲得し、街を暗い運命から救う最終目標へと近づく。ステージを完遂しボスを倒した際は、一度立ち止まって振り返り、新たに挑戦する次のステージを構築する。この手順は《次のステージへ》(Next Stage) のムーブに従う。複数人でプレイしている場合は、ステージや進行度をグループで共有する。</p>
+  </div>
+
+  <h3 id="act1-moves">ムーブの種類とロール</h3>
+
+  <div class="card">
+    <div class="card-title">ムーブの分類 (Moves)</div>
+    <p>サイボーグのファシストに昇龍拳を叩き込んで倉庫の窓を突き破る時、火炎放射器を構えた元警察署長の武装を解除しようとする時、あるいは悪党を締め上げて情報を吐かせる時、ゲームは「ムーブ（Moves）」によって処理される。ムーブとは、リスクや失敗の可能性を伴う行動を解決するための自己完結型ルールであり、「あなたが〜する時（When you...）」というトリガー条件によって発動する。</p>
+    <ul class="move-options">
+      <li><strong>戦闘ムーブ (Conflict Moves)</strong>: 戦闘や危険地帯の突破に用いる最も基本的なムーブ。コンボ、投げ、打撃、武器、空中攻撃などを扱う。</li>
+      <li><strong>メータームーブ (Meter Moves)</strong>: メーターを消費して発動するムーブ。必殺技、連携、緊急回復などの特殊能力を扱う。</li>
+      <li><strong>進行ムーブ (Advance Moves)</strong>: ステージの終了、新ステージの作成、レベルアップなどの進行手順を扱う。</li>
+      <li><strong>ストリートムーブ (Street Moves)</strong>: 生きている街そのものが進むべき道を示すムーブ。展開に迷った際の指針となる。</li>
+      <li><strong>被害ムーブ (Harm Moves)</strong>: 拳が血に染まり、鉄パイプで背中を殴られ、奈落へ叩き落とされた際、どれほど深刻な被害を受けたかを解決する。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3種類のロール (Types of Rolls)</div>
+    <p>ほとんどのムーブはダイスロールを要求する。状況に応じて以下の3種類のロールを使い分ける（ロールの指示がないムーブではダイスを振らない）。</p>
+    <ul class="move-options">
+      <li><strong>アクションロール (Action Rolls)</strong>: 主に戦闘ムーブで使用。戦闘などリスクのある行動を取る際に最も頻繁に行う判定。</li>
+      <li><strong>進行度ロール (Progress Rolls)</strong>: 主に進行ムーブで使用。ステージの突破や最終ボスへの到達度合いを決着させる判定。</li>
+      <li><strong>ガイドロール (Guide Rolls)</strong>: 主にストリートムーブで使用。次に何が起きるか決めるために《右へ進む》(Move Right) などを使う際に行う判定。</li>
+    </ul>
+  </div>
+
+  <h3 id="act1-actionroll">アクションロール・ゾロ目</h3>
+
+  <div class="card">
+    <div class="card-title">アクションロールの解決 (The Action Roll)</div>
+    <p>危険で不確実な行動でムーブを行う際、3つのダイスを同時に振る：<strong>チャレンジダイス（d10×2）</strong> と <strong>アクションダイス（d6×1）</strong>。</p>
+    <p>アクションダイスの出目に指定された能力値（STAT）と各種加算ボーナス（Adds）を加えた合計が <strong>アクションスコア（Action Score）</strong> となる。<strong>アクションスコアの上限は 10 であり、10を超える分は切り捨てられる。</strong></p>
+    <p>このアクションスコアを2個のチャレンジダイスそれぞれの出目と比較し、<strong>真に上回っているか</strong>（同値は敗北）で3通りの結果が決まる：</p>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc"><strong>Strong Hit</strong> — アクションスコアが <strong>両方のチャレンジダイスより大きい</strong>。試みた行動に完全成功する。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc"><strong>Weak Hit</strong> — アクションスコアが <strong>片方のチャレンジダイスのみより大きい</strong>。一応成功するが、効果が落ちるか何らかの代償を伴う。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc"><strong>Miss</strong> — アクションスコアが <strong>どちらのチャレンジダイスも上回れない</strong>。失敗するか、重大な譲歩を強いられる。通常は《一撃を受ける》(Take a Hit) の処理へ進む。ミスの際は常に何かが起き、状況がより複雑・劇的・危険になる。</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ゾロ目 (Matches)</div>
+    <p>判定時、2個のチャレンジダイスの出目が同じ数値（ゾロ目）になった場合は注目すべきシグナルとなる。ソロプレイでも協力プレイでも、予期せぬ展開（ツイスト）や新たなトラブル、意外な事態を発生させるトリガーとなる。迷った場合は《右へ進む》(Move Right) で街に問いかける。</p>
+    <ul class="move-options">
+      <li><strong>強ヒット＋ゾロ目</strong>: 物語上の興味深いひねり、あるいは新たな好機の到来を示す。</li>
+      <li><strong>ミス＋ゾロ目</strong>: より深刻な失敗、複雑な事態、あるいは新たな危機の到来を示す。予期せぬ形で状況が悪化する（特に <strong>10のゾロ目</strong> は最悪の悲劇的転換や致命的失敗を意味する）。</li>
+    </ul>
+  </div>
+
+  <h3 id="act1-meter">メーター (Meter)</h3>
+
+  <div class="card">
+    <div class="card-title">メーターの仕組み (Meter)</div>
+    <p>メーターは『Justice Sworn』の中核をなす特殊メカニクスであり、<strong>-6 から +10</strong> の範囲を変動して現在の調子や戦況の優劣を表す。プラスであれば主導権を握り優位に立っており、マイナスであれば流れが逆転し厳しい窮地に立たされていることを示す。メーターはシーンやセッションを跨いで維持される。</p>
+    <ul class="move-options">
+      <li><strong>メーターの獲得 (Gaining Meter)</strong>: 「メーター+Xを得る（take +X Meter）」の指示でトラックを増加させる。+1は小さな優位、+2以上は大きな優位を表す。</li>
+      <li><strong>メーターの減少 (Losing Meter)</strong>: 「メーター-Xを受ける（suffer -X Meter）」の指示や代償としてトラックを減少させる。具体的な数値が示されない《一撃を受ける》(Take a Hit) などの場合、軽い不利は <strong>-1</strong>、重大な不利は <strong>-2</strong> とする。</li>
+      <li><strong>メーターのリセット (Resetting Meter)</strong>: メーターを消費（バーン）した後、メータートラックを <strong>メーターリセット値（初期値 +2）</strong> に戻す。</li>
+      <li><strong>負のメーターによるペナルティ (Suffering Negative Meter)</strong>: メーターが <strong>0未満（マイナス）</strong> の状態でアクションロールを行い、<strong>アクションダイス（d6）の出目がマイナス値を除いた現在のメーターの数値と一致した場合、そのアクションダイスの出目は無効（キャンセル）</strong> となる。能力値とボーナスだけでチャレンジダイスと比べなければならない。</li>
+    </ul>
+  </div>
+
+  <h3 id="act1-progress">進行度トラックと難易度</h3>
+
+  <div class="card">
+    <div class="card-title">進行度トラックと難易度ランク (Progress Tracks & Challenge Ranks)</div>
+    <p>進行度トラックは10個のボックスが並んだゲージであり、特定の目標や戦闘の進展を計測する。</p>
+    <ul class="move-options">
+      <li>《ゲームスタート》(Press Start): 最終目的達成に向けた試練の進展を表す。</li>
+      <li>《次のステージへ》(Next Stage): 現在のエリア（ステージ）をどれだけ踏破したかを表す。</li>
+      <li>《乱闘開始》(Throw Down): 戦闘中に敵をどれだけ追い詰め傷つけたかを表す。</li>
+    </ul>
+    <p>挑戦を開始する際、状況に応じた難易度ランクを設定し、進行度を獲得した際にランクに応じた進行度をボックスに塗りつぶす（1ボックス＝進行度4、すなわち4チック）：</p>
+    <ul class="move-options">
+      <li><strong>Easy（低級）</strong>: 確実に勝てる相手や容易な課題。<strong>進行度 3 をマーク</strong></li>
+      <li><strong>Medium（中級）</strong>: 実力を試され押し込まれる課題。<strong>進行度 2 をマーク</strong></li>
+      <li><strong>Hard（強敵）</strong>: 乗り越えられるか不確かな難関。<strong>進行度 1 をマーク</strong></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">進行度ロール (Progress Rolls)</div>
+    <p>進行度ムーブを行う際はアクションダイスを振らない。代わりに、<strong>完全に埋まったボックスの数</strong> を数えて <strong>進行スコア（Progress Score）</strong> とし、2個のチャレンジダイス（2d10）を振って比較し、通常通り強ヒット・弱ヒット・ミスを解決する（ゾロ目も同様に適用）。</p>
+    <p>決着をつける前にどれだけ進行度を溜めるかはプレイヤー次第であり、必ずしも10ボックスすべてを埋める必要はない。また、<strong>進行度ロールではメーターは無視される</strong>。味方と協力して挑む場合は進行度トラックを共有し、グループを代表して1人だけがダイスを振る。</p>
+  </div>
+
+  <h3 id="act1-harm">負傷 (Harm) とその他</h3>
+
+  <div class="card">
+    <div class="card-title">負傷の与え方と受け方 (Harm)</div>
+    <p>負傷（Harm）は肉体的なダメージと疲労を表す。</p>
+    <ul class="move-options">
+      <li><strong>負傷を与える (Inflicting Harm)</strong>: 《コンボ》(Combo) や《カウンター》(Counter) などの攻撃ムーブが成功すると負傷を与える（通常は1負傷だが、コンボ等で増加可能）。与えた負傷1点ごとに、敵のランクに応じた進行度を敵のトラックにマークする（例：Easyの敵は1負傷につき進行度3、Hardの敵は進行度1）。</li>
+      <li><strong>負傷に耐える (Enduring Harm)</strong>: 物理的ダメージや過酷な試練を受けた際は《一撃を受ける》(Take a Hit) を行い、被害ランクに応じた数値だけ体力を減らす：<strong>Easy（1負傷）</strong>／<strong>Medium（2負傷）</strong>／<strong>Hard（3負傷）</strong>。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">アップグレードとストリート (Upgrades & The Streets)</div>
+    <p><strong>アップグレード (Upgrades)</strong> はエンジェル・シティの過酷な戦いを生き抜く中で獲得する特殊能力・装備・味方である。《ゲームスタート》(Press Start) 時に初期アップグレードを1つ選び、ステージを攻略して《ステージクリア》(End Of Stage) を迎えるたびに新たなアップグレードを獲得する。</p>
+    <p><strong>ストリート (The Streets)</strong> とは、次に何が起きるか不明な際や《一撃を受ける》等で街の声に耳を傾ける仕組みである。2個の10面ダイスを振って 01〜100 の出目を出し、対応する表を参照して展開を導き出す。</p>
+  </div>
+
+  <h3 id="act1-core">追加コアルール（特殊攻撃・武器・ボス）</h3>
+
+  <div class="card">
+    <div class="card-title">特殊攻撃：メーターの消費 (Special Attacks / Burning Meter)</div>
+    <p>通常攻撃に加え、メーターを消費（バーン）して発動する強力な「メータームーブ」が存在する（例：メーターをすべて消費して敵を一撃で沈めるフィニッシャーなど）。また、これらのムーブの多くは体力回復効果を持っている。<strong>協力（Co-Op）プレイ時は、自分が回復する代わりに他のプレイヤーを回復させることも可能である。</strong></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">武器 (Weapons)</div>
+    <p>ムーブによって武器（Weapon）を獲得した場合、攻撃時にその武器を消費することで <strong>+1負傷</strong> を与えられる。武器は使用後ただちに破損し、以降は使えない。</p>
+    <p>武器を使うかどうかは <strong>攻撃ロールの前に宣言</strong> しなければならない。もし武器を使用した攻撃で <strong>弱ヒットまたはミスを出して体力を失った場合、敵に武器を奪われてさらに追加で 体力-1 のダメージ</strong> を受ける。</p>
+    <p>武器は同時に複数所持できるが、<strong>最大3つまで</strong> である。すでに3つ所持している状態で新たに武器を得た場合、代わりに <strong>メーター+1</strong> を選択できる。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ボス (Bosses)</div>
+    <p>各ステージは、そのエリアを牛耳るボスを追跡し、劇的かつ暴力的な決戦を繰り広げることで締めくくられる。ボスは常に <strong>Hard 難易度</strong> として扱われ、通常の敵を超越した能力を与える固有の <strong>ボスムーブ（Boss Move）</strong> を1つ所持する（最終ボスは2つ所持）。ボスと対峙した際はボスムーブ一覧から1つを選択する。</p>
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- ACT TWO -->
+<!-- ========================================== -->
+<section class="act" id="act2">
+  <div class="act-header">
+    <div class="act-num">ACT TWO</div>
+    <h2>キャラクター作成</h2>
+  </div>
+
+  <div class="block-text">
+    リングの上であれ、ストリートであれ、死の脅威を潜り抜けてこそ初めて己の生を実感できる。ここに残された時間は限られている。この街に刻みつけた傷跡もいずれは消え去るだろう。ならば、炎と憤怒でその行く手を照らし出すのだ。
+  </div>
+
+  <h3 id="act2-principles">信念と心構え</h3>
+
+  <div class="card">
+    <div class="card-title">拳のみを信じろ (Trust Only Your Fists)</div>
+    <p>『Justice Sworn』において、プレイヤーが担当する主人公に固有の肩書きはない。己を取り巻く世界が崩壊していくのを目の当たりにし、それに抗うことを決意した一人の人間である。制度の根底にある不正と腐敗を知り警察を辞めた元警官かもしれない。最後の戦いとして赤旗を掲げ直す歴戦の革命家かもしれない。正義のために拳を振るう若きストリートファイターかもしれない。出自が何であれ、この街を救うのは己自身である。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">炎を灯せ (Ignite Your Fire)</div>
+    <p>メカニクスに触れる前に、まずその人物像と物語上の動機を思い描く。なぜ他の誰でもなく、彼・彼女が正義を求めて倉庫街や高層金融ビルを蹂躙するのか。まだ明確な答えがなくても構わない。物語を進める中で見つけ出してもよいし、あるいは悪漢どもの頭を机に叩きつけながら答えを導き出してもよい。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">眩く燃え上がれ (Burn Bright)</div>
+    <p>キャラクター作成と行動決定における絶対の原則はただ一つ、「眩く燃え上がれ（Burn Bright）」である。内に秘めた炎は、切り開くべき果てなき暗夜を照らし出すほどに激しく燃え盛っていなければならない。常に最も勇敢な選択をし、最も大胆な技を放ち、不条理を前に決して退かない。遭遇中もキャラクター作成時も、徹底して強烈で格好いいと感じる選択肢を選ぶ。常に思い通りにいくとは限らないが、倒されることすら、華麗な雷光アッパーカットを叩き込むための好機にすぎない。</p>
+    <p>また「眩く燃え上がる」とは「己に忠実である」ことも意味する。容姿、人柄、性別、セクシュアリティ、信仰、文化、アイデンティティはすべて自由であり、エンジェル・シティのストリートにおいて正当に認められる。ただし、ファシストと強欲なCEOは例外である。すべての決着がついた時、奴らを窓の外へ蹴り落とす必要がある。</p>
+  </div>
+
+  <h3 id="act2-fighter">ファイターの作成</h3>
+  <p>『Justice Sworn』のサウンドトラックを流し、エナジードリンクを開けてキャラクター作成を開始する。</p>
+
+  <h4>名前 (Name)</h4>
+  <p>歯切れがよく、最高にクールな名前を決める。例：ゴン（Gon）、ジーク（Zeke）、カイ（Kai）、アイサー（Icer）、ブレイズ（Blaze）、フロイド（Floyd）。</p>
+
+  <h3 id="act2-stats">能力値 (STATS)</h3>
+  <p>キャラクターの生来の強さと技量を示す5つの能力値。アクションロール判定時に該当する能力値の数値をアクションダイス（1d6）の出目に加算する。</p>
+
+  <div class="stat-grid">
+    <div class="stat-box">
+      <div class="stat-name">POWER（剛力）</div>
+      <div class="stat-desc">肉体的なパワー、腕力、剥き出しの筋力。</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-name">TECHNIQUE（技量）</div>
+      <div class="stat-desc">技術的な冴え、フォームの正確さ、精緻な動作。</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-name">SPEED（敏捷）</div>
+      <div class="stat-desc">敏捷性、瞬発力、確実な足取り。</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-name">STAMINA（耐久）</div>
+      <div class="stat-desc">持久力、健康、不屈の闘志。</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-name">BLAZE（魂炎）</div>
+      <div class="stat-desc">ストリートとの繋がり、何度でも立ち上がる力、内なる炎。</div>
+    </div>
+  </div>
+
+  <p>ゲーム開始時、以下の数値を好みの順序で各能力値に割り振る：<strong>+3, +2, +1, +1, 0</strong><br>
+  キャラクターシートの該当するゲージを選択した数値まで塗りつぶす。</p>
+
+  <h3 id="act2-gauges">体力・メーター・ステージ</h3>
+
+  <div class="card">
+    <div class="card-title">体力 (Health)</div>
+    <p>肉体の状態を示す。《一撃を受ける》(Take A Hit) を行うと減少し、専用ムーブ、アイテムの発見、ステージ間の休息によって回復する。<strong>初期値: +8</strong></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">メーター (Meter)</div>
+    <p>戦況の優勢度・好調さを示す。各種ムーブによって増減する。メーターがプラスであれば、成功を足がかりに決定的な攻勢へ出られる。マイナスであれば、挫折を味わい窮地に立たされていることを示す。</p>
+    <p>キャラクターシート左側のメータートラックに現在値を記録する。またシートには最大メーターとメーターリセット値を記録する欄がある。</p>
+    <ul class="move-options">
+      <li><strong>最大メーター (Max Meter): +8</strong></li>
+      <li><strong>メーターリセット値 (Meter Reset): +2</strong></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ステージ (Stages)</div>
+    <p>《ゲームスタート》(Press Start) の際、討つべき相手に対する「正義の誓約」を立て、難易度ランク（Easy, Medium, Hard）を設定してシートに記入する。各ステージを突破するごとにこのメーターを進め、最終ボス（Final Boss）への挑戦を目指す。</p>
+  </div>
+
+  <h3 id="act2-upgrades">アップグレード (Upgrades)</h3>
+  <p>正義を求める戦いの中で獲得する特殊能力、装備、そして頼れる味方。<strong>キャラクター作成時に以下のリストから任意の1つを選択する。</strong>その後、ステージをクリアするごとに追加で1つずつ獲得していく。</p>
+
+  <h4>味方 (Allies)</h4>
+
+  <div class="card">
+    <div class="card-title">《目と耳》(Eyes and Ears) <span class="category">Allies</span></div>
+    <p>情報収集のためのムーブを行う際、自動的に噂を1つ獲得し、そのステージの終了時までその噂に基づいて行動するあらゆるロールに <strong>+1</strong> を得る。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《殉教者》(Martyr) <span class="category">Allies</span></div>
+    <p>体力を失う際、各ステージにつき1回まで、この味方が身代わりとなってその一撃を引き受けてくれる。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《段取り屋》(Setup Master) <span class="category">Allies</span></div>
+    <p>各ステージにつき1回まで、この味方がコンボのお膳立てをしてくれる。コンボの判定ロールを <strong>+1</strong> の修正付きで開始する。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《2P参戦》(Player Two) <span class="category">Allies</span></div>
+    <p>各ステージにつき1回まで、この味方と共に戦っている状況で体力が0になった際、《コンティニュー？》(Continue?) のロールに <strong>+1</strong> を加える。強ヒットを出した場合、選択した項目の効果にさらに <strong>+1</strong> を加算する。</p>
+  </div>
+
+  <h4>戦闘スタイル (Combat Styles)</h4>
+
+  <div class="card">
+    <div class="card-title">《カポエイラ》(Capoeira) <span class="category">Combat Styles</span></div>
+    <p>ステップを踏んで踊るように《仕掛け》(Opener) へ持ち込む際、判定に <strong>+1</strong> を加え、ヒット時に <strong>メーター+1</strong> を得る。強ヒットを出した際、踊るような動作を維持して《コンボ》(Combo) へ移行するなら、そのロールに <strong>+1</strong> を加える。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《ストリートファイト》(Street Fighting) <span class="category">Combat Styles</span></div>
+    <p>ダーティな手段・反則攻撃で攻める際、ヒット時に「<strong>メーター+1 を得る</strong>」か「<strong>追加で1負傷を与える</strong>」のいずれかを選択する。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《象形拳》(Animal Style Kung Fu) <span class="category">Combat Styles</span></div>
+    <p>派手な技と芸術的な流れる動きで見せ場を作る際、メータームーブを使用した上で、その攻撃がヒットした後に <strong>メーターを1回復</strong> する。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《武器の達人》(Weapon Specialist) <span class="category">Combat Styles</span></div>
+    <p>武器を使って攻撃する際、以下から1つを選択する：</p>
+    <ul class="move-options">
+      <li>その武器の使用可能回数が追加で1回分増える</li>
+      <li>ミスが出た場合でも、武器が失われず手元に残る</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《柔道》(Judo) <span class="category">Combat Styles</span></div>
+    <p>戦闘中やその他の状況で統制（コントロール）を失った際、<strong>+TECHNIQUE</strong> でロールする。強ヒットなら <strong>メーター+2</strong> を得て次の攻撃ロールに <strong>+1</strong>。弱ヒットならそのうち1つを選択する。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《即興戦闘》(Improvisation) <span class="category">Combat Styles</span></div>
+    <p>周囲のオブジェクトや環境を利用したり、事前の計画なしに行動を起こす際、ロールに <strong>+1</strong>。強ヒットを出した場合、<strong>メーター+1</strong> を得る。</p>
+  </div>
+
+  <h4>ストリート (Streets)</h4>
+
+  <div class="card">
+    <div class="card-title">《街灯に問う》(Speak To The Lights) <span class="category">Streets</span></div>
+    <p>独り佇み、きらめく街の光に単一の問いを投げかける際、<strong>+BLAZE</strong> でロールする。</p>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">ストリートが有益な答えを授けてくれる。その応答を描写し、<strong>メーター+1</strong> を得る。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">街灯が明滅し、このステージにおける別の問題点を指し示す。何を知ったのかを描写する。</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《街が私を立たせる》(It Lifts Me Up) <span class="category">Streets</span></div>
+    <p>追い詰められ、無残な敗北の瀬戸際に立たされた際、コンクリートに両手を当て、己自身をもう少し街へと捧げる。<strong>+BLAZE</strong> でロールする。</p>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">街と取引を交わす。街が何を求めているのかを問い、その道へと身を投じる。街はいかなる形であれ己を救い出す。どのように救われたかを描写するか、《右へ進む》(Move Right) を行う。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">街の魂は中立のままである。<strong>体力+1</strong> を得るが、それ以外の恩恵はない。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">静寂のみが返ってくる。</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《炎を纏う拳》(Emblazing Fists) <span class="category">Streets</span></div>
+    <p>都市の構成要素（ネオン、炎、排気、鉄など）を取り込み、拳や足へと宿す際、<strong>+BLAZE</strong> でロールする。</p>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">その属性が全身を包み込み、短時間の間力を授ける。それを行使した際に起きる現象を描写するか、以下から選択する：<br>・次の戦闘中のダメージに +1 負傷<br>・次の戦闘中の《コンボ》(Combo) ロールに +1</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">その効果は直後の1回の攻撃またはムーブにのみ適用される。確実に活かすこと。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">暴発して裏目に出る。探索が頓挫するか、望まぬ注目を集めてしまう。</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《街が呼ぶ場所へ》(I Go Where I’m Needed) <span class="category">Streets</span></div>
+    <p>高所から飛び降りる、あるいは落下する際、エンジェル・シティの魂に身を委ねて <strong>+BLAZE</strong> でロールする。</p>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">街がその身を受け止め、最も必要とされている場所、あるいは最も向かうべき場所へと送り届ける。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">街は受け止めてくれるが、最初は混乱するような場所に着地する。現在地を把握するか、《右へ進む》(Move Right) を行う。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">地面に激突する。状況に応じた負傷を受け、<strong>メーター-1</strong>。</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《拳を伸ばせ》(Reach Out With Your Fists) <span class="category">Streets</span></div>
+    <p>街の光と影が味方となる。それらの明暗に身を浸す際、離れた距離から《仕掛け》(Opener) を発動できる。ヒット時、敵を引き寄せるか、敵の元へと一瞬で肉薄するかを選択する。</p>
+  </div>
+
+  <h4>装備 (Equipment)</h4>
+
+  <div class="card">
+    <div class="card-title">《遠距離射程》(Long Range Options) <span class="category">Equipment</span></div>
+    <p>武器（Weapon）を使用する際、その攻撃を遠距離攻撃として扱ってよい。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《街の恵み》(The City Provides) <span class="category">Equipment</span></div>
+    <p>1回の戦闘につき1回まで、樽、壁、公衆電話などのオブジェクトを破壊した際、以下から1つを選択する：</p>
+    <ul class="move-options">
+      <li><strong>武器 (Weapon)</strong> を1つ発見する</li>
+      <li><strong>食料</strong> を発見する（<strong>体力+1</strong>）</li>
+      <li>隠れている人物を発見する（相手の要求や目的を探り出す）</li>
+      <li>《右へ進む》(Move Right) を行う</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========================================== -->
+<!-- ACT THREE -->
+<!-- ========================================== -->
+<section class="act" id="act3">
+  <div class="act-header">
+    <div class="act-num">ACT THREE</div>
+    <h2>ムーブ集</h2>
+  </div>
+
+  <div class="block-text">
+    血を洗い流せるのは血のみだ。暴力が敬意を払うのは、さらなる暴力だけだ。暗闇に痛みを独占させておく時間はもう終わった。己の取り分をもぎ取れ。
+  </div>
+
+  <h3 id="act3-glossary">ムーブ用語集 (Move Glossary)</h3>
+  <p>ムーブやアセット内で頻出するルール用語の定義一覧。</p>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「+Xを加える」(Add X)</div>
+    <div class="glossary-desc">アクションダイス（1d6）の出目にこの数値を加算する。能力値などの既存ボーナスに加えた合算値（アクションダイス + 能力値 + 加算値）が最終的なアクションスコアとなる。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「味方」(Allies / Ally)</div>
+    <div class="glossary-desc">他のプレイヤーが操作するキャラクター、または同行者を指す。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">《右へ進む》(Move Right)</div>
+    <div class="glossary-desc">ムーブの結末を判断するためのインスピレーションを得たい時、次に何が起きるかを解決したい時、あるいは世界についての詳細を知りたい時に行う。イエス／ノーを導く質問をしたり、オラクル表を使ってアイデアを出す。GM同席の場合はGMがストリートの代弁者となる。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「選択する」(Choose)</div>
+    <div class="glossary-desc">提示されたリストの中から指定された個数の選択肢を選ぶ。同一の選択肢を複数回選ぶことはできない。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「〜と引き換えに」(In Exchange for)</div>
+    <div class="glossary-desc">指定されたトラックの数値を指示通りに変動させる。通常はあるトラックを+1する代わりに別のトラックを-1する。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「負傷を与える」(Inflict your Harm)</div>
+    <div class="glossary-desc">敵に対して進行度（進捗）を記録する。与えた負傷1点ごとに、相手のランクに応じた進行度を進行トラックにマークする。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「+X負傷を与える」(Inflict +X Harm)</div>
+    <div class="glossary-desc">現在の攻撃ダメージにX点の負傷を加算する。アセットの条件やムーブの選択肢によって得られる。負傷を与える結果になった場合のみボーナスが適用される。基本負傷とボーナス負傷を合計し、敵の進行トラックに適用する。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「ヒット時」(On a Hit) / 「ヒットを出した場合」</div>
+    <div class="glossary-desc">弱ヒットまたは強ヒットを出した場合（アクションスコアがいずれか一方、または両方のチャレンジダイスを上回った場合）にこの指示に従う。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「弱ヒット時」(On a Weak Hit)</div>
+    <div class="glossary-desc">アクションスコアが一方のチャレンジダイスより大きく、もう一方のダイス以下である場合にこの指示に従う。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「強ヒット時」(On a Strong Hit)</div>
+    <div class="glossary-desc">アクションスコアが両方のチャレンジダイスより真に大きい場合にこの指示に従う。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「ミス時」(On a Miss)</div>
+    <div class="glossary-desc">アクションスコアがどちらのチャレンジダイスも上回れなかった場合にこの指示に従う。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">《一撃を受ける》(Take a Hit)</div>
+    <div class="glossary-desc">ロールでミスを出した際、原則としてこのムーブの処理が要求される。失敗による被害と影響を解決するためのムーブ。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「進行度ムーブ」(Progress Move)</div>
+    <div class="glossary-desc">目標や挑戦の最終的な結末を判定する特殊ムーブ。アクションダイスを振る代わりに、埋まった進行度ボックスの数値を進行スコア（進行度値）とする。2個のチャレンジダイス（2d10）を振り、進行スコアと比較して強ヒット・弱ヒット・ミスを解決する。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「任意のダイスを振り直す」(Reroll Any Dice)</div>
+    <div class="glossary-desc">ロール後、任意のダイス（アクションダイス、チャレンジダイスの片方または両方）を選んで1回だけ振り直すことができる。残すダイスを脇に置き、振り直すダイスを一度に振る。振り直した後の結果を確定値としなければならない。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「能力値で判定する」(Roll Stat)</div>
+    <div class="glossary-desc">アクションダイス（1d6）の出目に指定された能力値を加算する基本のアクションロール。指示がない場合や選択式の場合は、状況に最もふさわしい能力値を用いる。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「+Xを得る」(Take X)</div>
+    <div class="glossary-desc">指定されたトラックにその数値を加算する（例：「メーター+2を得る」）。アセット等の追加ボーナスがある場合、特に明記がない限り合算して受け取る。</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">「あなたが〜する時」(When You...)</div>
+    <div class="glossary-desc">ムーブのトリガー条件。指定された行動を取った、あるいは状況に直面した際にムーブが発生する。ムーブを行うのはプレイヤーキャラクターのみであり、NPCや敵のためにムーブを振ることはない。</div>
+  </div>
+
+  <h3 id="act3-conflict">戦闘ムーブ (Conflict Moves)</h3>
+
+  <div class="move-entry">
+    <div class="move-name">《乱闘開始》(Throw Down)</div>
+    <div class="move-trigger">戦闘を余儀なくされた際、立ち向かうすべてのチンピラのランクを設定する：</div>
+    <ul class="move-options">
+      <li><strong>Easy（低級）</strong>: 与える負傷1点につき進行度3点、受ける負傷1点</li>
+      <li><strong>Medium（中級）</strong>: 与える負傷1点につき進行度2点、受ける負傷2点</li>
+      <li><strong>Hard（強敵）</strong>: 与える負傷1点につき進行度1点、受ける負傷3点</li>
+    </ul>
+    <p>次に、どちらが戦況の主導権（コントロール）を握っているかを決める。状況から判断するか、以下からロールする：</p>
+    <ul class="move-options">
+      <li><strong>電光石火、先手必勝で殴り込む</strong>: <strong>+POWER</strong> でロール</li>
+      <li><strong>一発耐えて即座に跳ね起きる</strong>: <strong>+BLAZE</strong> でロール</li>
+      <li><strong>死角から不意を突く</strong>: <strong>+SPEED</strong> でロール</li>
+    </ul>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc"><strong>メーター+2</strong> を得て、<strong>主導権（コントロール）を獲得する</strong>。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">上記（メーター+2 または 主導権獲得）からいずれか1つを選択する。</span></div>
+    </div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《仕掛け》(Opener)</div>
+    <div class="move-trigger">自分が主導権を握っており、攻撃の口火を切る際、以下のいずれかのアプローチを選ぶ：</div>
+    <ul class="move-options">
+      <li><strong>強烈な組み技・投げ (Devastating Grapple)</strong>: <strong>+TECHNIQUE</strong> でロール</li>
+      <li><strong>渾身の殴打 (Brutal Strike)</strong>: <strong>+POWER</strong> でロール</li>
+      <li><strong>怒涛の乱打 (Unstoppable Flurry)</strong>: <strong>+SPEED</strong> でロール</li>
+    </ul>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">主導権を維持し、対象に <strong>1負傷</strong> を与える。さらに続けて《コンボ》(Combo) へ移行してよい。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">以下から1つを選択する：<strong>「主導権を維持する」</strong>、<strong>「1負傷を与える」</strong>、または<strong>「判定-1 のペナルティを受けて《コンボ》(Combo) へ移行する」</strong>。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">攻撃は失敗する。《一撃を受ける》(Take a Hit) を行い、相手が主導権を握る。</span></div>
+    </div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《コンボ》(Combo)</div>
+    <div class="move-trigger">《仕掛け》(Opener) でヒットを出し、そのまま怒涛の連撃を浴びせかける際、<strong>+STAMINA</strong> でロールする。以下のリストからコンボの構成要素を選択する。好きな数だけ項目を選んでよいが、<strong>2つ目以降の項目を選ぶごとに判定ロールに -1 の修正が累積する</strong>。</div>
+    <ul class="move-options">
+      <li><strong>渾身の強打 (Full Power Strike)</strong>: 1負傷を与える</li>
+      <li><strong>途切れぬ連打の雨 (Unending Rain of Blows)</strong>: メーター+1</li>
+      <li><strong>計算尽くの投げ (Calculated Throw)</strong>: 戦場にいる他の敵1体に対しても 1負傷 を与える</li>
+      <li><strong>武器を拾って暴れ回る (Grab a Weapon, Go to Town)</strong>: 次の攻撃のダメージに +1負傷</li>
+      <li><strong>打ち上げ (Launch)</strong>: 次の攻撃がこの敵に対するものである限り、その攻撃に +1負傷</li>
+    </ul>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">選んだコンボの全効果を適用し、主導権を維持する。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">選んだコンボの効果を適用するが、主導権を失い《一撃を受ける》(Take a Hit) を行う。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">主導権を失い、《一撃を受ける》(Take a Hit) を行う。</span></div>
+    </div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《空中追撃》(Aerial Assault)</div>
+    <div class="move-trigger">《コンボ》の「打ち上げ (Launch)」で上空へ浮かせた敵に追撃を仕掛ける際、<strong>+SPEED</strong> でロールする。</div>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">即座に <strong>ロール+1</strong> のボーナスを得て新たな《コンボ》(Combo) を開始する。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">負傷を与え、主導権を維持する。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">主導権を失い、《一撃を受ける》(Take a Hit) を行う。</span></div>
+    </div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《トドメの一撃》(Closer)</div>
+    <div class="move-trigger">《コンボ》(Combo) を成功させた際、主導権を自ら明け渡すことで、現在の対象へ即座に <strong>2負傷</strong> を与えてよい。</div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《主導権奪取》(Take Control)</div>
+    <div class="move-trigger">敵に主導権を握られている状況で、反撃の隙を見出そうとする際、<strong>+TECHNIQUE</strong> でロールする。</div>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">以下から <strong>2つ</strong> を選択する：<br>・メーター+1<br>・1負傷を与える<br>・主導権を獲得する</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">上記リストから <strong>1つ</strong> を選択する。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">《一撃を受ける》(Take a Hit) を行う。敵が主導権を維持する。</span></div>
+    </div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《ノックアウト》(Knock Out)</div>
+    <div class="move-trigger">強力な《コンボ》の成功や《トドメの一撃》など、敵に強烈な打撃を叩き込んだ際、戦闘の決着をつけるためにこの進行度ムーブを行う。チャレンジダイス（2d10）を振り、蓄積した進行度スコアと比較する。</div>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">敵は戦闘不能になる。<strong>メーター+1</strong> を得るか、<strong>1負傷分の体力を回復する</strong>。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">強ヒットと同様に敵を排除するが、同時に以下から1つを選択する：<br>・倒れ際の敵から一撃を喰らう。《一撃を受ける》(Take a Hit) を行う。<br>・状況が悪化する。新たな敵の増援や、より危険な脅威が現れる。<br>・戦いの中で極めて重要な何かが破壊される。<br>・さらに危険な連中がこちらを狙って接近してくる。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">この戦いに敗北した。《一撃を受ける》(Take a Hit) を行う。</span></div>
+    </div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《ストリートを突っ走る》(Rip Through The Streets)</div>
+    <div class="move-trigger">ネオンきらめくストリートを復讐の炎で切り裂いて進む際、達成すべき目的を思い描き、主に取る行動に応じた能力値でロールする：</div>
+    <ul class="move-options">
+      <li><strong>答えを求めて頭を叩き割り、骨を砕く</strong>: <strong>+POWER</strong> でロール</li>
+      <li><strong>アジトまで敵を追跡・尾行・潜入する</strong>: <strong>+TECHNIQUE</strong> でロール</li>
+      <li><strong>大切な物や人を守るため一刻を争う</strong>: <strong>+SPEED</strong> でロール</li>
+      <li><strong>街が浴びせかける試練を受け止め、敵を消耗させ最後まで立ち続ける</strong>: <strong>+STAMINA</strong> でロール</li>
+      <li><strong>街に信を置き、最も必要とされる場所へと導かれる</strong>: <strong>+BLAZE</strong> でロール</li>
+    </ul>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">何の代償もなく目的を完遂する。己の名は恐れられ、その正義は街に轟く。<strong>メーター+2</strong> を得る。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">道中で何かを失う。《一撃を受ける》(Take a Hit) を行う。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">圧倒され包囲される。《一撃を受ける》(Take a Hit) を行う。</span></div>
+    </div>
+  </div>
+
+  <h3 id="act3-advance">進行ムーブ (Advance Moves)</h3>
+
+  <div class="move-entry">
+    <div class="move-name">《ゲームスタート》(Press Start)</div>
+    <div class="move-trigger">復讐の旅路を開始する際、最低3つのロケーションを書き出し、それぞれに難易度ランク（Easy, Medium, Hard）を割り当てる。各ランクの隣にそのエリアのボス名を記入する。次にキャラクターを作成し（名前を決め、能力値に +3, +2, +1, +1, 0 を割り振る）、<strong>+BLAZE</strong> でロールする。</div>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">戦う準備は万全であり、誰を叩きのめすべきかも見えている。以下から1つ選択する：<br>・<strong>武装完了</strong>: 次の攻撃のダメージに +1負傷<br>・<strong>闘志充填</strong>: メーター+2</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">行き先は掴んでいるが、先手を取られて痛手を負っている。以下から1つ選択する：<br>・<strong>満身創痍</strong>: 体力-1<br>・<strong>奪われた宝</strong>: 大切なものを奪われる<br>・<strong>心への傷</strong>: メーター-1</span></div>
+    </div>
+    <p style="margin-top: 12px; font-size: 14px; color: #cccccc;">その後、最初のロケーションを選択し、正義を執行するための戦いを開始する。</p>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《前進！》(Go!)</div>
+    <div class="move-trigger">激戦を制する、物語の真相を暴く、強敵を倒す、市民を救う、確実な死から誰かを救い出す、市民の支持を集める、極秘情報を掴むなどしてエリアを大きく前進させた際、進行トラックを進める：</div>
+    <ul class="move-options">
+      <li><strong>Easy ステージ</strong>: 進行度 3点 を記録</li>
+      <li><strong>Medium ステージ</strong>: 進行度 2点 を記録</li>
+      <li><strong>Hard ステージ</strong>: 進行度 1点 を記録</li>
+    </ul>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《ステージクリア》(End Of Stage)</div>
+    <div class="move-trigger">そのステージのボスを打倒した際、チャレンジダイス（2d10）を振り、ステージ進行トラックの蓄積値と比較する進行度ムーブを行う。</div>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">ステージ完全制覇。<strong>《レベルアップ》(Level Up)</strong> を行う。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">真の黒幕が姿を現すか、倒したはずのボスが最後の足掻きで進路を阻む。その事態を解決してから（迷った場合は《右へ進む》を行う）、<strong>《レベルアップ》(Level Up)</strong> を行う。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">奴が息を吹き返して立ち上がる。以下から1つを選択する：<br>・<strong>退かず、さらに踏み込む (Double Down)</strong>: ボスの体力を全回復させ、追加のボスムーブを1つ与えた上で再び叩きのめす。<br>・<strong>一時撤退</strong>: この場を闇に残して退却する。次のステージへ。</span></div>
+    </div>
+    <p style="margin-top: 12px; font-size: 14px; color: #cccccc;">いずれの結果であれ、最終的に《次のステージへ》(Next Stage) へ進む。</p>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《次のステージへ》(Next Stage)</div>
+    <div class="move-trigger">新たなステージへ進む際、直前のステージの結末を振り返り、状況に応じたリストから1つを選択する：</div>
+
+    <p style="margin-top: 14px; margin-bottom: 6px;"><strong>見事に前ステージをクリアし、ボスを倒し、街の治安を確保してギャングを追い払った場合：</strong></p>
+    <ul class="move-options">
+      <li>ギャングどもは恐れをなし散り散りになっている。次のステージの難易度は <strong>Easy</strong> になる。</li>
+      <li>気力充実、<strong>メーター+3</strong> を得る。</li>
+      <li>一時的な協力を得る。このステージ中のみ有効な <strong>味方 (Ally)</strong> を1人獲得する。</li>
+      <li>前ステージのボスから想定以上の収穫を得た。開始前に <strong>進行度2点</strong> を記録する。</li>
+    </ul>
+
+    <p style="margin-top: 14px; margin-bottom: 6px;"><strong>撤退した、ギャング組織を壊滅できず放置した、大事なものを失った、あるいはボスが権力を維持した場合：</strong></p>
+    <ul class="move-options">
+      <li>世界はさらに暗黒へと沈む。次のステージの難易度は <strong>Hard</strong> になる。</li>
+      <li>気落ちしている。<strong>メーター0</strong> から開始する。</li>
+      <li>追跡されている。ボストの決戦時、前ステージのボスのボスムーブが今回のボスに追加される。</li>
+      <li>特に深刻な影響はない。通常通り次のステージを開始する（疲れていて余計なストレスなく悪党を殴り倒したい場合に選ぶ）。</li>
+    </ul>
+
+    <p style="margin-top: 14px; margin-bottom: 6px;"><strong>妥協点を見出した、ギャングを更生させた、正義のために戦う市民たちを団結させた、あるいはボスから人々を傷つける力を剥奪した場合：</strong></p>
+    <ul class="move-options">
+      <li>力を得た地区から支援が届く。このステージ中のみ有効な <strong>任意のアップグレード</strong> を1つ得る。</li>
+      <li>改心したボスが復讐の旅に加わる。専用のアップグレードを自作するか既存の近いものを選び、味方とする。</li>
+      <li>気力も体力も充実した。<strong>体力を全回復</strong>し、<strong>メーター+3</strong> で開始する。</li>
+      <li>正義への別ルートを発見する。予定していたステージに向かう代わりに、新たなロケーションと新たなボスを創出してそこへ向かう。</li>
+    </ul>
+
+    <p style="margin-top: 12px; font-size: 14px; color: #cccccc;">選択後、どのように次のステージへ到着したか、そしてそこで誰が待ち受けているかを描写する。</p>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《レベルアップ》(Level Up)</div>
+    <div class="move-trigger">新たな力、味方、技を獲得した際、アップグレードリストから新たなアップグレードを1つ選んで習得する。</div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《右へ進む》(Move Right)</div>
+    <div class="move-trigger">次に何が起こるか分からない時、疑問への答えを求める時、あるいは世界が己のコントロールを離れて動いた時、以下のアプローチを取ることができる：</div>
+    <ul class="move-options">
+      <li><strong>最も明白な事象を行う</strong>: 最も起こりそうな展開をそのまま描写し、進行させる。</li>
+      <li><strong>起こりうる2つの候補を考え、コイントスで決める</strong>。</li>
+      <li><strong>d100（2個の10面ダイス）を振り、以下のオラクル表を参照する</strong>：</li>
+    </ul>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>出目 (d100)</th>
+          <th>ストリートの託宣</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>01 - 10</td><td>恐るべき真実が裏付けられる。</td></tr>
+        <tr><td>11 - 15</td><td>新たなギャングが待ち受けている。彼らは目的達成に不可欠な何かを持っている。</td></tr>
+        <tr><td>16 - 19</td><td>施錠された扉。そして鍵を握るのは自分より遥かに大柄な巨漢だ。</td></tr>
+        <tr><td>20 - 25</td><td>腐敗した公的機関が進路を阻む。粉砕せよ。</td></tr>
+        <tr><td>26 - 28</td><td>新たな味方、貴重な道具、あるいは束の間の休息がすぐ目の前に見えている。</td></tr>
+        <tr><td>29 - 34</td><td>罠が発動する。己はどちらの側に立っているのか？</td></tr>
+        <tr><td>35 - 49</td><td>予期せぬ裏切り。</td></tr>
+        <tr><td>50</td><td>何かが爆発する。</td></tr>
+        <tr><td>51 - 57</td><td>無数のものが爆発する。</td></tr>
+        <tr><td>58 - 64</td><td>行きたくもなかった場所へと足を踏み入れることになる。</td></tr>
+        <tr><td>65 - 69</td><td>優しい夜風が、ほんの一瞬だけ温もりと平穏を運んでくる。</td></tr>
+        <tr><td>70 - 74</td><td>手遅れだった。</td></tr>
+        <tr><td>75 - 78</td><td>間一髪で間に合う。</td></tr>
+        <tr><td>79 - 84</td><td>思いがけない武器が見つかる。</td></tr>
+        <tr><td>85 - 88</td><td>真実がより不透明になる。予期せぬ敵が正体を現し、味方が敵へと寝返る。</td></tr>
+        <tr><td>89 - 95</td><td>己の武勇伝が、思いがけない形で先に知れ渡っている。</td></tr>
+        <tr><td>96 - 99</td><td>無関係だったはずの2つの事件、ギャング、あるいは敵同士が結託する。</td></tr>
+        <tr><td>100</td><td>この表で2回ダイスを振る。その両方の事象が同時に発生する。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="act3-meter">メータームーブ (Meter Moves)</h3>
+  <p>蓄積したメーターを消費（バーン）して発動する強力な必殺アクション。</p>
+
+  <div class="move-entry">
+    <div class="move-name">《正義の烈火魂》(Flaming Justice Soul)</div>
+    <div class="move-trigger">コンボ以外の通常攻撃を成功させた直後、<strong>メーターを2消費</strong> して以下から1つを選択する：</div>
+    <ul class="move-options">
+      <li><strong>+1 負傷</strong></li>
+      <li><strong>主導権（コントロール）を獲得する</strong></li>
+      <li><strong>体力を1回復する</strong></li>
+      <li><strong>判定結果を弱ヒットから強ヒットへ変更する</strong></li>
+    </ul>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《ブレイジング・ファイア》(Blazing Fire)</div>
+    <div class="move-trigger">1回の戦闘につき1回まで、<strong>メーターを2消費</strong> することで即座に主導権を掌握する。</div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《カウンター》(Counter)</div>
+    <div class="move-trigger">敵から負傷を与えられた際、<strong>メーターを3消費</strong> して敵の攻勢を力づくで中断させ、即座に《コンボ》(Combo) を発動する。</div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《天崩地裂メテオストライク》(Earth Shattering Meteor Strike)</div>
+    <div class="move-trigger">自身の体力が最大値の半分未満になった際、<strong>メーターを4消費</strong> して《コンボ》(Combo) を開始する。この攻撃で対象に与えた負傷値と同じ点数だけ自身の体力を回復する。</div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《エンジェルバースト・スープレックス・フィニッシャー》(Angel Bursting Suplex Finisher)</div>
+    <div class="move-trigger"><strong>メーターを5消費</strong> して発動する。ボス以外の敵1体を即座に戦闘不能にする。自身の体力を1失う。</div>
+  </div>
+
+  <h3 id="act3-harm">被害ムーブ (Harm Moves)</h3>
+
+  <div class="move-entry">
+    <div class="move-name">《一撃を受ける》(Take a Hit)</div>
+    <div class="move-trigger">負傷を受けた際、敵のランクに応じた値（Easy: 1、Medium: 2、Hard: 3）、または状況にふさわしい点数分だけ体力を減少させる（迷ったら《右へ進む》を行う）。体力が0になった場合はノックアウトとなり、《コンティニュー？》(Continue?) へ進む。<br>体力が残っている場合、<strong>+BLAZE</strong> でロールする。</div>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">以下から1つを選択する：<br>・<strong>痛みを力に変える</strong>: 受けた負傷1点につきメーターを1消費し、判定+1 のボーナスを得て即座に《コンボ》(Combo) へ突入する。<br>・<strong>闘火への薪</strong>: メーター+1 を得る。<br>・<strong>効いてないな</strong>: メーターを1消費し、体力を1回復する。</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">歯を食いしばって立ち上がる。</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">体力の減少に加え、<strong>メーター-1</strong> の被害を受ける。</span></div>
+    </div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《コンティニュー？》(Continue?)</div>
+    <div class="move-trigger">体力が0になりノックアウトされた際、<strong>+STAMINA</strong> でロールする。</div>
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">強ヒット</span><span class="result-desc">体力を1回復し、さらに以下から1つを選択する：<br>・<strong>体力をさらに+1</strong> して立ち上がる（合計体力2）<br>・<strong>即座に《コンボ》(Combo) を繰り出しながら</strong> 立ち上がる<br>・<strong>メーター+1 を得て</strong> 立ち上がる</span></div>
+      <div class="result-row"><span class="result-label">弱ヒット</span><span class="result-desc">以下から1つを選択して目を覚ます：<br>・見知らぬ、危険に満ちた恐ろしい場所で血まみれになって目覚める<br>・粉々になった夢の残骸と燃え盛る炎に囲まれて目覚める<br>・己の最も恐れる悪夢の音が全方位から響く中で目覚める</span></div>
+      <div class="result-row"><span class="result-label">ミス</span><span class="result-desc">ゲームオーバー寸前。そのステージの最初からやり直し、体力を全快し、メーターを初期リセット値（+2）に戻す。</span></div>
+    </div>
+  </div>
+
+  <div class="move-entry">
+    <div class="move-name">《コイン投入》(Insert Coin)</div>
+    <div class="move-trigger">メーターが <strong>-5</strong> に達している状態でさらにメーター減少ペナルティを受けた際、以下から1つを選択する：</div>
+    <ul class="move-options">
+      <li><strong>破滅的事態</strong>: 状況が最悪を通り越し、終末的な規模で悪化する。それが何を意味するかを描写し（必要なら《右へ進む》を行う）、現在の戦闘またはステージから <strong>進行度1ランク分（進行度トラックのボックス1つ分）を消去する</strong>。拳を握り直し、新たに生じたこの破局の解決に挑め。</li>
+      <li><strong>底力を絞り出す (Dig Deeper)</strong>: 体力1点と引き換えに、<strong>メーター+1</strong> を得る。</li>
+    </ul>
+  </div>
+
+  <h3 id="act3-boss">ボスムーブ (Boss Moves)</h3>
+  <p>各ステージの最後に待ち受けるボス、および全3ステージをクリアした後の最終ボス（Final Boss）が所持する特殊な脅威。ボスに遭遇した際、以下のリストから1つを選択するか、専用のムーブを自作して割り当てる。<strong>最終ボスはボスムーブを2つ所持する。</strong></p>
+
+  <div class="card">
+    <div class="card-title">《取り巻き従え》(Mobbed Up) <span class="category">Boss Move</span></div>
+    <p>このボスは最低でも2人、あるいはそれ以上の手下の味方を従えて戦闘に参加する。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《気力吸収》(Sapper) <span class="category">Boss Move</span></div>
+    <p>このボスがプレイヤーに攻撃を命中させるたび、プレイヤーの <strong>メーターを1点吸収（減少）</strong> させる。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《道連れの爆炎》(Going Out With A Bang) <span class="category">Boss Move</span></div>
+    <p>このボスが倒された際、以下のd100チャートを振って最後の悪あがきを解決する：</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>出目 (d100)</th>
+          <th>ボスの最期</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>01 - 20</td><td>手榴弾、時限爆弾、またはデッドマンズ・スイッチを起動する。</td></tr>
+        <tr><td>21 - 40</td><td>ボスの副官が自らこそが真の黒幕であったと正体を現す。</td></tr>
+        <tr><td>41 - 60</td><td>ボスがこちらを掴み、道連れにしようとほぼ確実な死の奈落へと引きずり込む。</td></tr>
+        <tr><td>61 - 80</td><td>復讐のため、ボスのヘリ、装甲車、戦車、その他の武装車両が急襲してくる。</td></tr>
+        <tr><td>81 - 100</td><td>ボスが真の姿を現す。ボスの進行トラックから進行度を半分消去し、プレイヤーの次のロールに -1。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《重武装》(Armed And Deadly) <span class="category">Boss Move</span></div>
+    <p>ボスは銃火器で武装している。近接戦を挑むあらゆる試みは極めて危険を伴い、ボスからダメージを受ける際、<strong>追加で1点の負傷</strong> を受ける。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《必殺奥義》(Special Moves) <span class="category">Boss Move</span></div>
+    <p>このボスとの戦闘中、プレイヤーがミスを出すたびにシートのどこかにチェックを入れる。<strong>チェックが5個溜まった瞬間、ボスは凶悪な暴力の嵐を解き放つ。</strong>プレイヤーは以下から1つを選んで被害を受ける：</p>
+    <ul class="move-options">
+      <li>現在残っている体力の半分（端数切り上げ）に相当する負傷を受ける</li>
+      <li>この戦闘が終了するまで、所持しているアップグレードを1つ封じられる</li>
+      <li>この戦いに敗北する。撤退して体勢を立て直すか、《右へ進む》(Move Right) を行う</li>
+      <li>メーターをリセット値（+2）に戻し、2点の負傷を受ける</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">《重装機甲》(Mechanized) <span class="category">Boss Move</span></div>
+    <p>ボスは装甲車両に搭乗しているか、パワードスーツのような強化アーマーを装着している。プレイヤーが指定した「唯一の明確な弱点部位」を除き、ほぼあらゆる角度からの攻撃を受け付けない無敵状態を誇る。</p>
+  </div>
+</section>
+
+<footer>
+  JUSTICE SWORN 日本語リファレンス | ACT 1 - ACT 3
+</footer>
+
+</div>
+</body>
+</html>
