@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FITR Academy キャラクターシート作成ツール</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --crimson: #a1162c;
+    --crimson-dark: #7d1021;
+    --gold: #f9c93d;
+    --bg: #f3f2ef;
+    --card: #ffffff;
+    --border: #ddd8d0;
+    --text: #222222;
+    --muted: #666666;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: var(--crimson);
+    color: #fff;
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.1rem;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  header h1 span.badge {
+    background: var(--gold);
+    color: var(--crimson-dark);
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: inherit;
+    transition: opacity 0.15s, transform 0.05s;
+  }
+  button:active { transform: translateY(1px); }
+  .btn-gold { background: var(--gold); color: var(--crimson-dark); }
+  .btn-white { background: #fff; color: var(--crimson); }
+  .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.6); }
+  .btn-sm { padding: 4px 8px; font-size: 0.78rem; }
+  .btn-danger { background: #444; color: #fff; }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: minmax(380px, 540px) 1fr;
+    gap: 16px;
+    padding: 16px;
+    max-width: 1700px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  @media (max-width: 1050px) {
+    .main-grid { grid-template-columns: 1fr; }
+  }
+
+  .editor-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .warnings-bar {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+  .warn-pill {
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.76rem;
+  }
+  .warn-ok { background: #e6f4ea; color: #137333; }
+  .warn-alert { background: #fef7e0; color: #b06000; border: 1px solid #f5c242; }
+
+  details.section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  details.section-card summary {
+    padding: 10px 14px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    background: #faf9f7;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    color: var(--crimson);
+    user-select: none;
+  }
+  .section-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  label.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+  }
+  textarea { resize: vertical; min-height: 56px; }
+  .hint { font-size: 0.75rem; color: var(--muted); line-height: 1.35; }
+
+  .attr-box {
+    border: 1px solid #e5e0d8;
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: #fcfbfa;
+  }
+  .attr-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-weight: 700;
+    color: var(--crimson);
+  }
+  .enh-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+  }
+  .enh-row label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+  }
+  .skill-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    padding: 3px 0;
+    border-bottom: 1px dashed #eee;
+  }
+  .skill-boxes {
+    display: flex;
+    gap: 4px;
+  }
+  .skill-sq {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--crimson);
+    border-radius: 3px;
+    background: #d8d8d8;
+    cursor: pointer;
+  }
+  .skill-sq.filled { background: var(--crimson); }
+
+  .pb-block {
+    border: 1px solid #e0c8cc;
+    border-radius: 6px;
+    padding: 10px;
+    background: #fffafb;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mod-slot {
+    border-top: 1px dashed #e2d8d8;
+    padding-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .preview-panel {
+    position: sticky;
+    top: 64px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-height: calc(100vh - 80px);
+  }
+  .preview-topbar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .preview-note {
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+  canvas#sheetCanvas {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100vh - 148px);
+    aspect-ratio: 1 / 1;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    background: #efefef;
+  }
+
+  /* Zoom Modal */
+  #zoomModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 18, 0.86);
+    display: none;
+    flex-direction: column;
+    z-index: 3000;
+  }
+  #zoomModal.open { display: flex; }
+  .zoom-toolbar {
+    background: #1f1f24;
+    color: #fff;
+    padding: 10px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px solid #383842;
+  }
+  .zoom-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .zoom-pct {
+    min-width: 56px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--gold);
+  }
+  .zoom-viewport {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+  }
+  .zoom-viewport.dragging { cursor: grabbing; }
+  canvas#modalCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+    box-shadow: 0 8px 36px rgba(0,0,0,0.55);
+    background: #efefef;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #222;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; }
+  #fontLoader {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    z-index: 2000;
+    color: var(--crimson);
+    font-weight: 700;
+  }
+  #fontLoader .spinner {
+    width: 36px;
+    height: 36px;
+    border: 4px solid #e0d6d6;
+    border-top-color: var(--crimson);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="fontLoader">
+  <div class="spinner"></div>
+  <div>フォントを読み込み中... (Zen Kaku Gothic Antique)</div>
+</div>
+<div id="appRoot" style="visibility:hidden;">
+
+<header>
+  <h1>FITR Academy キャラクターシート作成ツール <span class="badge">v0.6対応</span></h1>
+  <div class="toolbar">
+    <button class="btn-gold" onclick="exportPNG()">PNG画像ダウンロード</button>
+    <button class="btn-white" onclick="copyCcfolia()">ココフォリア駒コピー</button>
+    <button class="btn-outline" onclick="exportJSON()">JSON保存</button>
+    <button class="btn-outline" onclick="document.getElementById('jsonFile').click()">JSON読込</button>
+    <input type="file" id="jsonFile" accept=".json" style="display:none" onchange="importJSON(event)" />
+    <button class="btn-outline" onclick="document.getElementById('modsCsvFile').click()">MOD CSV読込</button>
+    <input type="file" id="modsCsvFile" accept=".csv" style="display:none" onchange="importModsCSV(event)" />
+    <button class="btn-danger btn-sm" onclick="resetAll()">初期化</button>
+  </div>
+</header>
+
+<div class="main-grid">
+  <!-- LEFT: EDITOR -->
+  <div class="editor-panel">
+    <div id="warningsBar" class="warnings-bar"></div>
+
+    <details class="section-card" open>
+      <summary>1. 基本情報・立ち絵</summary>
+      <div class="section-body">
+        <div class="row-2">
+          <label class="field">名前<input type="text" id="name" oninput="syncFromForm()" placeholder="キャラクター名" /></label>
+          <label class="field">性別<input type="text" id="gender" oninput="syncFromForm()" placeholder="任意" /></label>
+        </div>
+        <div class="row-2" style="align-items:end;">
+          <label class="field">立ち絵画像（上辺中央合わせ正方形トリミング）
+            <input type="file" id="portraitFile" accept="image/*" onchange="handlePortrait(event)" />
+          </label>
+          <button class="btn-danger btn-sm" onclick="clearPortrait()" style="height:32px;">画像をクリア</button>
+        </div>
+        <label class="field">ヒストリー<input type="text" id="history" oninput="syncFromForm()" placeholder="出身や過去の経歴" /></label>
+        <label class="field">ドライブ<input type="text" id="drive" oninput="syncFromForm()" placeholder="戦う理由・動機" /></label>
+        <label class="field">備考<textarea id="bioNotes" oninput="syncFromForm()" placeholder="メモ・設定など"></textarea></label>
+      </div>
+    </details>
+
+    <details class="section-card" open>
+      <summary>2. 能力値 &amp; スキル（右のシート上で直接クリックも可）</summary>
+      <div class="section-body">
+        <div class="attr-box">
+          <div class="attr-header">
+            <span>肉体 (Body)</span>
+            <input type="number" id="attrBody" min="0" max="5" style="width:64px" oninput="syncFromForm()" />
+          </div>
+          <div class="enh-row">
+            <label><input type="checkbox" id="enhAgility" onchange="syncFromForm()" /> 強化:敏捷</label>
+            <label><input type="checkbox" id="enhEndurance" onchange="syncFromForm()" /> 強化:耐久</label>
+            <label><input type="checkbox" id="enhStrength" onchange="syncFromForm()" /> 強化:筋力</label>
+          </div>
+        </div>
+        <div class="attr-box">
+          <div class="attr-header">
+            <span>精神 (Mind)</span>
+            <input type="number" id="attrMind" min="0" max="5" style="width:64px" oninput="syncFromForm()" />
+          </div>
+          <div class="enh-row">
+            <label><input type="checkbox" id="enhAcuity" onchange="syncFromForm()" /> 強化:知覚</label>
+            <label><input type="checkbox" id="enhIntuition" onchange="syncFromForm()" /> 強化:直感</label>
+            <label><input type="checkbox" id="enhResolve" onchange="syncFromForm()" /> 強化:意志</label>
+          </div>
+        </div>
+        <div class="attr-box">
+          <div class="attr-header">
+            <span>心情 (Heart)</span>
+            <input type="number" id="attrHeart" min="0" max="5" style="width:64px" oninput="syncFromForm()" />
+          </div>
+          <div class="enh-row">
+            <label><input type="checkbox" id="enhCourage" onchange="syncFromForm()" /> 強化:勇気</label>
+            <label><input type="checkbox" id="enhIntegrity" onchange="syncFromForm()" /> 強化:高潔</label>
+            <label><input type="checkbox" id="enhMoxie" onchange="syncFromForm()" /> 強化:度胸</label>
+          </div>
+        </div>
+
+        <div style="font-size:0.8rem;font-weight:700;color:var(--muted);margin-top:4px;">スキル (0〜3)</div>
+        <div id="skillsEditor" class="skills-grid"></div>
+      </div>
+    </details>
+
+    <details class="section-card" open>
+      <summary>3. 兵装 (Weapon Playbooks)</summary>
+      <div class="section-body">
+        <div class="row-2">
+          <label class="field">兵装名<input type="text" id="weaponName" oninput="syncFromForm()" placeholder="武器の固有名称" /></label>
+          <label class="field">熟練 (Mastery)<input type="number" id="mastery" min="0" max="6" oninput="syncFromForm()" /></label>
+        </div>
+        <div class="row-3">
+          <label class="field">出自 (Make)<input type="text" id="weaponMake" oninput="syncFromForm()" placeholder="例: 特注品" /></label>
+          <label class="field">外見 (Look)<input type="text" id="weaponLook" oninput="syncFromForm()" placeholder="例: 結晶・金属" /></label>
+          <label class="field">特徴 (Quirks)<input type="text" id="weaponQuirks" oninput="syncFromForm()" placeholder="例: 変形・高音" /></label>
+        </div>
+
+        <!-- PB1 -->
+        <div id="pb1Editor" class="pb-block"></div>
+        <!-- PB2 -->
+        <div id="pb2Editor" class="pb-block"></div>
+      </div>
+    </details>
+
+    <details class="section-card" open>
+      <summary>4. エーテルクラス &amp; スパーク</summary>
+      <div class="section-body">
+        <div class="row-2">
+          <label class="field">エーテルクラス
+            <select id="aetherClass" onchange="onAetherClassChange()">
+              <option value="">-- 選択 --</option>
+              <option value="アデプト (Adept)">アデプト (Adept)</option>
+              <option value="イヴォーカー (Evoker)">イヴォーカー (Evoker)</option>
+              <option value="エンチャンター (Enchanter)">エンチャンター (Enchanter)</option>
+            </select>
+          </label>
+          <label class="field">スパーク プリセット（任意）
+            <select id="sparkPreset" onchange="onSparkPresetChange()">
+              <option value="">-- プリセットから選択 / 自由入力 --</option>
+            </select>
+          </label>
+        </div>
+        <div class="row-2">
+          <label class="field">スパーク名（自由入力）<input type="text" id="sparkName" oninput="syncFromForm()" placeholder="スパーク名" /></label>
+          <label class="field">最大エーテル<input type="number" id="maxAether" min="0" max="99" oninput="syncFromForm()" placeholder="10" /></label>
+        </div>
+        <label class="field">スパーク効果・説明<textarea id="sparkDesc" oninput="syncFromForm()" placeholder="スパークの内容"></textarea></label>
+      </div>
+    </details>
+
+    <details class="section-card">
+      <summary>5. 履修計画 (Course Schedule)</summary>
+      <div class="section-body">
+        <div class="hint">ココフォリア上でコマを置くため、科目名の横にコース名のみ記入します（例: 芸術）。</div>
+        <div class="row-2">
+          <label class="field">人文学:<input type="text" id="courseHumanities" oninput="syncFromForm()" placeholder="例: 芸術" /></label>
+          <label class="field">実験・開発:<input type="text" id="courseLab" oninput="syncFromForm()" /></label>
+          <label class="field">科学:<input type="text" id="courseScience" oninput="syncFromForm()" /></label>
+          <label class="field">体技:<input type="text" id="courseSports" oninput="syncFromForm()" /></label>
+          <label class="field">サバイバル:<input type="text" id="courseSurvival" oninput="syncFromForm()" /></label>
+          <label class="field">RING:<input type="text" id="courseRing" oninput="syncFromForm()" /></label>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- RIGHT: LIVE CANVAS PREVIEW -->
+  <div class="preview-panel">
+    <div class="preview-topbar">
+      <div class="preview-note">シート上の「◆強化」や「スキル□」は直接クリックして切替可</div>
+      <button class="btn-gold btn-sm" onclick="openZoomModal()">🔍 拡大プレビュー（原寸）</button>
+    </div>
+    <canvas id="sheetCanvas" width="2000" height="2000"></canvas>
+  </div>
+</div>
+
+<!-- ZOOM MODAL -->
+<div id="zoomModal">
+  <div class="zoom-toolbar">
+    <div style="font-weight:700;font-size:0.9rem;">原寸プレビュー（ドラッグで移動・ホイールで拡大縮小）</div>
+    <div class="zoom-controls">
+      <button class="btn-outline btn-sm" onclick="zoomBy(1 / 1.25)">－</button>
+      <span id="zoomPct" class="zoom-pct">100%</span>
+      <button class="btn-outline btn-sm" onclick="zoomBy(1.25)">＋</button>
+      <button class="btn-gold btn-sm" onclick="setZoomCentered(1)">原寸 (100%)</button>
+      <button class="btn-white btn-sm" onclick="fitZoom()">画面に収める</button>
+      <button class="btn-danger btn-sm" onclick="closeZoomModal()">閉じる (ESC)</button>
+    </div>
+  </div>
+  <div id="zoomViewport" class="zoom-viewport">
+    <canvas id="modalCanvas" width="2000" height="2000"></canvas>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+</div><!-- #appRoot -->
+
+<script>
+const GAME_DATA = {"playbooks": [{"id": "automatic", "name_ja": "オートマチック（自動火器）", "name_en": "THE AUTOMATIC", "weight_ja": "軽 / 中 / 重（選択）", "weight_en": "light/medium/heavy", "range_ja": "中距離・射撃", "tags_ja": "乱雑 (messy)", "res_type_en": "Ammo", "res_type_ja": "弾薬", "res_max": "5", "skills_count": 2, "skills_ja": "〈威圧〉|〈エンジニア〉|〈探索〉|〈破壊〉", "trait": {"name_ja": "フルオート (Full Auto)", "desc_ja": "武器で行動する際、「フルオート」を発動すると宣言できる。フルオート中はあらゆる対象に対して優位（Potency）を得るが、ロールで1、2、または3の出目が出るたびに弾薬を1消費する。"}, "talents": [{"id": "automatic_talent_covering_fire", "name_ja": "援護射撃 (Covering Fire)", "desc_ja": "不測の事態にいつでも飛び出せる準備ができている。あなたは「オーバーウォッチ（Overwatch）」を宣言して待機状態に入り、チームを再編成させたり突破口を開かせたりすることができる。味方を逃がすために殿として残った場合、1 XPをマークする。"}, {"id": "automatic_talent_cry_some_more", "name_ja": "もっと泣き喚け！ (Cry Some More!)", "desc_ja": "最後のストレスを受けたとき、または最後のダメージを受けたとき、闘争への渇望に身を委ねてすべてを賭けることができる。ストレスアウト（Stress Out）や死亡する代わりに、そのシーンに留まり、アクション・ロールで6以上を出し続ける限り行動を継続できる。クリティカル（CRIT!）が出た場合、ストレス1またはダメージ1（該当する方）を回復して通常通り続行する。6未満が出た場合は通常通りストレスアウトまたは死亡する。"}, {"id": "automatic_talent_friendlies_fire", "name_ja": "味方の援護射撃 (Friendlies’ Fire)", "desc_ja": "銃弾が飛び交う中、あなたの熱狂は周囲に伝染する。〈魅了〉のスキルレーティングを+1する（最大3）。チームワークに参加するたび、仲間はそれぞれ進捗（Progress）を+1得る。（グループ・スキルチェックでは全体の進捗が+1されるだけだが、コンボ・アタックでは参加者ごとに追加ダメージを与える。）"}, {"id": "automatic_talent_run_gun", "name_ja": "ラン＆ガン (Run & Gun)", "desc_ja": "あなたは極めて足止めされにくい。〈アクロバット〉のスキルレーティングを+1する（最大3）。〈アクロバット〉または〈探索〉で奮起（Push yourself）する際、A地点からB地点へ無傷で辿り着くための仕掛け、罠、あるいは軌道（ルート）を常に見つけることができる。"}, {"id": "automatic_talent_spray_pray", "name_ja": "乱射と祈り (Spray & Pray)", "desc_ja": "「ピュロスの勝利（辛勝）」に「勝利」をもたらすのはあなただ。アクション・ロールを行う前、立ち位置（Position）を「有利（Controlled）」から「危険（Risky）」へ、および／または「危険（Risky）」から「絶望的（Desperate）」へ変更することで、変更1段階につき進捗（Progress）を+1得ることができる。"}], "mods": [{"id": "automatic_mod_range_enhancer_kit", "name_ja": "射程拡張キット", "name_en": "Range Enhancer Kit", "tech_cost": 1, "desc_ja": "二脚と曳光弾で遠距離（far）戦が可能に。設置と撤収に時間を要する。", "desc_full_ja": "二脚（バイポッド）アタッチメントと曳光弾のセットにより、遠距離（far range）での戦闘が可能になる。このキットの設置と撤収には時間がかかる。", "scope": "playbook"}, {"id": "automatic_mod_say_hello_my_little_friend", "name_ja": "俺の小さな友達に挨拶しな", "name_en": "Say Hello, My Little Friend", "tech_cost": 1, "desc_ja": "小型のトラ・イヌ・ニワトリと使い魔契約。いつでも召喚し感覚共有・会話可。", "desc_full_ja": "あなたのオートマチックには「ドグロス（Dogross）」の欠片が宿っており、あなたと小型のトラ、イヌ、またはニワトリを使い魔として結びつける。使い魔はいつでも召喚・解除でき、その感覚を通して知覚し、使い魔を通して話すことができる。", "scope": "playbook"}, {"id": "automatic_mod_token_of_uo_huot", "name_ja": "ウオ・フオトの護符", "name_en": "Token of Uo’Huot", "tech_cost": 2, "desc_ja": "ミッション1回、自分と近くの味方の立ち位置を一時的に「有利」にリセット。", "desc_full_ja": "土壇場で現実を書き換えるウオ・フオトの印章が刻まれた小型の運命爆弾を手に入れる。訓練ミッションにつき1回、この爆弾を使用して、あなたと近くのチームメイトの立ち位置（Position）を一時的に「有利（Controlled）」にリセットできる。", "scope": "playbook"}, {"id": "automatic_mod_welded_magazine", "name_ja": "連結マガジン", "name_en": "Welded Magazine", "tech_cost": 2, "desc_ja": "ミッション1回、連結マガジンを交換してオートマチックの弾薬を全補充。", "desc_full_ja": "オートマチックの弾倉2本が溶接されており、戦場での継戦能力を高める。訓練ミッションにつき1回、マガジンを交換してオートマチックの弾薬を完全に補充できる。", "scope": "playbook"}]}, {"id": "bow", "name_ja": "ボウ（弓）", "name_en": "THE BOW", "weight_ja": "中", "weight_en": "medium", "range_ja": "遠距離・射撃", "tags_ja": "精密 (precise)", "res_type_en": "Ammo", "res_type_ja": "弾薬", "res_max": "5", "skills_count": 2, "skills_ja": "〈アクロバット〉|〈エイム〉|〈共感〉|〈探索〉", "trait": null, "talents": [{"id": "bow_talent_doubleshot", "name_ja": "ダブルショット (Doubleshot)", "desc_ja": "弓を使って進捗（Progress）を得たとき、弾薬を1消費することで、即座にその半分の進捗（切り上げ）を追加で得る。周囲の者はあなたの腕前に感嘆する。（渋々かもしれないが。）"}, {"id": "bow_talent_hunter_s_empathy", "name_ja": "狩人の共感 (Hunter's Empathy)", "desc_ja": "人間、動物、ケイオス・ビーストの感情状態について情報収集（Gather Information）を行う際、+1dを得る。誰かと一緒に「気晴らし（Cut Loose）」を行う際、相手は追加で最大2ストレスまで回復できる。"}, {"id": "bow_talent_hunter_s_resolve", "name_ja": "狩人の決意 (Hunter's Resolve)", "desc_ja": "【精神】を強化し、【知覚】【直感】【意志】のいずれか1つを得る。強大な脅威や障害に対峙している間、あなたは恐怖の効果を受けない。また、ペナルティなしで至近距離（close quarters）でも射撃武器を使用できる。"}, {"id": "bow_talent_survivalist", "name_ja": "サバイバリスト (Survivalist)", "desc_ja": "安全な食べ物や飲み物を常に見分けることができ、危険な環境下での情報収集において効果（Effect）が1段階上昇する。弾薬を1消費することで、あなたと仲間が1日の苦難を生き延びるのに十分な物資を調達できる。"}, {"id": "bow_talent_vantage_point", "name_ja": "高所の利 (Vantage Point)", "desc_ja": "〈隠蔽/欺瞞〉のスキルレーティングを+1する（最大3）。時間に追われていない限り、アクション・ロールなしでほぼあらゆる壁面や障害物を登ることができる。"}], "mods": [{"id": "bow_mod_active_camouflage", "name_ja": "光学迷彩", "name_en": "Active Camouflage", "tech_cost": 1, "desc_ja": "あなたの弓はチャージ（Charge）を2得る。チャージを1消費することで周囲の光を屈折させ、短時間ほぼ透明になる。", "desc_full_ja": "あなたの弓はチャージ（Charge）を2得る。チャージを1消費することで周囲の光を屈折させ、短時間ほぼ透明になる。", "scope": "playbook"}, {"id": "bow_mod_elemental_converter", "name_ja": "属性変換器", "name_en": "Elemental Converter", "tech_cost": 1, "desc_ja": "チャージ1獲得。1消費で矢に火・冷気・風などの属性エネルギーを纏わせる。", "desc_full_ja": "あなたの弓はチャージ（Charge）を1得る。チャージを1消費することで、矢に火・冷気・風などの属性エネルギーを纏わせる。", "scope": "playbook"}, {"id": "bow_mod_smart_quiver", "name_ja": "スマート矢筒", "name_en": "Smart Quiver", "tech_cost": 1, "desc_ja": "弾薬の最大容量が弓の【熟練】に等しい値だけ増加する。", "desc_full_ja": "武器がリアルタイムの戦術データを提供し、射撃効率を高める。弾薬の最大容量が、あなたの弓の【熟練】に等しい値だけ増加する。", "scope": "playbook"}, {"id": "bow_mod_trick_arrows", "name_ja": "トリック・アロー", "name_en": "Trick Arrows", "tech_cost": 2, "desc_ja": "弾薬1消費でスキルチェック奮起。初出の特殊矢を描写し1-3で1XP獲得。", "desc_full_ja": "スキルチェックを行う際、弾薬を1消費して奮起（Push yourself）することができる。その判定で使用する特殊な矢を描写すること。これまでに描写したことのない新しい矢を描写し、かつロールの結果が1～3だった場合、1 XPをマークする。", "scope": "playbook"}, {"id": "bow_mod_warp_arrows", "name_ja": "ワープ・アロー", "name_en": "Warp Arrows", "tech_cost": 2, "desc_ja": "エーテル1＋弾薬1消費で矢を放ち、着弾地点へ瞬間移動できる。", "desc_full_ja": "あなたの矢筒には結晶化したスパークを宿す特殊な矢が収められている。その矢を放つ際、エーテル1と弾薬1を消費することで、矢が着弾した場所へ瞬間移動（テレポート）できる。", "scope": "playbook"}, {"id": "bow_mod_wraith_bolts", "name_ja": "レイス・ボルト", "name_en": "Wraith Bolts", "tech_cost": 3, "desc_ja": "エーテル1＋弾薬1消費。【熟練】個選択：超遠距離／対ケイオス優位／障害物無視。", "desc_full_ja": "悪意ある霊魂の怒りを矢に宿らせることができる。エーテル1と弾薬1を消費してレイス・ボルトを放ち、あなたの弓の【熟練】に等しい数だけ以下から効果を選ぶ：超遠距離（extreme range）で行動する―ケイオスに対して優位（Potency）を得る―あなたと標的の間にある障害物を無視する。", "scope": "playbook"}]}, {"id": "cane", "name_ja": "ケイン（仕込み杖・ステッキ）", "name_en": "THE CANE", "weight_ja": "軽", "weight_en": "light", "range_ja": "至近・近接", "tags_ja": "", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈アクロバット〉|〈威圧〉|〈技巧/洗練〉|〈魅了〉", "trait": null, "talents": [{"id": "cane_talent_alumnus_of_hard_knocks", "name_ja": "修羅場の卒業生 (Alumnus of Hard Knocks)", "desc_ja": "レーティング0のスキル1つのスキルレーティングを+1する。何らかのストレスを受けたとき、エーテルを1回復する。奮起（Push yourself）したとき、常に束の間の好機や脱出口を見つけ出すことができる。"}, {"id": "cane_talent_charlie_hustle", "name_ja": "チャーリー・ハッスル (Charlie Hustle)", "desc_ja": "レーティング0のスキル1つのスキルレーティングを+1する。アクション・ロールで1～3を出したとき、レジスタンス・ロールやエーテルの使用を放棄する代わりに、あなたのケインの【熟練】に等しい進捗（Progress）を得ることができる。"}, {"id": "cane_talent_slippin_kimmy", "name_ja": "スリッピン・キミー (Slippin' Kimmy)", "desc_ja": "レーティング0のスキル1つのスキルレーティングを+1する。いつでも4ステップのクロックである「詐欺（Scam）」を仕掛けることができる。詐欺から何を得たいか決めること（ほぼ何でもよい）。アドバイザーはその詐欺を完了する規模（1シーン、1ミッション、長期プロジェクトなど）を告げる。手を引くには遅すぎる段階になって、詐欺の代償が明らかになる。"}, {"id": "cane_talent_tricky_dicky", "name_ja": "トリッキー・ディッキー (Tricky Dicky)", "desc_ja": "レーティング0のスキル1つのスキルレーティングを+1する。〈魅了〉または〈技巧/洗練〉で奮起（Push yourself）するとき、優位（Potency）を得る。カリスマ、欺瞞、または図太さをもって行動するとき、それに伴うレジスタンス・ロールに+1dを得る。"}, {"id": "cane_talent_wolf_in_sheep_s_clothing", "name_ja": "羊の皮を被った狼 (Wolf in Sheep's Clothing)", "desc_ja": "レーティング0のスキル1つのスキルレーティングを+1する。他者と自分がどのような立場にあるかを常に把握しており、あなたを信頼している相手に対して優位（Potency）を得る。"}], "mods": [{"id": "cane_mod_fortune_sink", "name_ja": "幸運の受け皿", "name_en": "Fortune Sink", "tech_cost": 1, "desc_ja": "判定時にストレス1で出目を振直可（エース:1／デュース:2／トレイ:3）。", "desc_full_ja": "余剰の「廃運」を将来のために蓄える魔導ガジェットで、複数のモデルが存在する。フォーチュン・ロールまたはアクション・ロールを行うたび、以下の効果を得る：\n▶モデル・エース（Model Aces）：ストレスを1受けることで、1の出目を好きな数だけ1回振り直せる。\n▶モデル・デュース（Model Deuces）：ストレスを1受けることで、2の出目を好きな数だけ1回振り直せる。\n▶モデル・トレイ（Model Treys）：ストレスを1受けることで、3の出目を好きな数だけ1回振り直せる。（※1モデルにつき1 Tech）", "scope": "playbook"}, {"id": "cane_mod_lil_trickster_s_aetherpops", "name_ja": "リトル・トリックスター™・エーテルポップス", "name_en": "Lil’Trickster’s™Aetherpops", "tech_cost": 1, "desc_ja": "チャージ3獲得。1消費でエーテル製の足場崩し・撒菱・癇癪玉を生成。", "desc_full_ja": "あなたのケインはチャージ（Charge）を3得て、戦場にエーテルの残骸を生み出せるようになる。チャージを1消費して以下のいずれか1つを生成する：エーテル・ボールベアリング（足場崩し）―エーテル・撒菱（まきびし）―エーテル・癇癪玉（チェリーボム）。", "scope": "playbook"}, {"id": "cane_mod_luxury_add_ons", "name_ja": "豪華装飾オプション", "name_en": "Luxury Add-Ons", "tech_cost": 2, "desc_ja": "貴金属、上質な宝石、希少な素材――非常に高価であり、誰かの目を引くこと間違いなしだ。", "desc_full_ja": "貴金属、上質な宝石、希少な素材――非常に高価であり、誰かの目を引くこと間違いなしだ。", "scope": "playbook"}, {"id": "cane_mod_magitech_8_ball_pommel", "name_ja": "魔導8ボール石突", "name_en": "Magitech 8-Ball Pommel", "tech_cost": 2, "desc_ja": "アクション・ロールを行った「後」からでも奮起できるようになる。", "desc_full_ja": "杖の柄頭に精巧に組み込まれた占い装置。あなたはアクション・ロールを行う「前」ではなく、「後」に奮起（Push yourself）できるようになる。", "scope": "playbook"}, {"id": "cane_mod_karmic_ledger", "name_ja": "因果の帳簿", "name_en": "Karmic Ledger", "tech_cost": 3, "desc_ja": "現在受けているストレス3点ごとに、与えるダメージが+1される。", "desc_full_ja": "常に貸し借りを精算できるようにするエーテル・ルーン。あなたが現在受けているストレス3点ごとに、与えるダメージが+1される。", "scope": "playbook"}, {"id": "cane_mod_palm_pilot", "name_ja": "パーム・パイロット", "name_en": "Palm Pilot", "tech_cost": 3, "desc_ja": "3ポンドまで運べる極小飛行ドローンを操作。いつでも手元へ瞬間回収可能。", "desc_full_ja": "あなたのケインには最大3ポンド（約1.36kg）までの物体を運べる遠隔操作ドローンが収納されている。ドローンは極小で飛行可能だが、脆い（fragile）。いつでもドローンを呼び戻すことができ、ドローンとそれが運んでいたものをあなたの手元へ瞬間移動させる。", "scope": "playbook"}]}, {"id": "gadget", "name_ja": "ガジェット（魔導装置）", "name_en": "THE GADGET", "weight_ja": "軽", "weight_en": "light", "range_ja": "中距離・射撃", "tags_ja": "エネルギー (energy), 装着または内蔵 (worn or integrated), 脆弱 (fragile)", "res_type_en": "Charge", "res_type_ja": "チャージ", "res_max": "4", "skills_count": 2, "skills_ja": "〈エンジニア〉|〈探索〉|〈研究/調査〉|〈破壊〉", "trait": null, "talents": [{"id": "gadget_talent_eureka", "name_ja": "エウレカ！ (Eureka!)", "desc_ja": "アクション・ロールで同じ出目のダイスを2個以上（ゾロ目）出したとき、即座に任意の長期プロジェクト（Long-term Project）または学習クロック（Learning Clock）1つの進捗を+1できる。"}, {"id": "gadget_talent_pedantic", "name_ja": "衒学的（ペダンティック） (Pedantic)", "desc_ja": "【精神】を使って行動するとき、最初の奮起（Push yourself）のストレス消費が0になる。【精神】で抵抗（Resist）するときは常に受けるストレスが+1される。"}, {"id": "gadget_talent_project_management", "name_ja": "プロジェクト管理 (Project Management)", "desc_ja": "複雑なシステムを理解し、複雑な構造を自在に操り、複雑なスケジュールを管理する。最大ストレスが+1される。長期プロジェクトで進捗を得たとき、別の長期プロジェクト1つにもその半分の進捗（切り捨て）を与えることができる。"}, {"id": "gadget_talent_soulcharge", "name_ja": "ソウルチャージ (Soulcharge)", "desc_ja": "〈エンジニア〉のスキルレーティングを+1する（最大3）。ガジェットを使って自分または他者のエーテルをゆっくりと補充できる。チャージを1消費してエーテルを2回復する。"}, {"id": "gadget_talent_tinkerer_s_talent", "name_ja": "発明家の才能 (Tinkerer's Talent)", "desc_ja": "[1 Tech] ポイントを得る。あなたの武器用のモッドは、取得に必要なテックコストが1点減少する（最小1）。"}], "mods": [{"id": "gadget_mod_energy_barrier", "name_ja": "エネルギー・バリア", "name_en": "Energy Barrier", "tech_cost": 1, "desc_ja": "チャージを「Armor N」（N＝ガジェットの【熟練】）として消費できる。", "desc_full_ja": "ガジェットからエネルギー障壁を展開し、自分や他者を害から護る。チャージ（Charge）を「Armor N」として消費できる（Nはあなたのガジェットの【熟練】に等しい）。", "scope": "playbook"}, {"id": "gadget_mod_reinforced_superstructure", "name_ja": "強化上部構造", "name_en": "Reinforced Superstructure", "tech_cost": 1, "desc_ja": "あなたのガジェットは「脆弱（fragile）」タグを失う。", "desc_full_ja": "あなたのガジェットは「脆弱（fragile）」タグを失う。", "scope": "playbook"}, {"id": "gadget_mod_jailbroken_capacitor_bank", "name_ja": "改造コンデンサバンク", "name_en": "Jailbroken Capacitor Bank", "tech_cost": 2, "desc_ja": "あなたのガジェットのチャージ（Charge）が+3される。", "desc_full_ja": "あなたのガジェットのチャージ（Charge）が+3される。", "scope": "playbook"}, {"id": "gadget_mod_discharge_array", "name_ja": "放電アレイ", "name_en": "Discharge Array", "tech_cost": 2, "desc_ja": "奮起時にチャージ2を消費することで、生物および電子機器に対し優位を得る。", "desc_full_ja": "奮起（Push yourself）する際、チャージ（Charge）を2消費することで、生物および電子機器に対して優位（Potency）を得る。", "scope": "playbook"}, {"id": "gadget_mod_reality_transducer", "name_ja": "現実変換器", "name_en": "Reality Transducer", "tech_cost": 2, "desc_ja": "チャージをもう一方のプレイブックの「弾薬」または「ホールド」として消費可。", "desc_full_ja": "チャージ（Charge）を、もう一方のウェポン・プレイブックの「弾薬（Ammo）」または「ホールド（Hold）」であるかのように消費できる。", "scope": "playbook"}, {"id": "gadget_mod_autonomous_drone", "name_ja": "自律ドローン", "name_en": "Autonomous Drone", "tech_cost": 4, "desc_ja": "ガジェットが飛行・歩行で自律行動可能に。通信維持しセンサー越しに知覚可。", "desc_full_ja": "ガジェットが武器機能を損なうことなく、飛行または歩行によってあなたから独立して行動できるようになる。あなたは魔導的、電子的、および／またはテレパシー的手段（選択）でドローンと通信を維持でき、各種センサーを通じてドローン越しに知覚できる。", "scope": "playbook"}, {"id": "gadget_mod_hard_light_replicator", "name_ja": "ハードライト複製機", "name_en": "Hard Light Replicator", "tech_cost": 5, "desc_ja": "汎用モッドの複製を1Techあたりチャージ3で生成。4歩長期計画で設計図追加。", "desc_full_ja": "このモッドを取得した際、汎用モッド（General Mod）を1つ選ぶ。その前提条件を満たしていれば、そのモッドのハードライト設計図を獲得し、現在のフェイズ終了まで持続するハードライト製の複製を生成できる。生成コストは、そのモッドの本来の取得コスト [1 Tech] あたりチャージ3である。各4ステップの長期プロジェクトを完了することで、任意のモッドのハードライト設計図を追加で獲得できる。（他のプレイヤーのプレイブック固有モッドを取得する場合は、事前にそのプレイヤーに確認すること。）", "scope": "playbook"}]}, {"id": "gauntlets", "name_ja": "ガントレッツ（籠手）", "name_en": "THE GAUNTLETS", "weight_ja": "軽", "weight_en": "light", "range_ja": "至近・近接", "tags_ja": "装着 (worn)", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈アクロバット〉|〈威圧〉|〈魅了〉|〈破壊〉", "trait": null, "talents": [{"id": "gauntlets_talent_armed_and_ready", "name_ja": "臨戦態勢 (Armed and Ready)", "desc_ja": "あなたは常に戦闘の準備ができており、不意打ちを受けてもペナルティを受けない。ダメージを受けたとき、受けたダメージと同量のストレスを回復する。"}, {"id": "gauntlets_talent_devil_sworkshop", "name_ja": "悪魔の工房 (The Devil's Workshop)", "desc_ja": "〈エンジニア〉のスキルレーティングを+1する（最大3）。相手の気を逸らし、事態をエスカレートさせ、挑発するために押すべきボタンと言うべき禁句を常に心得ている。"}, {"id": "gauntlets_talent_don_t_worry_i_ve_gotyou", "name_ja": "心配するな、俺に任せろ (Don't Worry—I've Got You)", "desc_ja": "チームメイトがチームワーク・アクションで1～3の出目を出したとき、あなたはストレスを2受けることで、そのチームメイトに即座に振り直しをさせ、新しい結果を採用させることができる。"}, {"id": "gauntlets_talent_hands_on_experience", "name_ja": "実地体験 (Hands-On Experience)", "desc_ja": "乱闘や戦闘、あるいは一悶着起こす際、あなたが行うあらゆるアクションの一部として「情報収集（Gather Information）」を行える。（情報収集の結果にはそのアクション・ロールの結果をそのまま使用する。）"}, {"id": "gauntlets_talent_tussle_talk", "name_ja": "拳で語る (Tussle Talk)", "desc_ja": "言葉よりも拳で気持ちを伝える方が簡単なとき、〈威圧〉〈共感〉〈鼓舞/指揮〉において無料で奮起（Push yourself）できる（ストレスを受ける必要がない）。「気晴らし（Cut Loose）」を行う際、あなたとチームメイトはコネクションを振る代わりにスパーリングして攻撃ロールを行い、ストレスを回復できる（通常通り最も高い出目に等しいストレスを回復する）。"}], "mods": [{"id": "gauntlets_mod_ergonomic_hardpoints", "name_ja": "人間工学ハードポイント", "name_en": "Ergonomic Hardpoints", "tech_cost": 1, "desc_ja": "もう一方の武器の「重量（weight）」タグを無視する。", "desc_full_ja": "もう一方の武器の「重量（weight）」タグを無視する。", "scope": "playbook"}, {"id": "gauntlets_mod_hermetic_sealing", "name_ja": "完全気密", "name_en": "Hermetic Sealing", "tech_cost": 1, "desc_ja": "あなたのガントレットは完全密閉されており、極端な温度、圧力、その他の環境的危険から両手を守る。", "desc_full_ja": "あなたのガントレットは完全密閉されており、極端な温度、圧力、その他の環境的危険から両手を守る。", "scope": "playbook"}, {"id": "gauntlets_mod_kinetic_accelerator", "name_ja": "運動加速器", "name_en": "Kinetic Accelerator", "tech_cost": 2, "desc_ja": "〈全力（GO ALL OUT）〉発動時、近接攻撃で【熟練】分の追加ダメージ。", "desc_full_ja": "〈全力（GO ALL OUT）〉を発動したとき、近接攻撃であなたのガントレットの【熟練】に等しい追加ダメージを与える。", "scope": "playbook"}, {"id": "gauntlets_mod_soulsteel_actuators", "name_ja": "ソウルスティール・アクチュエータ", "name_en": "Soulsteel Actuators", "tech_cost": 2, "desc_ja": "エーテル1消費でアクチュエータをロック／解除し、驚異的な握力を発揮する。", "desc_full_ja": "ガントレットには非常に強力なアクチュエータが組み込まれており、エーテルを1消費することでロック／ロック解除できる。ソウルスティール製の部品は驚異的な握力を生み出す。", "scope": "playbook"}, {"id": "gauntlets_mod_rocket_propulsion", "name_ja": "ロケット推進", "name_en": "Rocket Propulsion", "tech_cost": 2, "desc_ja": "ミッション1回、全対象優位の中距離射撃として射出。撃破で敵が爆発する。", "desc_full_ja": "ミッションにつき1回、ガントレットをあらゆる対象に対して優位（Potency）を持つ中距離射撃武器（mid-range projectile）として射出できる。この方法でケイオス・ビーストを倒した場合、それはド派手に爆発する。", "scope": "playbook"}, {"id": "gauntlets_mod_pile_bunker", "name_ja": "パイルバンカー", "name_en": "Pile Bunker", "tech_cost": 4, "desc_ja": "構造物〈破壊〉に優位。全力／コンボ時に与ダメ2倍だが自身も半分のダメを受ける。", "desc_full_ja": "ガントレットに強大な破壊と想像を絶する暴力をもたらす重火器用の炸薬式杭打ち機が装着される。構造物や環境を〈破壊〉する際、優位（Potency）を得る。〈全力（GO ALL OUT）〉またはコンボ・アタックを行う際、与えるダメージを2倍にできるが、与えたダメージの半分を自分も受ける。", "scope": "playbook"}]}, {"id": "hand_cannon", "name_ja": "ハンドキャノン（大口径拳銃）", "name_en": "THE HAND CANNON", "weight_ja": "重", "weight_en": "heavy", "range_ja": "中距離・射撃", "tags_ja": "", "res_type_en": "Ammo", "res_type_ja": "弾薬", "res_max": "6", "skills_count": 2, "skills_ja": "〈エイム〉|〈共感〉|〈鼓舞/指揮〉|〈破壊〉", "trait": {"name_ja": "古き良き相棒 (Old Reliable)", "desc_ja": "ハンドキャノンで攻撃する際、ストレスの代わりに弾薬を消費して奮起（Push yourself）することができる。"}, "talents": [{"id": "hand_cannon_talent_big_iron", "name_ja": "ビッグ・アイアン (Big Iron)", "desc_ja": "あなたの魅力と誠実さは相手の警戒を解く。〈共感〉のスキルレーティングを+1する（最大3）。ハンドキャノンを誇示して弾薬を1消費することで、一時的にその場の主導権を握り、モメンタムを+1得ることができる。"}, {"id": "hand_cannon_talent_field_medic", "name_ja": "野戦衛生兵 (Field Medic)", "desc_ja": "ミッション中に【精神】を使って任意のスキルチェックを行い、人々の傷を手当てできる。4または5の出目1つにつき1ダメージ、6の出目1つにつき2ダメージを回復し、クリティカル（CRIT）なら追加で1ダメージを回復する。手当てには時間と集中を要し、繰り返すと効果が逓減する（アドバイザーの裁量による）。"}, {"id": "hand_cannon_talent_focused", "name_ja": "研ぎ澄まされた集中 (Focused)", "desc_ja": "【精神】を強化し、【知覚】【直感】【意志】のいずれか1つを得る。各ミッションの開始時、最初のスキルチェック、最初の攻撃ロール、および最初のレジスタンス・ロールにそれぞれ+1dを得る。"}, {"id": "hand_cannon_talent_humanoid_typhoon", "name_ja": "ヒューマノイド・タイフーン (Humanoid Typhoon)", "desc_ja": "あなたの弾帯はさながら移動武器庫となる。最大HPが+3される。弾薬を1消費するかダメージを1受けることで、ハンドキャノンの弾丸に以下の特性のうち1つを付与できる：属性（elemental）―爆発（explosive）―非致死（less-lethal）―乱雑（messy）―精密（precise）。"}, {"id": "hand_cannon_talent_pseudoprecognition", "name_ja": "擬似予知 (Pseudoprecognition)", "desc_ja": "あなたの知覚力と反射神経は、まるで未来を見通しているかのようにトラブルを引き起こす天性の勘をもたらす。情報収集（Gather Information）を行ったとき、そこで得た情報に基づいて行動するための+1d（フォワード）を得て、必ず最低1つの好機を見つけ出すことができる。"}], "mods": [{"id": "hand_cannon_mod_custom_forged_bullets", "name_ja": "特注鍛造弾", "name_en": "Custom-Forged Bullets", "tech_cost": 2, "desc_ja": "【熟練】分の特殊弾を獲得（対ケイオス優位／3振直／超遠距離／追跡痕跡から選択）。", "desc_full_ja": "ハンドキャノンの【熟練】に等しい数の「特殊弾（Special Ammo）」を獲得し、消費することで特注弾を発射できる。この能力を取得した際、以下の特注弾から1種類を選ぶ：\n▶劣化ソウルスティール弾（Depleted Soulsteel Rounds）：ケイオスに対して優位（Potency）を得る。\n▶デウス・エクス・ミサイル（Deus Ex Missiles）：微小な精霊が弾丸を誘導し、3の出目を振り直せる。\n▶神粒子弾（God Particle Shot）：超遠距離（extreme range）で行動できる。\n▶パノプティコン弾（Panopticon Shells）：追跡可能なエーテル痕跡が刻まれている。\n（※基本コスト2 Tech。以降の成長で追加の弾種を1つ取得するごとに+1 Tech。）", "scope": "playbook"}, {"id": "hand_cannon_mod_runic_rifling", "name_ja": "ルーン施条", "name_en": "Runic Rifling", "tech_cost": 2, "desc_ja": "特性・タレント・モッドのコストとして、弾薬の代わりにエーテルを消費できる。", "desc_full_ja": "銃身内部のエーテル感応素材と特殊なルーンにより、ハンドキャノンの特性（Trait）、タレント、モッドのコストとして弾薬の代わりにエーテルを消費できる（ただし特殊弾には使用できない）。", "scope": "playbook"}, {"id": "hand_cannon_mod_targeting_linkage", "name_ja": "照準連動リンク", "name_en": "Targeting Linkage", "tech_cost": 3, "desc_ja": "〈エイム〉〈破壊〉または弾薬で奮起するとき、優位（Potency）を得る。", "desc_full_ja": "神経インプラント、魔導刺青、または内蔵型アイピースにより、ハンドキャノンとファイターの境界が曖昧になる。〈エイム〉〈破壊〉または弾薬を用いて奮起（Push yourself）するとき、優位（Potency）を得る。", "scope": "playbook"}, {"id": "hand_cannon_mod_10104_72_seraph_core", "name_ja": "10104-72 セラフ・コア", "name_en": "10104-72 Seraph Core", "tech_cost": 5, "desc_ja": "全エーテルと弾薬を消費し、自分を含む超遠距離内の全対象に最大エーテル分のダメ。", "desc_full_ja": "極めて実験的で不安定な装置であり、最後の切り札としてのみ起動すべきである。残っているすべてのエーテルと弾薬を消費してハンドキャノンを構え、照準を定める：あなた自身を含め、超遠距離（extreme range）内のあらゆる対象にあなたの最大エーテルに等しいダメージを与える。", "scope": "playbook"}]}, {"id": "hawser", "name_ja": "ホーサー（鎖縄・軟武器）", "name_en": "THE HAWSER", "weight_ja": "軽", "weight_en": "light", "range_ja": "中距離・近接", "tags_ja": "", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈エイム〉|〈威圧〉|〈隠蔽/欺瞞〉|〈エンジニア〉", "trait": null, "talents": [{"id": "hawser_talent_death_by_1_000_cutting_remarks", "name_ja": "千の毒舌による死 (Death by 1,000 Cutting Remarks)", "desc_ja": "〈魅了〉のスキルレーティングを+1する（最大3）。【心情】で行動し奮起（Push yourself）する際、痛烈な真実や残酷な皮肉で個人的に相手を揺さぶり、優位（Potency）を得ることができる。（優位は相手があなたの言葉を理解できる場合にのみ有効。）"}, {"id": "hawser_talent_heart_piercer", "name_ja": "ハート・ピアサー (Heart Piercer)", "desc_ja": "あなたは強力かつ危険な人格的魅力を持っている。いつでも、他の訓練生1人に1 XPを得させることで、あなたの代わりに罪を被らせたり代償（Consequence）を受けさせたりすることができる。"}, {"id": "hawser_talent_peerless_coordination", "name_ja": "無双の協調性 (Peerless Coordination)", "desc_ja": "〈エイム〉または〈技巧/洗練〉で奮起（Push yourself）したとき、それに続くレジスタンス・ロール（もしあれば）に+1dを得る。【熟練】能力値の上限が+1される。"}, {"id": "hawser_talent_puppet_master", "name_ja": "人形遣い (Puppet Master)", "desc_ja": "セットアップ・アクション（Setup actions）に+1dを得る。敵を拘束したり組み伏せたりするとき、あなたの脅威度（Threat）はあなたのホーサーの【熟練】分だけ増加する。"}, {"id": "hawser_talent_razzmatazz", "name_ja": "ラズマタズ (Razzmatazz)", "desc_ja": "あなたは卓越した脱出の名人であり、肉体的にも知的にも社会的にも追い詰めることは困難だ。どれほど高い場所（文字通りの意味でも比喩的な意味でも）から落ちても死ぬことはない――いつでも立ち上がり、やり直すことができる。"}], "mods": [{"id": "hawser_mod_aetherpoolweave", "name_ja": "エーテルプール織り", "name_en": "AetherpoolWeave", "tech_cost": 1, "desc_ja": "エーテルや各種エネルギーを伝導。適切な防護具を付ければ重量が「中」になる。", "desc_full_ja": "あなたのホーサーは極めて高いエーテル伝導性を持つ素材で作られており、その長さに沿ってエーテルや様々なエネルギー、自然現象、魔術、スパークなどを伝導できる。この伝導性から身を守る適切な防護具（PPE）を後付けした場合、ホーサーの重量は「中（medium）」になる。", "scope": "playbook"}, {"id": "hawser_mod_vanishweave", "name_ja": "バニッシュ織り", "name_en": "VanishWeave", "tech_cost": 1, "desc_ja": "極めて圧縮性が高く正体を見抜かれにくい。隠密・発見抵抗に+1dを得る。", "desc_full_ja": "あなたのホーサーは極めて圧縮性の高い素材で作られており、一見しただけではその正体を見抜けない。〈隠蔽/欺瞞〉でそれを隠す際、および発見されるのを抵抗（Resist）する際に+1dを得る。", "scope": "playbook"}, {"id": "hawser_mod_hepa_censer", "name_ja": "HEPA香炉", "name_en": "HEPA Censer", "tech_cost": 2, "desc_ja": "広範囲の塵・病原体・疫病を浄化し、特定の精霊やケイオス・ビーストを遠ざける。", "desc_full_ja": "ホーサーには高性能粒子空気浄化香炉が装備されており、広範囲の塵、病原体、疫病を浄化できるほか、特定の精霊、魔法生物、ケイオス・ビーストを遠ざけることができる。", "scope": "playbook"}, {"id": "hawser_mod_polygrapple_chain", "name_ja": "多重グラップル・チェーン", "name_en": "Polygrapple Chain", "tech_cost": 2, "desc_ja": "汎用「グラップル・チェーン」を無償取得。【熟練】本に分裂し拘束・登攀等に優位。", "desc_full_ja": "汎用モッド「グラップル・チェーン（Grapple Chain）」をコストなしで獲得する。さらに、あなたのグラップル・チェーンはあなたのホーサーの【熟練】に等しい本数の追加の鎖へと分裂し、拘束・捕縛・安定化・登攀を試みる際に優位（Potency）をもたらす。", "scope": "playbook"}, {"id": "hawser_mod_ophidian_retrofit", "name_ja": "蛇神の改修", "name_en": "Ophidian Retrofit", "tech_cost": 3, "desc_ja": "エーテル1消費で+1d（マンバ:速さ／キング:力／ヴァイパー:狡猾さ）。", "desc_full_ja": "あなたのホーサーは擬態ミスリルとソウルスティールの合金で改修されており、異界の大蛇の力を宿すことができる。エーテルを1消費することで、以下の蛇神の霊格（Ophidian Oversouls）のいずれか1つの力を一時的に降ろす：\n▶擬態：マンバ（Mimesis: Mamba）：速さを伴う行動または抵抗に+1dを得る。\n▶擬態：キング（Mimesis: King）：力を伴う行動または抵抗に+1dを得る。\n▶擬態：ヴァイパー（Mimesis: Viper）：狡猾さを伴う行動または抵抗に+1dを得る。", "scope": "playbook"}]}, {"id": "heavy_metal", "name_ja": "ヘヴィメタル（重鉄武装）", "name_en": "THE HEAVY METAL", "weight_ja": "重", "weight_en": "heavy", "range_ja": "近距離・近接", "tags_ja": "乱雑 (messy)", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈アクロバット〉|〈共感〉|〈鼓舞/指揮〉|〈破壊〉", "trait": null, "talents": [{"id": "heavy_metal_talent_adrenaline_rush", "name_ja": "アドレナリン・ラッシュ (Adrenaline Rush)", "desc_ja": "【肉体】を使って行動するとき、最初の奮起（Push yourself）のストレス消費が0になる。【肉体】で抵抗（Resist）するときは常に受けるストレスが+1される。"}, {"id": "heavy_metal_talent_ifyou_had_the_strength_couldyou_do_it", "name_ja": "もし力があったなら、お前にそれができたか？ (If You Had the Strength, Could You Do It?)", "desc_ja": "このタレントの下にチームメイトの名前を書き記す。チームメイトが最も暗い絶望の時（darkest hour）を迎えた際、一度だけリストからその名前を消し去ることで彼らの傍に駆けつけることができる。その仲間は、絶望が過ぎ去るまであなたとのコネクションに等しい数の「Darkest Hour」を保持する。彼らは1対1の交換でDarkest Hourを消費し、以下のいずれかを行える：ストレスを3回復する―エーテルを3回復する―ダメージを3回復する―アクションの結果を「6」に変更する。"}, {"id": "heavy_metal_talent_monkey_grip", "name_ja": "モンキー・グリップ (Monkey Grip)", "desc_ja": "〈技巧/洗練〉のスキルレーティングを+1する（最大3）。あなたは驚くほどの優雅さと器用さで武器を振り回し、片手でも軽々と扱うことができる。〈アクロバット〉または〈技巧/洗練〉で奮起（Push yourself）するとき、奮起の通常の効果に加えて常に立ち位置（Position）が1段階改善される。（この方法で同じロールの立ち位置を複数回改善することはできない。）"}, {"id": "heavy_metal_talent_radiant_soul", "name_ja": "輝く魂 (Radiant Soul)", "desc_ja": "絶望と無力感の深淵にどれほど深く沈もうとも、あなたは行動できる。【肉体】【精神】【心情】をそれぞれ強化する。すでに完全に強化されている能力値がある場合、その能力値1つにつき代わりに最大エーテルが+1される。"}, {"id": "heavy_metal_talent_unstoppable_force", "name_ja": "止められぬ力 (Unstoppable Force)", "desc_ja": "最大HPが+6される。あなたと最も必要とされている場所の間に障害物があるなら、それを突き破って進め。あなたは自分と障害物の脅威度（Threat）の差に等しいダメージを受ける（状況に応じたその他の代償も通常通り受ける）。"}], "mods": [{"id": "heavy_metal_mod_industrial_rigging", "name_ja": "工業用リギング", "name_en": "Industrial Rigging", "tech_cost": 1, "desc_ja": "重い物体を安全に持ち上げられるベルト。重量物の把持や操作に優位を得る。", "desc_full_ja": "腰への負担を軽減する特殊なベルトにより、武器を用いて巨大な重量物を安全に持ち上げることができる。重い物体を掴んだり操作したりする際、優位（Potency）を得る。", "scope": "playbook"}, {"id": "heavy_metal_mod_mohs_16_coating", "name_ja": "モース硬度16コーティング", "name_en": "Mohs-16 Coating", "tech_cost": 1, "desc_ja": "ダイヤモンドの100倍硬い皮膜により、金属・石・木材の破壊で優位を得る。", "desc_full_ja": "あなたの武器はダイヤモンドの100倍の硬度を持つ工業用魔導素材の薄い層でコーティングされている。金属、石、木材を破壊する際、武器は優位（Potency）を得る。", "scope": "playbook"}, {"id": "heavy_metal_mod_vernier_thrusters", "name_ja": "バーニア・スラスター", "name_en": "Vernier Thrusters", "tech_cost": 2, "desc_ja": "【熟練】基まで使用可。1基で射程+1段階＆攻撃時モメンタム+1（6以外で焼損）。", "desc_full_ja": "ヘヴィメタルに小型スラスターが装着され、短時間ながら強烈な加速をもたらす。あなたはヘヴィメタルの【熟練】に等しい数のバーニア・スラスターを使用でき、自分自身および／または武器を長距離推進させることができる。スラスターを1つ使用するごとに射程が1段階伸びる（near melee → mid-range melee → far melee → extreme melee）。攻撃の一部として使用した場合、モメンタムを+1得る。バーニア・スラスターは短時間の噴射にしか使えない。1つ以上使用した際、フォーチュン・ロールを行う：6以外の出目が出た場合、スラスターは焼き切れ、次のミッションまで使用不能になる。", "scope": "playbook"}, {"id": "heavy_metal_mod_refined_soulsteel_rebuild", "name_ja": "精製ソウルスティール再鋳造", "name_en": "Refined Soulsteel Rebuild", "tech_cost": 3, "desc_ja": "エーテル2消費で超高密度化し与ダメ2倍（ほぼ移動不可）。再消費で元に戻る。", "desc_full_ja": "あなたのヘヴィメタルは密度を劇的に変化させる特殊なエーテル感応合金で鍛えられている。エーテルを2消費することで、ヘヴィメタルを超高密度状態に移行させる。超高密度状態では与えるダメージが2倍になるが、武器はほとんど動かせなくなる。さらにエーテルを2消費すると通常の状態に戻る。", "scope": "playbook"}]}, {"id": "katana", "name_ja": "カタナ（刀）", "name_en": "THE KATANA", "weight_ja": "中", "weight_en": "medium", "range_ja": "至近・近接", "tags_ja": "精密 (precise)", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈エイム〉|〈威圧〉|〈技巧/洗練〉|〈研究/調査〉", "trait": {"name_ja": "剣の求道者 (Devotee of the Blade)", "desc_ja": "あなたの【熟練】能力値の上限は、常にチームメイトの中で最も高い【熟練】上限より1高くなる。（他のカタナ使いとは同率となる。）"}, "talents": [{"id": "katana_talent_brand_of_stoicism", "name_ja": "ストイックの烙印 (Brand of Stoicism)", "desc_ja": "真に冷静な気質ゆえか、あるいは対人不安への防衛反応ゆえか、他者はあなたの無関心に見える態度に油断する。他者がいるシーンにおいて、あなたが何らかの寄与やロール（アクション・ロール、レジスタンス・ロール、フォーチュン・ロールを含む）を行うまで、すべての判定に+1d（Ongoing）を得る。"}, {"id": "katana_talent_combat_intuition", "name_ja": "戦闘直感 (Combat Intuition)", "desc_ja": "あなたに向けられた周囲の敵意、攻撃性、あるいは苛立ちを常に察知できる。この知覚の範囲はあなたのカタナの【熟練】によって決まる：近距離 near (1)―中距離 mid-range (2)―遠距離 far (3)―超遠距離 extreme (4)。"}, {"id": "katana_talent_eye_of_the_storm", "name_ja": "台風の目 (Eye of the Storm)", "desc_ja": "ケイオス・ビーストを倒すか、何らかのクロックを完了させたとき、ストレスを1回復する。もし単独（ソロ）でそれを達成した場合、代わりにストレスを3回復する。"}, {"id": "katana_talent_whileyou_chased_frivolity", "name_ja": "お前たちが浮かれていた間に… (While You Chased Frivolity…)", "desc_ja": "他者と心を通わせるのは苦手だが、一度結んだ絆は鉄のように固い。「気晴らし（Cut Loose）」で回復するストレスが1減少する（最小0）。あなたがチームワーク・アクションを行う際、参加者の中にあなたとのコネクションが2以上の者がいれば、その全員が（該当する判定で）+1dを振る。"}, {"id": "katana_talent_i_studied_the_blade", "name_ja": "…俺は剣を極めていた (…I Studied the Blade)", "desc_ja": "【熟練】能力値レーティングを+1する。"}], "mods": [{"id": "katana_mod_iaijutsu_smart_scabbard", "name_ja": "居合術スマート鞘", "name_en": "Iaijutsu Smart Scabbard", "tech_cost": 1, "desc_ja": "誰が最初に斬りかかるかが問題になるとき、答えは常にあなただ。", "desc_full_ja": "誰が最初に斬りかかるかが問題になるとき、答えは常にあなただ。", "scope": "playbook"}, {"id": "katana_mod_prewritten_apology_to_master", "name_ja": "師への遺書（詫び状）", "name_en": "Prewritten Apology to Master", "tech_cost": 1, "desc_ja": "絶望的時に1度、モメンタム不要で全力＆全優位＆2倍ダメ（必ず絶望的代償）。", "desc_full_ja": "一度だけ、あなたが「絶望的（Desperate）」な立ち位置にあるとき、この遅延発動式の呪文、使役霊、あるいは下書きメールを起動することで、モメンタムを消費せずに〈全力（GO ALL OUT）〉を発動できる。その際、あらゆる対象に対して優位（Potency）を得て、2倍のダメージを与える。ただし、ロールの結果に基づく通常の代償に加えて、必ず「絶望的（Desperate）」な代償を1つ受ける。", "scope": "playbook"}, {"id": "katana_mod_phoenix_talon", "name_ja": "不死鳥の爪", "name_en": "Phoenix Talon", "tech_cost": 2, "desc_ja": "エーテル2消費で刀身を超高熱化し、生物・可燃物・金属に対して優位を得る。", "desc_full_ja": "刀身にエーテル抵抗性素材が練り込まれており、エーテルを流し込むことで超高熱を発生させることができる。エーテルを2消費することで、生物、可燃物、または金属に対して優位（Potency）を得る。", "scope": "playbook"}, {"id": "katana_mod_fiber_optic_aether_wards", "name_ja": "光ファイバー・エーテル護符", "name_en": "Fiber Optic Aether Wards", "tech_cost": 3, "desc_ja": "シーン1回、エーテルを無効化してエーテル強化体や魔術さえも斬り裂く。", "desc_full_ja": "織り上げられたガラス製の精巧な護符が鞘の内部に組み込まれており、カタナに強力な祝福を与える。シーンにつき1回、この祝福を解放してエーテルを事実上無効化できる：あなたの刃はエーテルで強化された生物や物体を容易く斬り裂き、魔術（spell craft）さえも断ち切ることができる。", "scope": "playbook"}, {"id": "katana_mod_10_000_000_folded_steel_blade", "name_ja": "一千万回折り返し鍛造鋼刃", "name_en": "10,000,000 × Folded Steel Blade", "tech_cost": 4, "desc_ja": "カタナで与えるダメージが2倍になる。", "desc_full_ja": "カタナで与えるダメージが2倍になる。", "scope": "playbook"}]}, {"id": "knife", "name_ja": "ナイフ（短剣）", "name_en": "THE KNIFE", "weight_ja": "軽", "weight_en": "light", "range_ja": "至近・近接 / 中距離・射撃", "tags_ja": "精密 (precise)", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 3, "skills_ja": "全スキルから選択（異なる3つ）", "trait": null, "talents": [{"id": "knife_talent_contingency_planning", "name_ja": "不測事態計画 (Contingency Planning)", "desc_ja": "狡猾な洞察と苦い教訓を通じて、あなたは起こり得る事態に対する入念な準備の術を身につけた。社交フェイズ（Social Phase）中に1回、アクション・ロールの種類（スキルチェックまたは攻撃ロール）、立ち位置（Position）、および効果（Effect）を1つ選ぶ。今すぐ通常通りに修正を加えてそのロールを行い、その結果をこの能力の下に書き留めて「Contingency（予備計画）」を1つ保持する。将来、選んだ通りの種類のロール・立ち位置・効果で判定を行う際、そのContingencyを消費して書き留めたロール結果を使用できる。保持できるContingencyの総数はあなたのナイフの【熟練】に等しい。"}, {"id": "knife_talent_ingenuity_alive", "name_ja": "冴えわたる創意 (Ingenuity Alive)", "desc_ja": "あなたはナイフの斬新な使い道を見出すことに驚くほど長けている。各ミッションの開始時、ミッション終了まであなたのナイフの【熟練】に等しい数の「Ingenuity（創意）」を保持する。Ingenuityを1消費することで、スキルチェックにおいて奮起（Push yourself）できる。"}, {"id": "knife_talent_knife_in_a_gun_fight", "name_ja": "銃撃戦にナイフ (Knife in a Gun Fight)", "desc_ja": "場違いな場所や最悪のタイミングに居合わせたときでも、あなたは見事に立ち回れる。アクション・ロールで4～5の出目を出したとき、現在の立ち位置（Position）に応じた代償（Consequence）をあなた自身が決めることができる。"}, {"id": "knife_talent_second_story_work", "name_ja": "空き巣の技術 (Second Story Work)", "desc_ja": "あなたは装置、構造物、システムに対する深い洞察と知識を持っている。〈エンジニア〉で奮起（Push yourself）するとき、ほぼあらゆるものがどう動くかを見抜くことができ、〈破壊〉で奮起するとき、ほぼあらゆるものをどう壊せばよいかを見抜くことができる。"}, {"id": "knife_talent_swindler_s_swagger", "name_ja": "ペテン師の貫禄 (Swindler's Swagger)", "desc_ja": "カモがあなたの欲しいものを持っているなら、あなたはそれを奪い取る。あなたが隠していた動機や存在を明かしたとき、次の判定に+1d（フォワード）を得る。"}], "mods": [{"id": "knife_mod_kinetic_inversion_runes", "name_ja": "運動反転ルーン", "name_en": "Kinetic Inversion Runes", "tech_cost": 1, "desc_ja": "あなたのナイフには運動学ルーンが刻まれている。投擲した際、固い物体に接触した後にあなたの手元へ戻ってくる。", "desc_full_ja": "あなたのナイフには運動学ルーンが刻まれている。投擲した際、固い物体に接触した後にあなたの手元へ戻ってくる。", "scope": "playbook"}, {"id": "knife_mod_flashbangs", "name_ja": "閃光音響弾（フラッシュバン）", "name_en": "Flashbangs", "tech_cost": 1, "desc_ja": "対象を一時的に盲目にする閃光音響弾を最大2個収納。訓練フェイズ開始時に補充。", "desc_full_ja": "対象を一時的に盲目にする小型爆薬。ナイフの内部に最大2個のフラッシュバンを収納でき、各訓練フェイズ（Training Phase）の開始時に補充される。", "scope": "playbook"}, {"id": "knife_mod_mimesis_drive", "name_ja": "模倣ドライブ", "name_en": "Mimesis Drive", "tech_cost": 1, "desc_ja": "学業フェイズ中、自分のロールの代わりに他キャラクターのロール結果を使用できる。", "desc_full_ja": "ナイフに埋め込まれた小型アクチュエータがあなたの筋肉を刺激し、局所的な集合的無意識にアクセスすることで、他者の行動を不気味なほど正確に模倣させる。学業フェイズ（School Phase）において、自分自身のロールを行う代わりに別のキャラクターのロール結果を使用できる――まったく無関係かもしれない他者の知識と労力を、あなたはどう利用するのか？", "scope": "playbook"}, {"id": "knife_mod_skeleton_key", "name_ja": "スケルトン・キー", "name_en": "Skeleton Key", "tech_cost": 2, "desc_ja": "ドングル（ほぼ全電算機に接続）またはロックピック（ほぼ全物理錠解錠）を選択。", "desc_full_ja": "このモッドを取得した際、「ドングル（Dongle）」または「ロックピック（Lock Pick）」のいずれかを選ぶ。ドングルを選んだ場合、何らかのポートにアクセスできる限り、ナイフをほぼあらゆるコンピュータ・システムに接続できる。ロックピックを選んだ場合、鍵を必要とするほぼあらゆる物理的な錠前をこじ開けることができる。", "scope": "playbook"}, {"id": "knife_mod_sword_breaker", "name_ja": "ソードブレイカー", "name_en": "Sword Breaker", "tech_cost": 3, "desc_ja": "ミッションにつき【熟練】回まで、武器を「Armor N」（N＝【熟練】）として使用可。", "desc_full_ja": "ミッションにつきあなたのナイフの【熟練】に等しい回数まで、武器を「Armor N」として使用できる（Nもまたナイフの【熟練】に等しい）。（例：ナイフの【熟練】が2なら、Armor 2を2回使用できる。）", "scope": "playbook"}]}, {"id": "knightly_sword", "name_ja": "ナイトリーソード（騎士剣）", "name_en": "THE KNIGHTLY SWORD", "weight_ja": "中", "weight_en": "medium", "range_ja": "至近・近接", "tags_ja": "", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈共感〉|〈技巧/洗練〉|〈鼓舞/指揮〉|〈研究/調査〉", "trait": null, "talents": [{"id": "knightly_sword_talent_leadership", "name_ja": "統率力 (Leadership)", "desc_ja": "あなたは周囲の者が恐怖、パニック、苛立ちを乗り越えるのを助ける穏やかなオーラを放つ。チームワーク・アクション中にあなたがストレスを受けたとき、他の参加者はそれぞれその半分のストレス（切り上げ）を回復する。"}, {"id": "knightly_sword_talent_mantra_of_the_knight_errant", "name_ja": "遍歴騎士の真言 (Mantra of the Knight Errant)", "desc_ja": "不確かな時に自らを導くため、いにしえの英雄の言葉を唱える。シーンにつき1回、エーテルを2消費して「光の微粒子（Radiant Motes）」を3つ保持（Hold）する。微粒子はあなたの周囲を照らし、意志に応じて動く浮遊する光の球だ。Moteを1消費して以下のいずれかを行う：絶望や恐怖に駆られた者の感情を鎮める―ケイオス・ビーストの存在を感知する―幻影を打ち払い偽りを暴く―最も近い集落または真水の方角を知る。"}, {"id": "knightly_sword_talent_open_mind", "name_ja": "開かれた心 (Open Mind)", "desc_ja": "自らの偏見、無知、または先入観のために苦闘したとき、自分の視点を見直すことでストレスを1回復する。〈共感〉〈探索〉または〈研究/調査〉で奮起（Push yourself）するとき、優位（Potency）を得る。"}, {"id": "knightly_sword_talent_swords_to_plowshares", "name_ja": "剣を鋤に (Swords to Plowshares)", "desc_ja": "歴史の探究と実体験を通じて、あなたは誰よりも平和の尊さを理解している。争いを鎮静化（デエスカレート）させるとき、次の判定に+1d（フォワード）を得る。暴力が避けられないときは、弱者（通常、民間人、負傷者、野生動物など）を護るための判定に+1d（Ongoing）を得る。"}, {"id": "knightly_sword_talent_what_all_by_myself", "name_ja": "なに、私一人で？ (What—All by Myself?)", "desc_ja": "セットアップ・アクション（Setup actions）に優位（Potency）を得る。ミッションにつき1回、グループ・スキルチェックまたはコンボ・アタックで〈全力（GO ALL OUT）〉を発動したとき、1点以上のエーテルを消費し、それと同量のストレスを受けることで、消費したエーテルの数までの参加者にも同様に〈全力（GO ALL OUT）〉を発動させることができる。"}], "mods": [{"id": "knightly_sword_mod_talisman_of_purity", "name_ja": "清浄の護符", "name_en": "Talisman of Purity", "tech_cost": 1, "desc_ja": "ケイオスによる代償への抵抗に+1dし、ケイオス・ビーストからの被ダメ-1。", "desc_full_ja": "ナイトリーソードに嵌め込まれた霊的な宝石またはメダリオン。ケイオスによる代償（Consequence）に抵抗（Resist）する際+1dを振り、ケイオス・ビーストから受けるダメージが-1される。", "scope": "playbook"}, {"id": "knightly_sword_mod_adamantine_whetstone", "name_ja": "アダマンタイトの砥石", "name_en": "Adamantine Whetstone", "tech_cost": 1, "desc_ja": "完璧な斬れ味を保つ破壊不能の砥石。ナイトリーソードの与ダメージ+1。", "desc_full_ja": "ほぼ破壊不能な金属でできた携帯用の砥石により、完璧な刃こぼれなき斬れ味を保つ。ナイトリーソードで与えるダメージが+1される。", "scope": "playbook"}, {"id": "knightly_sword_mod_reliquary_of_the_white_dove", "name_ja": "白鳩の聖遺物箱", "name_en": "Reliquary of the White Dove", "tech_cost": 2, "desc_ja": "チャージ2獲得。平穏時に1消費でダメ2回復または有害セットバック深刻度-1。", "desc_full_ja": "周囲の慈悲、愛、義務感をゆっくりと凝縮し、強力なエーテル軟膏へと変える魔導装置。あなたのナイトリーソードはチャージ（Charge）を2得る。落ち着いた瞬間にチャージを1消費して以下のいずれかを行う：ダメージを2回復する―有害なセットバック（Setback）の深刻度を1段階下げる。（危険な状況下ではアクション・ロールが必要になる場合がある。）", "scope": "playbook"}, {"id": "knightly_sword_mod_field_respite_kit", "name_ja": "野戦休息キット", "name_en": "Field Respite Kit", "tech_cost": 3, "desc_ja": "ミッション1回、仲間とグループ気晴らし実行可。最高出目分エスカレーション進捗。", "desc_full_ja": "長期任務中の訓練生をリフレッシュさせる少量の香油、お香、石鹸を収めたチャームがナイトリーソードに付いている。ミッションにつき1回、あなたと任意の数のチームメイトは「グループ気晴らし（Group Cut Loose）」ダウンタイム・アクションを実行できる。その後、参加者のうち最も高い出目に基づいてエスカレーション・クロック（Escalation Clock）を進捗させる。", "scope": "playbook"}]}, {"id": "launcher", "name_ja": "ランチャー（重火器・発射機）", "name_en": "THE LAUNCHER", "weight_ja": "重", "weight_en": "heavy", "range_ja": "遠距離・射撃", "tags_ja": "爆発 (explosive), 乱雑 (messy)", "res_type_en": "Ammo", "res_type_ja": "弾薬", "res_max": "2", "skills_count": 2, "skills_ja": "〈エンジニア〉|〈鼓舞/指揮〉|〈魅了〉|〈破壊〉", "trait": {"name_ja": "撃てるうちに撃ち尽くせ (Smoke ‘em if You Got ‘em)", "desc_ja": "ミッションにつき1回、ランチャーの残弾が0になったとき、1 XPをマークする。"}, "talents": [{"id": "launcher_talent_bombastic", "name_ja": "大仰で派手（ボンバスティック） (Bombastic)", "desc_ja": "〈魅了〉のスキルレーティングを+1する（最大3）。良い意味でも悪い意味でも、誰かに第一印象を与える際、優位（Potency）を得る。"}, {"id": "launcher_talent_heart_onyour_sleeve", "name_ja": "感情全開 (Heart on Your Sleeve)", "desc_ja": "【心情】を使って行動するとき、最初の奮起（Push yourself）のストレス消費が0になる。【心情】で抵抗（Resist）するときは常に受けるストレスが+1される。"}, {"id": "launcher_talent_itano_circus", "name_ja": "板野サーカス (Itano Circus)", "desc_ja": "弾薬の最大容量が+2される。攻撃ロールで奮起（Push yourself）する際、任意の数の弾薬を消費して以下のいずれか（または両方）を行える：消費した弾薬と同量だけモメンタムを増加させる―消費した弾薬と同数の追加ダイスを振る。これによりモメンタムが3に達した場合、そのまま〈全力（GO ALL OUT）〉を発動できる。"}, {"id": "launcher_talent_rock_it_hop", "name_ja": "ロケット・ジャンプ！ (Rock-It Hop!)", "desc_ja": "爆発から受けるダメージが2減少する。弾薬を消費して奮起（Push yourself）することで、以下のいずれかにおいて超人的な離れ業をやってのけることができる：運動能力（athleticism）―表現力（expression）―派手な見せ場（showmanship）。（通常通り+1dおよび／または効果上昇も得る。）"}, {"id": "launcher_talent_stick_to_itiveness", "name_ja": "粘り強さ (Stick-to-itiveness)", "desc_ja": "「絶望的（Desperate）」な代償に抵抗（Resist）する際、+1dを得る。アクション・ロールに失敗したとき、次のアクション・ロールに+1d（フォワード）を得る。"}], "mods": [{"id": "launcher_mod_boop", "name_ja": "ブープ！", "name_en": "Boop!", "tech_cost": 1, "desc_ja": "あなたの弾頭は限定的な誘導性能を持つ：それらを使用する際、3の出目を振り直すことができる。", "desc_full_ja": "あなたの弾頭は限定的な誘導性能を持つ：それらを使用する際、3の出目を振り直すことができる。", "scope": "playbook"}, {"id": "launcher_mod_nowyou_see_me_nowyou_don_t", "name_ja": "煙幕と閃光", "name_en": "NowYou See Me, NowYou Don't!", "tech_cost": 1, "desc_ja": "あなたの弾頭は発煙弾や信号弾としても使用できる。弾薬を1消費すれば、それらは優位（Potency）を得る。", "desc_full_ja": "あなたの弾頭は発煙弾や信号弾としても使用できる。弾薬を1消費すれば、それらは優位（Potency）を得る。", "scope": "playbook"}, {"id": "launcher_mod_dicey_explosives", "name_ja": "ダイシー・エクスプローシブ！", "name_en": "Dicey Explosives!", "tech_cost": 2, "desc_ja": "攻撃で6が出るたび+1d追加（連鎖可）。最終的に出た6の総数分の爆発ダメを受ける。", "desc_full_ja": "ランチャーでアクション・ロールを行った際、6の出目が1つ出るたびに結果に+1dを追加する。この方法でさらに6が出た場合、この処理を繰り返す。ダイスを追加し終えたとき、出た6の総数に等しい爆発ダメージを受ける。", "scope": "playbook"}, {"id": "launcher_mod_unnamed", "name_ja": "（名称未記載：極限射程化）", "name_en": "(Unnamed in v.0.6 PDF)", "tech_cost": 2, "desc_ja": "あなたのランチャーの弾頭は超遠距離（extreme range）になる。", "desc_full_ja": "あなたのランチャーの弾頭は超遠距離（extreme range）になる。", "scope": "playbook"}, {"id": "launcher_mod_cowbell_reserves", "name_ja": "カウベル予備弾", "name_en": "Cowbell Reserves", "tech_cost": 3, "desc_ja": "弾薬消費時「圧倒的火力」発動（脅威度+1、アクション進捗+1。優位と重複）。", "desc_full_ja": "いつでも少しばかり爆音を足すことができる。ランチャーの弾薬を消費したとき、あなたは「圧倒的火力（Overwhelming Firepower）」を伴って行動する。圧倒的火力はあなたの脅威度（Threat）を+1し、アクションによる進捗（Progress）を+1する。（これは優位（Potency）と重複する。）", "scope": "playbook"}]}, {"id": "nomicon", "name_ja": "＿ノミコン（魔導書・記録媒体）", "name_en": "THE _NOMICON", "weight_ja": "軽", "weight_en": "light", "range_ja": "至近・近接", "tags_ja": "脆弱 (fragile)", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈隠蔽/欺瞞〉|〈探索〉|〈鼓舞/指揮〉|〈研究/調査〉", "trait": {"name_ja": "呪いの継承者 (Bearer of the Curse)", "desc_ja": "あなたの＿ノミコンの題名を1つ選ぶ。【熟練】が上昇するたび、その主題に関連する禁断の知識、失われた歴史、あるいは恐るべき秘密を学ぶ。\n▶『エーテロノミコン 第1巻』：エーテル、スパーク、魔術に関する論文。\n▶『エントロピノミコン 第1巻』：ケイオス・ビーストの年代記。\n▶『ホプロノミコン 第1巻』：ファイターとアカデミーの歴史記録。"}, "talents": [{"id": "nomicon_talent_abyss_blinked_first", "name_ja": "深淵が先に瞬きした (The Abyss Blinked First)", "desc_ja": "あなたの精神は鋼の檻であり、過酷な真実、計り知れない恐怖、異界の感覚に直面しても揺るがない。最大ストレスがあなたの＿ノミコンの【熟練】分だけ増加する。"}, {"id": "nomicon_talent_alacrity", "name_ja": "敏捷なる知性 (Alacrity)", "desc_ja": "レッスン（Lesson）につき1回ずつ、【知覚】【直感】【意志】のそれぞれについて無料で奮起（Push yourself）できる。〈探索〉または〈研究/調査〉で奮起したり情報収集を行ったりする際、優位（Potency）を得る。（該当する【精神】の属性を強化するまで、Alacrityによる無料奮起は使用できない。）"}, {"id": "nomicon_talent_fractal_continuum", "name_ja": "フラクタル連続体 (Fractal Continuum)", "desc_ja": "ストレスを5以上受けている間、多少の労力を払うことであらゆる生物・場所・物体の過去を垣間見ることができる。ストレスを8以上受けている間は、代わりに未来を垣間見ることができる。過去を長時間覗き込むと消耗し――未来を長時間覗き込むと死に至る。"}, {"id": "nomicon_talent_house_of_leaves", "name_ja": "葉の家 (House of Leaves)", "desc_ja": "〈エンジニア〉のスキルレーティングを+1する（最大3）。＿ノミコンの研究によって、迷宮のような脱線、難解な脚注、循環する付録の数々に慣れきっているため、あなたは完璧な方向感覚を備えており、議論や感情、あるいは周囲の環境の中で迷うことがない。"}, {"id": "nomicon_talent_sage_advice", "name_ja": "賢者の助言 (Sage Advice)", "desc_ja": "友人が助言や知恵を求めてきたとき、＿ノミコンから寓話、定理、または引用を暗唱してやることができる。相手がその助言に従った場合、あなたは1 XPをマークする。相手がその助言のせいで苦境に陥った場合、相手は1 XPをマークする。"}], "mods": [{"id": "nomicon_mod_spinal_reconstruction", "name_ja": "背表紙再構築", "name_en": "Spinal Reconstruction", "tech_cost": 1, "desc_ja": "あなたの＿ノミコンは「脆弱（fragile）」タグを失う。", "desc_full_ja": "あなたの＿ノミコンは「脆弱（fragile）」タグを失う。", "scope": "playbook"}, {"id": "nomicon_mod_volume_ii", "name_ja": "第2巻", "name_en": "Volume II", "tech_cost": 2, "desc_ja": "第2巻解読（エーテル:最大+1／エントロピ:激化時勢い+1／ホプロ:シナジー+1）。", "desc_full_ja": "あなたの＿ノミコンの次巻を解読する。\n▶『エーテロノミコン 第2巻』：最大エーテルを+1する。\n▶『エントロピノミコン 第2巻』：誰かがエスカレート（escalate）するたび、モメンタムを1得る。\n▶『ホプロノミコン 第2巻』：チーム・シナジー（Team Synergy）を+1する。\n（※前提条件：第1巻）", "scope": "playbook"}, {"id": "nomicon_mod_volume_iii", "name_ja": "第3巻", "name_en": "Volume III", "tech_cost": 3, "desc_ja": "第3巻解読（エーテル:最大+2／エントロピ:他者激化+1d／ホプロ:熟練+1）。", "desc_full_ja": "あなたの＿ノミコンの次巻を解読する。\n▶『エーテロノミコン 第3巻』：最大エーテルを+2する。\n▶『エントロピノミコン 第3巻』：他の誰かがエスカレートしたとき、次の判定に+1d（フォワード）を得る。\n▶『ホプロノミコン 第3巻』：【熟練】レーティングを+1する。\n（※前提条件：第2巻）", "scope": "playbook"}, {"id": "nomicon_mod_volume_iv", "name_ja": "第4巻", "name_en": "Volume IV", "tech_cost": 4, "desc_ja": "第4巻解読（エーテル:最大+3／エントロピ:対ケイオス2倍ダメ／ホプロ:全優位）。", "desc_full_ja": "あなたの＿ノミコンの最終巻を解読する。\n▶『エーテロノミコン 第4巻』：最大エーテルを+3する。\n▶『エントロピノミコン 第4巻』：ケイオス・ビーストに与えるダメージが2倍になる。\n▶『ホプロノミコン 第4巻』：あらゆる対象に対して優位（Potency）を得る。\n（※前提条件：第3巻）", "scope": "playbook"}, {"id": "nomicon_mod_bibliographic_cipher", "name_ja": "書誌暗号", "name_en": "Bibliographic Cipher", "tech_cost": 4, "desc_ja": "＿ノミコンの知識の起源を突き止める特殊な解読アルゴリズム。通常の方法ではほぼ突き止めることが不可能な出典元を解明できる。", "desc_full_ja": "＿ノミコンの知識の起源を突き止める特殊な解読アルゴリズム。通常の方法ではほぼ突き止めることが不可能な出典元を解明できる。", "scope": "playbook"}]}, {"id": "rapier", "name_ja": "レイピア（細剣）", "name_en": "THE RAPIER", "weight_ja": "中", "weight_en": "medium", "range_ja": "至近・近接", "tags_ja": "精密 (precise)", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈隠蔽/欺瞞〉|〈技巧/洗練〉|〈研究/調査〉|〈魅了〉", "trait": null, "talents": [{"id": "rapier_talent_formally_trained", "name_ja": "正規の鍛錬 (Formally Trained)", "desc_ja": "〈技巧/洗練〉のスキルレーティングを+1する（最大3）。【熟練】能力値の上限が+1される。"}, {"id": "rapier_talent_frostfire_aria", "name_ja": "霜炎のアリア (Frostfire Aria)", "desc_ja": "エーテルを2消費してこの魔法のアリアを歌い始め、「詩節（Verses）」を3つ保持（Hold）する。Verseを1消費して以下のいずれかを行う：炎または冷気の爆発を放つ―感情を鎮めたり高ぶらせたりする際に奮起（Push yourself）する―他者から自分へと注意を引きつける。"}, {"id": "rapier_talent_ice_queen", "name_ja": "氷の女王 (Ice Queen)", "desc_ja": "社会的状況や精神的・感情的害を受けた際の代償に対して、【肉体】【精神】【心情】と並んで〈威圧〉〈共感〉または〈魅了〉を使って抵抗（Resist）できる。チームメイトからの「気晴らし（Cut Loose）」の誘いを断ったとき、またはチームメイトの「ソーシャル・クライシス（Social Crisis）」を無視したとき、1 XPをマークする。"}, {"id": "rapier_talent_socialite", "name_ja": "社交界の華 (Socialite)", "desc_ja": "社交フェイズ（Social Phase）中のロールに+1dを得る。慣習、礼儀作法、社会的ヒエラルキーに関する広範な知識を持ち、それらを利用して情報収集（Gather Information）を行う際に+1dを得る。"}, {"id": "rapier_talent_waltz_of_the_white_rose", "name_ja": "白薔薇のワルツ (Waltz of the White Rose)", "desc_ja": "エーテルを2消費してこの魔法の決闘構えに入り、「エーテルの薔薇（Aetherial Rose）」を1つ保持（Hold）する。薔薇を1つ以上保持しこの構えを維持している間、あなたはあらゆる対象に対して優位（Potency）を得る。薔薇を1つ消費して以下のいずれかを行う：戦闘中に薔薇を「Armor N」として使用する（Nはあなたのレイピアの【熟練】に等しい）―比類なき速度と優雅さで移動する。"}], "mods": [{"id": "rapier_mod_crystallized_aether_reserves", "name_ja": "結晶化エーテル予備槽", "name_en": "Crystallized Aether Reserves", "tech_cost": 1, "desc_ja": "あなたのレイピアはチャージ（Charge）を1得る。チャージを1消費してエーテルを2回復する。", "desc_full_ja": "あなたのレイピアはチャージ（Charge）を1得る。チャージを1消費してエーテルを2回復する。", "scope": "playbook"}, {"id": "rapier_mod_purpose", "name_ja": "使命（パーパス）", "name_en": "Purpose", "tech_cost": 1, "desc_ja": "ミッション1回、窮地に「Purpose」1保持。消費してストレス2を回復できる。", "desc_full_ja": "あなたの武器にはあなただけが読める秘密のメッセージが刻まれている。ミッションにつき1回、絶望・失意・疑念の瞬間にその言葉を胸に刻み、「Purpose（使命）」を1つ保持（Hold）できる。Purposeを1消費してストレスを2回復する。", "scope": "playbook"}, {"id": "rapier_mod_holodex", "name_ja": "ホロデックス", "name_en": "Holodex", "tech_cost": 2, "desc_ja": "エーテル1消費で起動し、膨大な図書館・DBに即座にアクセスして情報収集可。", "desc_full_ja": "一見すると中身の詰まった小さなプリズムに見えるが、実際には内部がほぼ完全に中空になっており、エーテル情報を記録するための数千平方メートルもの表面積が彫り込まれている。エーテルを1消費してホロデックスを起動し、膨大な図書館やデータベースに即座にアクセスしているかのように情報収集（Gather Information）を行える。", "scope": "playbook"}, {"id": "rapier_mod_ampule_of_soulsteel_salts", "name_ja": "ソウルスティール塩のアンプル", "name_en": "Ampule of Soulsteel Salts", "tech_cost": 3, "desc_ja": "ミッション1回、エーテル2で1対1の「決闘者の結界」を展開（条件未合意なら死闘）。", "desc_full_ja": "あなたのレイピアには、1対1の決闘のために魔術的に指定された領域「決闘者の結界（Duelists' Wards）」を作り出すための必須成分が備わっている。ミッションにつき1回、この結界を展開できる。決闘者の結界を作る際は、儀式の円を描き、エーテルを2消費して、円の中にいる対戦相手を1人選ぶ。それ以外の全員は結界の外へ弾き出され、決闘が決着するまで二人は結界から出ることができない。決闘の条件が合意されていない場合、その決闘は死闘（命のやり取り）となる。", "scope": "playbook"}, {"id": "rapier_mod_personal_assistive_intelligence", "name_ja": "個人用支援知性体（P.A.I.）", "name_en": "Personal Assistive Intelligence", "tech_cost": 4, "desc_ja": "指定フェイズに恩恵（学業:学習+1／訓練:全優位／社交:ソロ活動+1）。", "desc_full_ja": "あなたのレイピアにはアカデミーでの時間管理を支援するかなり高度な支援知性体（P.A.I.）が組み込まれている。このモッドを取得した際、P.A.I.を「学業フェイズ（School Phase）」「訓練フェイズ（Training Phase）」「社交フェイズ（Social Phase）」のいずれかに割り当てる。次の該当フェイズ中、以下の恩恵を得る：\n▶学業フェイズ：任意の学習クロック（Learning Clock）の進捗を+1する。\n▶訓練フェイズ：あらゆる対象に対して優位（Potency）を得る。\n▶社交フェイズ：ソロのダウンタイム・アクションを追加で1回実行できる。\n次の学業フェイズの開始時までP.A.I.の割り当てを変更することはできない。", "scope": "playbook"}]}, {"id": "rifle", "name_ja": "ライフル（長銃）", "name_en": "THE RIFLE", "weight_ja": "重", "weight_en": "heavy", "range_ja": "超遠距離・射撃", "tags_ja": "精密 (precise)", "res_type_en": "Ammo", "res_type_ja": "弾薬", "res_max": "3", "skills_count": 2, "skills_ja": "〈エイム〉|〈隠蔽/欺瞞〉|〈エンジニア〉|〈探索〉", "trait": null, "talents": [{"id": "rifle_talent_eagle_eyes", "name_ja": "鷲の目 (Eagle Eyes)", "desc_ja": "通常よりもはるかに遠い距離の対象を鮮明に見ることができる。観察、精査、または忍耐によって情報収集（Gather Information）を行う際、+1dを得る。"}, {"id": "rifle_talent_environmental_training", "name_ja": "特殊環境訓練 (Environmental Training)", "desc_ja": "自由落下、水中、レイヴ会場などの過酷または特殊な環境の影響による効果減少（reduced effect）や立ち位置の悪化（worse position）を受けない。常に静かで安全な狙撃地点を見つけ出すことができる。"}, {"id": "rifle_talent_riflecore", "name_ja": "ライフルコア (Riflecore)", "desc_ja": "各ミッションの開始時、あなたのライフルの【熟練】に等しい数の「Sharpshooter（狙撃手）」を保持（Hold）する。Sharpshooterを1消費して以下のいずれか1つを行う：本来不可能な狙撃をやってのける―軽業や運動能力の離れ業を行う際に奮起（Push yourself）する―戦場で武器を素早く修理・整備・改造する。"}, {"id": "rifle_talent_slayer", "name_ja": "スレイヤー (Slayer)", "desc_ja": "あなたの悪名は轟いており、あなたの腕前が疑われたり権力者から要求を却下されたりした際、優位（Potency）を得る。あなたより脅威度（Threat）が低いケイオス・ビーストを殺すために単独で狙撃したなら、あなたはそれを仕留める。（あなたの脅威度は通常アカデミーの学年に等しく、優位があれば+1される。）"}, {"id": "rifle_talent_watcher_in_the_wings", "name_ja": "舞台袖の監視者 (Watcher in the Wings)", "desc_ja": "あなたの銃弾が飛ぶとき、チームメイトの神経が落ち着く。〈鼓舞/指揮〉のスキルレーティングを+1する（最大3）。チームワーク・アクションに参加するたび、仲間はそれに伴う代償への抵抗（Resist）を+1dで行える。"}], "mods": [{"id": "rifle_mod_laser_sights", "name_ja": "レーザーサイト", "name_en": "Laser Sights", "tech_cost": 1, "desc_ja": "あなたのライフルは超遠距離（extreme range）において優位（Potency）を得る。", "desc_full_ja": "あなたのライフルは超遠距離（extreme range）において優位（Potency）を得る。", "scope": "playbook"}, {"id": "rifle_mod_scope_aetherometer", "name_ja": "スコープ式エーテル計測器", "name_en": "Scope Aetherometer", "tech_cost": 1, "desc_ja": "生物および環境のエーテル（ただしケイオス・ビーストを除く）を知覚でき、数メートルの厚さの固体越しでも視認できる。", "desc_full_ja": "生物および環境のエーテル（ただしケイオス・ビーストを除く）を知覚でき、数メートルの厚さの固体越しでも視認できる。", "scope": "playbook"}, {"id": "rifle_mod_metabolic_inhibitor", "name_ja": "代謝抑制装置", "name_en": "Metabolic Inhibitor", "tech_cost": 2, "desc_ja": "10分で設置。接続中は飲食睡眠なしで1週間監視でき、神経直結で即応可能。", "desc_full_ja": "この大型の装備は設置と撤収に少なくとも10分を要し、装置・ライフル・あなたの間にフィードバック・ループを形成する。代謝抑制装置に接続している間、あなたは冬眠に近い休眠状態に入り、食料・水・休息なしで1週間監視を続けることができる。同時にライフルはあなたの神経系と直結しており、身体機能が低下していても素早く反応できる。", "scope": "playbook"}, {"id": "rifle_mod_superior_rifling", "name_ja": "精密施条", "name_en": "Superior Rifling", "tech_cost": 2, "desc_ja": "あなたのライフルの銃身は極限の精度で加工されており、与えるダメージが+1される。", "desc_full_ja": "あなたのライフルの銃身は極限の精度で加工されており、与えるダメージが+1される。", "scope": "playbook"}, {"id": "rifle_mod_sympathetic_railgun_barrel", "name_ja": "共鳴レールガン銃身", "name_en": "Sympathetic Railgun Barrel", "tech_cost": 3, "desc_ja": "ミッション1回、弾薬×3ダメ追加。周囲全員の全能力値が重荷（【熟練】個軽減可）。", "desc_full_ja": "ライフルに装着された大型の銃身が周囲の精神的・感情的エネルギーを収集し、破壊的な一撃の燃料とする。ミッションにつき1回、任意の数の弾薬を消費して凝縮された感情と思念の特殊弾を発射し、消費した弾薬1発につき追加で3ダメージを与える。このときあなたと周囲の者は凄まじい精神的フィードバックを受け、【肉体】【精神】【心情】【熟練】すべてが「重荷（Burdened）」状態になる。あなたは自分のライフルの【熟練】に等しい数だけ、重荷状態にする能力値を減らすことができる。（周囲の他の者は運がなかったと諦めるしかない。）", "scope": "playbook"}]}, {"id": "scythe", "name_ja": "サイス（大鎌）", "name_en": "THE SCYTHE", "weight_ja": "重", "weight_en": "heavy", "range_ja": "近距離・近接", "tags_ja": "", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈アクロバット〉|〈威圧〉|〈魅了〉|〈破壊〉", "trait": null, "talents": [{"id": "scythe_talent_abyssal_gaze", "name_ja": "深淵の視線 (Abyssal Gaze)", "desc_ja": "誰かと視線を合わせた際の恐怖や威圧の判定に+1dを得る。武器を手にしている場合はさらに優位（Potency）を得る。ケイオス・ビーストにとどめを刺したとき、その怪物が最後に殺した獲物の記憶を吸収できる。"}, {"id": "scythe_talent_all_hallows_cleave", "name_ja": "万聖節の薙ぎ払い (All Hallows' Cleave)", "desc_ja": "多勢に無勢の状況やコンボ・アタックを行う際、+1dを得る。〈全力（GO ALL OUT）〉を発動したとき、ストレスを2回復する。"}, {"id": "scythe_talent_behold_my_dark_gift", "name_ja": "我が闇の賜物を見よ (Behold My Dark Gift)", "desc_ja": "何らかの理由でエーテルを消費するたび、同量の「闇のエーテル（Dark Aether）」――煙のように立ち昇る禍々しいエネルギー――を得る。闇のエーテルを消費して以下のことを行える：\n▶闇のエーテルをアーマーとして消費する（通常のエーテルと同等の効果）。\n▶闇のエーテルを1消費して、抉り裂く闇の矢を放つ。\n▶闇のエーテルを3消費して、触れた植物や木材を枯らす。\n▶闇のエーテルを5消費して、自分以下の脅威度（Threat）の障害物を殺す（排除する）。\n▶闇のエーテルを8以上消費して、あらゆる対象に消費した量に等しいダメージを与える。\n各シーンの終了時、未使用の闇のエーテルをすべて失い、その量に等しいダメージを受ける。"}, {"id": "scythe_talent_morbid_fascination", "name_ja": "病的な執着 (Morbid Fascination)", "desc_ja": "あなたは特定のケイオス・ビースト、武器、魔法、またはその他の専門分野に関する広範かつ不穏な知識を持っている。そのような主題を1つ選ぶこと。その知識を活用する際、優位（Potency）を得る。"}, {"id": "scythe_talent_reap_and_sow", "name_ja": "刈り取りと種蒔き (Reap and Sow)", "desc_ja": "生殺与奪を握った生き物の命を見逃したとき、奮起（Push yourself）するたびにその生き物の助力を呼び出すことができる。特定の生き物を呼び出せるのは1回限りだが、他の手段で関係を築ける場合もある。ケイオス・ビーストが命乞いをして逃げ出すか、ましてやあなたの呼び声に応じるかは定かではない。"}], "mods": [{"id": "scythe_mod_familiar_s_roost", "name_ja": "使い魔の止まり木", "name_en": "Familiar's Roost", "tech_cost": 1, "desc_ja": "小型のカラス・精霊・ガーゴイルと使い魔契約。いつでも召喚し感覚共有・会話可。", "desc_full_ja": "大鎌には小さな止まり木と呪物が備わっており、あなたと小型のカラス類（corvid）、精霊（elemental）、またはガーゴイルを使い魔として魔術的に結びつける。使い魔はいつでも召喚・解除でき、その感覚を通して知覚し、使い魔を通して話すことができる。", "scope": "playbook"}, {"id": "scythe_mod_unholy_candor", "name_ja": "冒涜の率直", "name_en": "Unholy Candor", "tech_cost": 2, "desc_ja": "衝撃波により最大近接射程が【熟練】で延長：中距離(1)―遠距離(2)―超遠距離(3)。", "desc_full_ja": "大鎌の刃は研ぎ澄まされ、柄の筐体は凄まじい衝撃波を放つよう改造されている。大鎌の最大攻撃射程はあなたのサイスの【熟練】に応じて伸びる：中距離近接 mid-range melee (1)―遠距離近接 far melee (2)―超遠距離近接 extreme melee (3)。", "scope": "playbook"}, {"id": "scythe_mod_transmutation_matrix", "name_ja": "変換マトリクス", "name_en": "Transmutation Matrix", "tech_cost": 3, "desc_ja": "サイス関連のコスト・損失時、リソースを1対1で交換可（消費系／蓄積系）。", "desc_full_ja": "この魔導数学的印章により、サイスのタレント・モッドのコスト支払いや損失を受ける際、リソースを1対1で交換できる。（消費リソースはエーテル、弾薬、チャージ、ホールド。蓄積リソースはダメージとストレス。）", "scope": "playbook"}, {"id": "scythe_mod_death_s_hell_custom", "name_ja": "死神の地獄特注仕様", "name_en": "Death's Hell Custom", "tech_cost": 4, "desc_ja": "全対象に「死神の審判」獲得（脅威度+1、アクション進捗+1。優位と重複）。", "desc_full_ja": "大鎌の刃は暗く恐るべき力に満ち溢れており、あらゆる対象に対して「死神の審判（Death's Reckoning）」を得る。死神の審判はあなたの脅威度（Threat）を+1し、アクションによる進捗（Progress）を+1する。（これは優位（Potency）と重複する。）", "scope": "playbook"}]}, {"id": "shield", "name_ja": "シールド（盾）", "name_en": "THE SHIELD", "weight_ja": "軽 / 中 / 重（選択）", "weight_en": "light/medium/heavy", "range_ja": "至近・近接", "tags_ja": "", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈アクロバット〉|〈共感〉|〈鼓舞/指揮〉|〈研究/調査〉", "trait": {"name_ja": "防衛の勢い (Defensive Momentum)", "desc_ja": "他者を代償（Consequence）やダメージから護るたび、モメンタムを+1得る。あなたはレジスタンス・ロール（抵抗ロール）でも〈全力（GO ALL OUT）〉を発動できる。"}, "talents": [{"id": "shield_talent_boon_of_the_guardian", "name_ja": "守護者の恩寵 (Boon of the Guardian)", "desc_ja": "任意の量のエーテルを消費し、それを受け入れる意志のある仲間に均等に分配する。あなたの恩寵を受け取った者は、贈られたエーテルを自分自身のものとして消費できる。彼らがそれを使用したとき、あなたは瞬時に彼らの現在地、感情状態、および身体的健康状態を把握できる。"}, {"id": "shield_talent_immovable_object", "name_ja": "不動の物体 (Immovable Object)", "desc_ja": "【肉体】を強化し、【敏捷】【耐久】【筋力】のいずれか1つを得る。あなたが戦線を守り抜かねばならないとき、あなたはそれを成し遂げる。死のみがあなたの見張りを終わらせることができる。"}, {"id": "shield_talent_roll_with_the_punches", "name_ja": "打撃を受け流す (Roll with the Punches)", "desc_ja": "信念のために立ち上がれば頭を殴られたり腹に膝を入れられたりするものだが、あなたは受け止め方を心得ている。最大HPが+9される。"}, {"id": "shield_talent_stalwart", "name_ja": "不屈の忠誠 (Stalwart)", "desc_ja": "【心情】を強化し、【勇気】【高潔】【度胸】のいずれか1つを得る。正しいことをするために自分自身の利益に反する行動をとったとき、1 XPをマークする。"}, {"id": "shield_talent_work_now_play_later", "name_ja": "仕事が先、遊びは後 (Work Now, Play Later)", "desc_ja": "【精神】を強化し、【知覚】【直感】【意志】のいずれか1つを得る。あるクロックに取り組むかケイオス・ビーストを攻撃する最初の1回目において、その障害物に対する進捗（Progress）を+1得る。"}], "mods": [{"id": "shield_mod_deployable_airfoils", "name_ja": "展開式翼面", "name_en": "Deployable Airfoils", "tech_cost": 1, "desc_ja": "盾に「中距離・近接」タグを追加。投擲した際、望むなら手元へ戻ってくる。", "desc_full_ja": "格納式の翼面と補助翼により、あなたの盾は「中距離・近接（mid-range melee）」タグを得る。投擲した際、望むなら盾はあなたの手元に戻ってくる。", "scope": "playbook"}, {"id": "shield_mod_hazard_device", "name_ja": "HAZARD装置", "name_en": "HAZARD Device", "tech_cost": 1, "desc_ja": "湿度・温度・臭気などの環境的危険を和らげる小さな魔法フィールドを生成する。", "desc_full_ja": "「快適オーラ領域・休息装置（Hospitable Aura Zone and Respite Device）」は、湿度・温度・臭気などの環境的危険を和らげる小さな魔法のフィールドを生成する（ただし極限環境では効果が落ちる）。", "scope": "playbook"}, {"id": "shield_mod_hazardous_system", "name_ja": "HAZARDOUSシステム", "name_en": "HAZARDOUS System", "tech_cost": 1, "desc_ja": "チャージ2獲得。消費でHAZARD出力強化・グループ防護・持続延長（要HAZARD装置）。", "desc_full_ja": "あなたの盾はチャージ（Charge）を2得る。HAZARD最適化統合システムにより、HAZARD装置は仲間にも一時的な安らぎを提供できるようになる。チャージを1以上消費して以下のうち1つ以上を行う：HAZARD装置の出力を一時的に強化する―グループを短時間防護する―強化された緩和効果の持続時間を延ばす。（※前提条件：HAZARD装置）", "scope": "playbook"}, {"id": "shield_mod_shield_array", "name_ja": "シールド・アレイ", "name_en": "Shield Array", "tech_cost": 2, "desc_ja": "チャージ3獲得・分離可能に。チャージ1以上消費で遠方の1人以上を護れる。", "desc_full_ja": "あなたの盾はチャージ（Charge）を3得て、半自律的なパーツへと分離できるようになる。チャージを1以上消費して、遠方の1人以上の人々を護る。（距離が遠いほど、アドバイザーの裁量でより多くのチャージ消費が必要になる場合がある。）", "scope": "playbook"}, {"id": "shield_mod_universal_translator", "name_ja": "万能翻訳機", "name_en": "Universal Translator", "tech_cost": 2, "desc_ja": "エーテル1消費で音響機器化し、膨大な言語の送受信・通訳や音声ソフト連携が可能。", "desc_full_ja": "あなたの盾はエーテル音響機器として機能するよう改造されている。エーテルを1消費することでこの機能を起動できる。盾は膨大な種類の言語を送受信・通訳でき、音声処理ソフトウェアとの連携設定も容易に行える。", "scope": "playbook"}, {"id": "shield_mod_soulsteel_composite_retrofit", "name_ja": "ソウルスティール複合装甲改修", "name_en": "Soulsteel Composite Retrofit", "tech_cost": 3, "desc_ja": "エーテル2消費で単一攻撃源からの被ダメを半減（複数人同時防護でも消費2のみ）。", "desc_full_ja": "あなたの盾は運動エネルギーを効率的に拡散できるエーテル感応素材で構成されている。エーテルを2消費することで、単一の攻撃源から受けるダメージを半分（切り上げ）に抑える。（同じ攻撃源から複数人を同時に護る場合でも、消費するエーテルは2だけでよい。）", "scope": "playbook"}]}, {"id": "shotgun", "name_ja": "ショットガン（散弾銃）", "name_en": "THE SHOTGUN", "weight_ja": "中", "weight_en": "medium", "range_ja": "中距離・射撃", "tags_ja": "乱雑 (messy), 拡散 (spread)", "res_type_en": "Ammo", "res_type_ja": "弾薬", "res_max": "3", "skills_count": 2, "skills_ja": "〈威圧〉|〈探索〉|〈魅了〉|〈破壊〉", "trait": null, "talents": [{"id": "shotgun_talent_blowhard", "name_ja": "大言壮語 (Blowhard)", "desc_ja": "各訓練ミッションの開始時、1＋あなたのショットガンの【熟練】に等しい数の「Bullshit（ハッタリ）」を保持（Hold）する。Bullshitを1消費して以下のいずれかを行う：アクション・ロールで奮起（Push yourself）する―レジスタンス・ロールに+1dを加える。優位に立つためにあなたが用いる汚い手口、真っ赤な嘘、誇張、その他の愉快な振る舞いとはどのようなものか？"}, {"id": "shotgun_talent_fight_and_fight_response", "name_ja": "闘争・闘争反応 (Fight and Fight Response)", "desc_ja": "他人が自分を型に嵌めたがろうと知ったことか――追い詰められた獣を相手にしなければならないのは連中の方だ。攻撃ロールを行ったとき、常に最低1ダメージを与える（失敗したときでさえ）。HPが半分未満の間、すべての攻撃ロールに+1d（Ongoing）を得る。"}, {"id": "shotgun_talent_ride_or_die", "name_ja": "一蓮托生（ライド・オア・ダイ） (Ride or Die)", "desc_ja": "各学業フェイズ（School Phase）の開始時、コネクションが1より高い仲間1人につき1つの「Ride or Die」を次の学業フェイズまで保持（Hold）する。Ride or Dieを1消費して以下のいずれかを行う：瞬時にその仲間の傍に駆けつける―その仲間のストレスを2回復する―その仲間を庇う（cover）際に+1dを振る。"}, {"id": "shotgun_talent_sod_off", "name_ja": "失せろ！！！ (Sod Off!!!)", "desc_ja": "あなたは最高に最悪な威圧オーラを放っている。誰かを脅迫したり強要したり、その他相手の一日を台無しにしようとしたりするとき、+1dを振る。ケイオス・ビーストは概して周囲の他のどの生物よりも優先してあなたを攻撃する。"}, {"id": "shotgun_talent_knowwhen_to_fold_em", "name_ja": "引き際の見極め (Know When to Fold 'Em)", "desc_ja": "何らかのソースから1つでもホールド（Hold）を持っている場合、保持しているすべてを消費することで、アクションのあらゆる代償を無効化し、あらゆる状況から安全に離脱できる。この方法で「Ride or Die」を消費した場合、あなたはやってしまった（仲間を見捨てた）ことになり、裏切った相手と和解するまであらゆるロールに-1d（Ongoing）のペナルティを受ける。"}], "mods": [{"id": "shotgun_mod_choke", "name_ja": "チョーク（絞り）", "name_en": "Choke", "tech_cost": 1, "desc_ja": "射程を「遠距離・射撃」「極めて乱雑」に強化。「銃身切り詰め」と併用不可。", "desc_full_ja": "ショットガンの射程が「遠距離・射撃（far projectile）」「極めて乱雑（very messy）」に強化される。「銃身切り詰め（Sawed Off）」とは併用不可。", "scope": "playbook"}, {"id": "shotgun_mod_sawed_off", "name_ja": "銃身切り詰め（ソードオフ）", "name_en": "Sawed Off", "tech_cost": 1, "desc_ja": "射程が「近距離・射撃（乱雑・拡散）」に短縮される代わりに与ダメ+1。チョーク不可。", "desc_full_ja": "ショットガンの射程が「近距離・射撃（near projectile）（乱雑 messy, 拡散 spread）」に短縮される代わりに、ショットガンで与えるダメージが+1される。「チョーク（Choke）」とは併用不可。", "scope": "playbook"}, {"id": "shotgun_mod_an_extra_barrel", "name_ja": "追加銃身", "name_en": "An Extra Barrel", "tech_cost": 2, "desc_ja": "ショットガンで与えるダメージが+1される。", "desc_full_ja": "ショットガンで与えるダメージが+1される。", "scope": "playbook"}, {"id": "shotgun_mod_another_extra_barrel", "name_ja": "さらなる追加銃身", "name_en": "Another Extra Barrel", "tech_cost": 2, "desc_ja": "ショットガンで与えるダメージが+1される。（※前提条件：追加銃身 / An Extra Barrel）", "desc_full_ja": "ショットガンで与えるダメージが+1される。（※前提条件：追加銃身 / An Extra Barrel）", "scope": "playbook"}, {"id": "shotgun_mod_beer_hold", "name_ja": "ビール・ホルダー", "name_en": "Beer Hold", "tech_cost": 3, "desc_ja": "社交フェイズ開始時に缶を最大3本保持。ストレス1で他の任意のホールド代用可。", "desc_full_ja": "ショットガンの銃床が超小型の携帯冷蔵庫に改造されている。社交フェイズ（Social Phase）の開始時、最大3本の「缶（Cans）」を保持（Hold）する。ストレスを1受けることで、他のあらゆるホールド（Hold）の代わりに缶を1本消費できる。また、通常の飲料缶としての用途にも自由に使える。", "scope": "playbook"}, {"id": "shotgun_mod_fafo_vengeance_delimiter", "name_ja": "FAFO™復讐リミッター解除装置", "name_en": "FAFO™Vengeance Delimiter", "tech_cost": 4, "desc_ja": "HP0での死亡を弾薬1消費で回避し、HP0の間は与ダメ2倍（シーン終了時HP0で死亡）。", "desc_full_ja": "ショットガンの攻撃的で強靭な核と共鳴するインプラント、呪い、あるいは魔導刺青。HPが0になって死亡する状況になったとき、代わりに弾薬を1消費して生き延びることができる。HPが0の間、あなたが与えるダメージは2倍になる。（HP0の状態でさらにダメージを受け続けるなら、弾薬を消費し続けること。シーン終了時にまだHP0のままだと死亡する。）", "scope": "playbook"}]}, {"id": "staff", "name_ja": "スタッフ（長杖）", "name_en": "THE STAFF", "weight_ja": "中", "weight_en": "medium", "range_ja": "近距離・近接", "tags_ja": "", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈アクロバット〉|〈共感〉|〈鼓舞/指揮〉|〈研究/調査〉", "trait": {"name_ja": "機転と軽脚 (Quick Witted and Spring Heeled)", "desc_ja": "代償（Consequence）を受けて抵抗しなかったとき、モメンタムを+1得る。あなたはスキルチェックでも〈全力（GO ALL OUT）〉を発動できる。"}, "talents": [{"id": "staff_talent_a_true_friend", "name_ja": "真の友人 (A True Friend)", "desc_ja": "誰かの気分を明るくするための適切な言葉や親愛の仕草をいつでも思いつくことができる。誰かがあなたの誠意を拒絶したとき、1 XPをマークする。"}, {"id": "staff_talent_a_truant_friend", "name_ja": "サボり仲間 (A Truant Friend)", "desc_ja": "学業フェイズ（School Phase）中に授業をサボるたび、追加のダウンタイム・アクションに+1dを得る。ルーティンに縛られるには人生は短すぎると他者を説得したとき、1 XPをマークする。"}, {"id": "staff_talent_defensive_locus", "name_ja": "防衛の焦点 (Defensive Locus)", "desc_ja": "モメンタムを「Armor N」として消費できる（Nはあなたのスタッフの【熟練】に等しい）。"}, {"id": "staff_talent_an_honest_face", "name_ja": "正直な顔 (An Honest Face)", "desc_ja": "【心情】を強化し、【勇気】【高潔】【度胸】のいずれか1つを得る。他者はあなたが真実を語っているとき、常にそれを見抜く。"}, {"id": "staff_talent_vigor", "name_ja": "活力 (Vigor)", "desc_ja": "レッスン（Lesson）につき1回ずつ、【敏捷】【耐久】【筋力】のそれぞれについて無料で奮起（Push yourself）できる。最大HPが+6される。（該当する【肉体】の属性を強化するまで、Vigorによる無料奮起は使用できない。）"}], "mods": [{"id": "staff_mod_annihilationwizard", "name_ja": "殲滅の魔術師", "name_en": "AnnihilationWizard", "tech_cost": 1, "desc_ja": "使用ルールの「モメンタム」という語をすべて強制的に「エーテル」に置き換える。", "desc_full_ja": "あなたのスタッフは強力な魔導具として機能する。あなたが使用するルールに「モメンタム（momentum）」という語が登場するたび、その語を「エーテル（aether）」に置き換える。（これは強制であり、基本ルール、タレント、モッド、特性すべてに適用される。）", "scope": "playbook"}, {"id": "staff_mod_soulsteel_finial", "name_ja": "ソウルスティールの頂飾り", "name_en": "Soulsteel Finial", "tech_cost": 1, "desc_ja": "エーテル1消費で、ケイオスや邪悪な超常存在へのセットアップ・アクションに優位。", "desc_full_ja": "スタッフの一端を飾るシンプルな金属製頂飾りに、互いに絡み合う無数のソウルスティール製リングが取り付けられている。頂飾りにエーテルを1流し込むことで不協和音のオーラを生み出し、ケイオスおよび邪悪な超常存在に対するセットアップ・アクション（Setup actions）で優位（Potency）を得る。", "scope": "playbook"}, {"id": "staff_mod_pole_of_power", "name_ja": "力の長棒", "name_en": "Pole of Power", "tech_cost": 2, "desc_ja": "モメンタムを獲得または消費したとき、スタッフのリーチを一時的に遠距離近接へ延長。", "desc_full_ja": "手首を返すか音声コマンドを発するだけで、スタッフのリーチを劇的に伸ばすことができる。モメンタムを獲得または消費したとき、スタッフのリーチを一時的に「遠距離・近接（far melee）」まで伸ばせる。", "scope": "playbook"}, {"id": "staff_mod_rallying_banner", "name_ja": "集結の軍旗", "name_en": "Rallying Banner", "tech_cost": 2, "desc_ja": "各ミッション開始時に仲間が「Rally」を1保持。消費でレジスタンス・ロール代用。", "desc_full_ja": "ファイターが希望、悟り、生存のいずれを体現しようとも、この旗印は最も過酷な窮地においてさえその理想を鼓舞する。各ミッションの開始時、あなたのチームメイトはそれぞれ「Rally（鼓舞）」を1つ保持（Hold）し、レジスタンス・ロールを行う代わりにRallyを1消費することができる。", "scope": "playbook"}, {"id": "staff_mod_kinetic_metronome", "name_ja": "運動メトロノーム", "name_en": "Kinetic Metronome", "tech_cost": 3, "desc_ja": "チームワーク時に誰か1人でもモメンタムを得るなら、参加者全員が同様に獲得する。", "desc_full_ja": "あなたのスタッフはリズミカルな打楽器でもあり、あなたと味方が息を合わせて行動できるようにする。チームワーク・アクションに参加した際、参加者のうち少なくとも1人がそれによってモメンタムを得るなら、参加者全員が同じようにモメンタムを得る。", "scope": "playbook"}]}, {"id": "wand", "name_ja": "ワンド（魔杖）", "name_en": "THE WAND", "weight_ja": "軽", "weight_en": "light", "range_ja": "", "tags_ja": "手持ちまたは内蔵 (held or integrated), 脆弱 (fragile)", "res_type_en": "", "res_type_ja": "", "res_max": "", "skills_count": 2, "skills_ja": "〈エイム〉|〈エンジニア〉|〈技巧/洗練〉|〈研究/調査〉", "trait": {"name_ja": "スパーク共鳴 (Spark Resonance)", "desc_ja": "スパークを発動するたび、あなたは「エーテルの威光（Aetherial Majesty）」を伴って行動し、あなたの脅威度（Threat）が+1され、アクションによる進捗（Progress）が+1される。（これは優位（Potency）と重複する。）"}, "talents": [{"id": "wand_talent_conviction", "name_ja": "信念 (Conviction)", "desc_ja": "レッスン（Lesson）につき1回ずつ、【勇気】【高潔】【度胸】のそれぞれについて無料で奮起（Push yourself）できる。あなたの誠実さが疑われたとき、次の判定に+1d（フォワード）を得る。（該当する【心情】の属性を強化するまで、Convictionによる無料奮起は使用できない。）"}, {"id": "wand_talent_cum_laude", "name_ja": "優等生（クム・ラウデ） (Cum Laude)", "desc_ja": "学業フェイズ（School Phase）中に+1dを振る。情報収集（Gather Information）で6の出目を出したとき、次の判定に+1d（フォワード）を得る。"}, {"id": "wand_talent_prestidigitation", "name_ja": "手品（プレスティディジテイション） (Prestidigitation)", "desc_ja": "〈鼓舞/指揮〉のスキルレーティングを+1する（最大3）。〈鼓舞/指揮〉または〈技巧/洗練〉で奮起（Push yourself）するたび、近くの他者のためにささやかな幻影、心地よい感覚、あるいは魅力的な気晴らしを生み出すことができる。"}, {"id": "wand_talent_soul_sight", "name_ja": "魂の視力 (Soul Sight)", "desc_ja": "エーテルの放つ特有の輝きを極めて鮮明に視認できる。あらゆるエーテル源は固有の色をしており、それが誰のものか、何のものかを見分けられる。誰かが魔術（sorcery）を行使しているのを一目で看破でき、一度見たことのあるスパーク（Spark）の性質を推測できる。"}, {"id": "wand_talent_undaunted", "name_ja": "不撓不屈 (Undaunted)", "desc_ja": "あなたの輝く好奇心の精神は、危険な状況下で生き延び、さらには躍動することさえ可能にする。【心情】を強化し、【勇気】【高潔】【度胸】のいずれか1つを得る。「絶望的（Desperate）」な代償を受けるたび、1 XPをマークする。"}], "mods": [{"id": "wand_mod_draugrbox", "name_ja": "ドラウグル・ボックス", "name_en": "DraugrBox", "tech_cost": 1, "desc_ja": "あなたのワンドは気立ての良い精霊によって損傷から護られており、「脆弱（fragile）」タグを失う。", "desc_full_ja": "あなたのワンドは気立ての良い精霊によって損傷から護られており、「脆弱（fragile）」タグを失う。", "scope": "playbook"}, {"id": "wand_mod_familiar_s_beacon", "name_ja": "使い魔の導標", "name_en": "Familiar's Beacon", "tech_cost": 1, "desc_ja": "小型の精霊・妖精・ハトと使い魔契約。いつでも召喚し感覚共有・会話できる。", "desc_full_ja": "ワンドには希少なエーテル感応素材が埋め込まれており、あなたと小型の精霊（elemental）、妖精（faerie）、またはハト（pigeon）を使い魔として魔術的に結びつける。使い魔はいつでも召喚・解除でき、その感覚を通して知覚し、使い魔を通して話すことができる。", "scope": "playbook"}, {"id": "wand_mod_runes_of_aerial_transposition", "name_ja": "空中転移のルーン", "name_en": "Runes of Aerial Transposition", "tech_cost": 2, "desc_ja": "エーテル1で飛行モード切替（同乗者1人まで可。飛行中はワンド攻撃不可）。", "desc_full_ja": "あなたのワンドは飛行可能になり、あなたの体重に加えて同乗者1人を軽々と運ぶことができる（ただし飛行中はワンドで攻撃できない）。エーテルを1消費することで飛行モードの開始・終了を切り替える。", "scope": "playbook"}, {"id": "wand_mod_aetherial_conduit", "name_ja": "エーテル導管", "name_en": "Aetherial Conduit", "tech_cost": 3, "desc_ja": "最大エーテルがあなたのワンドの【熟練】分だけ増加する。", "desc_full_ja": "最大エーテルがあなたのワンドの【熟練】分だけ増加する。", "scope": "playbook"}, {"id": "wand_mod_artificial_spark", "name_ja": "人工スパーク", "name_en": "Artificial Spark", "tech_cost": 5, "desc_ja": "チャージ2と追加スパーク1獲得（発動はチャージ消費）。何度でも取得可能。", "desc_full_ja": "あなたのワンドはチャージ（Charge）を2得て、あなたは追加のスパーク（Spark）を1つ獲得する（どれを選べるかはあなたのエーテルクラスに依存する）。この新しいスパークを発動するには、エーテルの代わりにチャージを消費しなければならない。このモッドは好きなだけ何回でも取得できる。", "scope": "playbook"}]}], "general_mods": [{"id": "general_mod_advanced_materials", "name_ja": "先端素材", "name_en": "Advanced Materials", "tech_cost": 1, "desc_ja": "武器1つの重量タグを「軽」「中」「重」のいずれかに変更。複数回取得可。", "desc_full_ja": "あなたの武器1つの「重量（weight）」タグを「軽（light）」「中（medium）」「重（heavy）」のいずれかに変更する。このモッドは複数回取得できる。", "scope": "general"}, {"id": "general_mod_ballistic_locker_module", "name_ja": "弾道ロッカー・モジュール", "name_en": "Ballistic Locker Module", "tech_cost": 1, "desc_ja": "フェイズにつき1回、遠隔でアクセス可能な特殊な弾道ロッカーに武器を保管・呼び出しできる。", "desc_full_ja": "フェイズにつき1回、遠隔でアクセス可能な特殊な弾道ロッカーに武器を保管・呼び出しできる。", "scope": "general"}, {"id": "general_mod_enhanced_ammo_capacity", "name_ja": "弾薬容量拡張", "name_en": "Enhanced Ammo Capacity", "tech_cost": 1, "desc_ja": "武器の弾薬最大容量を+1する。このモッドは複数回取得できる。", "desc_full_ja": "武器の弾薬最大容量を+1する。このモッドは複数回取得できる。", "scope": "general"}, {"id": "general_mod_enhanced_charge_capacity", "name_ja": "チャージ容量拡張", "name_en": "Enhanced Charge Capacity", "tech_cost": 1, "desc_ja": "武器の最大チャージ容量を+1する。このモッドは複数回取得できる。", "desc_full_ja": "武器の最大チャージ容量を+1する。このモッドは複数回取得できる。", "scope": "general"}, {"id": "general_mod_grapple_chain", "name_ja": "グラップル・チェーン", "name_en": "Grapple Chain", "tech_cost": 1, "desc_ja": "鉤縄を射出可能にし、武器に「中距離・近接（mid-range melee）」タグを追加。", "desc_full_ja": "この機構により鉤縄（グラップリング・チェーン）を射出できるようになり、武器は「中距離・近接（mid-range melee）」機能タグを獲得する。", "scope": "general"}, {"id": "general_mod_resonance_rebuild", "name_ja": "共鳴再構築", "name_en": "Resonance Rebuild", "tech_cost": 1, "desc_ja": "武器が楽器としても機能。【心情】で行動時にエーテル1消費で優位を得て演奏可能。", "desc_full_ja": "武器があなたが選んだ特定の楽器としても機能するようになる。【心情】で行動する際、エーテルを1消費することで優位（Potency）を伴って楽器を演奏できる。", "scope": "general"}, {"id": "general_mod_weapon_charms_gachapon_2_pulls", "name_ja": "ウェポンチャーム・ガチャポン（2回分） (Weapon Charms Gachapon (2 pulls))", "name_en": "Weapon Charms Gachapon (2 pulls)", "tech_cost": 1, "desc_ja": "ランダムな武器チャームを2個獲得（0d6でセットとレアリティを決定）。交換可。", "desc_full_ja": "武器用のランダムなコレクション用チャームを獲得できる。エーテルを帯びたチャームは適切な状況下で恩恵をもたらし、他者と交換することも可能。コンプリートを目指そう！ Charm Series表を参照して0d6（2d6を振り低い方を採用）を振り、所属セットとレアリティ（C, R, SR, UR, WUR）を決定する。", "scope": "general"}, {"id": "general_mod_bag_of_holding", "name_ja": "収納の鞄（バッグ・オブ・ホールディング）", "name_en": "Bag of Holding", "tech_cost": 2, "desc_ja": "タレントやモッドで何らかのトークンを「保持（hold）」するとき、常に+1個多く保持。", "desc_full_ja": "武器内部のポケット空間と繋がる奇妙な小鞄により、異次元収納を利用できる。タレントやモッドによって何らかのトークンを「保持（hold _____）」するよう指示されたとき、常に1つ多く保持する。", "scope": "general"}, {"id": "general_mod_field_maintenance_kit", "name_ja": "野戦整備キット", "name_en": "Field Maintenance Kit", "tech_cost": 2, "desc_ja": "訓練開始時に【熟練】分の整備を保持。1消費で弾薬+1／チャージ+1／セットバック軽減。", "desc_full_ja": "戦場で武器を戦闘可能な状態に保つための工具、予備部品、予備弾薬が揃ったキット。訓練フェイズ（Training Phase）の開始時、武器の【熟練】に等しい数の「Maintenance（整備）」を保持（Hold）する。安全な場所にいるとき、Maintenanceを1消費して以下のいずれかを行う：弾薬を1補充する―チャージを1補充する―武器に関連するセットバック（Setback）の深刻度を1段階下げる。", "scope": "general"}, {"id": "general_mod_telecom_hotspot", "name_ja": "通信ホットスポット", "name_en": "Telecom Hotspot", "tech_cost": 2, "desc_ja": "仲間とのローカルプライベート通信網を提供（他網接続も可能だが低セキュリティ）。", "desc_full_ja": "武器があなたとチームメイト間のローカルなプライベート通信ネットワークへのアクセスを提供する。他のデジタル通信網や霊的通信網に接続することも可能だが、セキュリティは低くなる。", "scope": "general"}, {"id": "general_mod_transformation_cog", "name_ja": "変形機構（トランスフォーメーション・コグ）", "name_en": "Transformation Cog", "tech_cost": 2, "desc_ja": "精巧かつ頑丈なこの機構により、日常の利便性のために武器をより小型または秘匿性の高い形態へと変形させることができる。", "desc_full_ja": "精巧かつ頑丈なこの機構により、日常の利便性のために武器をより小型または秘匿性の高い形態へと変形させることができる。", "scope": "general"}, {"id": "general_mod_untraceable", "name_ja": "追跡不能（アントレーサブル）", "name_en": "Untraceable", "tech_cost": 2, "desc_ja": "武器の出自を隠し、特殊な電波・千里眼妨害素材によって現在地も隠蔽する。", "desc_full_ja": "削り取られたシリアル番号、製造刻印、あるいは塗り替えられた塗装が武器の出自を隠し、特殊な電波・千里眼妨害素材が武器の現在地を隠蔽する。", "scope": "general"}], "sparks": [{"aether_class": "Adept", "name_en": "Aetherial Acuity", "name_ja": "エーテル鋭敏覚 (Aetherial Acuity)", "max_aether": 12, "desc_ja": "周囲の環境変化に対してエーテルが極めて敏感に反応する。平常時から常人を遥かに超える知覚を持ち、スパークを発動すると特定の感覚をあらゆる動物以上に研ぎ澄ますことができる。ただし鋭敏すぎる感覚は狡猾な敵に突かれる弱点にもなる。"}, {"aether_class": "Adept", "name_en": "Empyrean Speed", "name_ja": "天翔ける疾風 (Empyrean Speed)", "max_aether": 10, "desc_ja": "稲妻のようにエーテルが体内を駆け巡り、鼓動の合間に長距離を駆け抜け複雑な動作をこなす驚異的な速度を発揮する。ただし爆発的な加速はエーテルを激しく消耗する。"}, {"aether_class": "Adept", "name_en": "Inner Beast", "name_ja": "内なる野獣 (Inner Beast)", "max_aether": 12, "desc_ja": "魂に刻まれた野生の獣性を具現化する。選んだ生物（空想上でも可）の特徴――身体的適応、感覚器官、本能的知識――を得て変貌し、完全変身さえ可能。ただし内なる獣に飲み込まれる危険を常に伴う。"}, {"aether_class": "Adept", "name_en": "Onslaught", "name_ja": "猛攻の激情 (Onslaught)", "max_aether": 12, "desc_ja": "内に秘めた激怒を破壊の力へと燃やし尽くす。格下の敵は戦列を崩し、強敵はあなたを注視する。枷を外せば凄まじい破壊力を発揮するが、その激情は味方さえ巻き込みかねない。"}, {"aether_class": "Adept", "name_en": "Oversoul", "name_ja": "オーバーソウル (Oversoul)", "max_aether": 12, "desc_ja": "魂が沸点に達したとき、エーテルが膨張し巨大なエーテルの巨人（タイタン）へと変貌する。建物ほどに巨大化することさえ可能だが、小さく敏捷な障害物には非常に弱い。"}, {"aether_class": "Adept", "name_en": "Tartaran Might", "name_ja": "タルタロスの剛力 (Tartaran Might)", "max_aether": 12, "desc_ja": "鉄の意志と共鳴したエーテルが筋肉に凝縮し、同格のファイター10人分以上の怪力を生み出す。大跳躍や敵を煙のように投げ飛ばす離れ業が可能で、あらゆる代償に耐え抜く。"}, {"aether_class": "Evoker", "name_en": "Aetherial Transmutation", "name_ja": "エーテル元素変換 (Aetherial Transmutation)", "max_aether": 10, "desc_ja": "選んだ自然現象（雷、冷気、炎、光、音、毒ガス、酸など）にエーテルを変換し、弾丸や構造物として放出する。原則として、変換した現象を自在に操ったり無効化したりする耐性は持たない。"}, {"aether_class": "Evoker", "name_en": "Dynamo", "name_ja": "ダイナモ (Dynamo)", "max_aether": 12, "desc_ja": "他者の潜在能力を引き出す触媒。スパークを発動して他者にエーテルを分け与えたり、他者のスパークの効力を高めたり弱点を克服させたり（稀に新たなスパークへ変質させることさえ）できる。"}, {"aether_class": "Evoker", "name_en": "Nostalgia", "name_ja": "ノスタルジア (Nostalgia)", "max_aether": 10, "desc_ja": "触れた物体を媒介として、記憶からエーテルの複製体を具現化する。大きく複雑な媒介ほど不安定になり、同じものを何度も呼び出すほど品質と効力が急速に劣化する。"}, {"aether_class": "Evoker", "name_en": "Illusions", "name_ja": "イリュージョン (Illusions)", "max_aether": 10, "desc_ja": "無限の想像力をエーテルの幻影として具現化し操る。視覚だけでなく音やその他の感覚情報も生み出せるが、複雑さが増すほど幻影の精度は急激に低下する。"}, {"aether_class": "Evoker", "name_en": "Sacred Geometries", "name_ja": "神聖幾何学 (Sacred Geometries)", "max_aether": 10, "desc_ja": "数学的調和によって半透明で極めて頑丈な力場の構造物を彫刻する。集中を維持する限り持続し、単純な図形なら容易に多数作れるが、巨大・複雑な構造物には膨大な集中力を要する。"}, {"aether_class": "Evoker", "name_en": "Soul Solid", "name_ja": "ソウル・ソリッド (Soul Solid)", "max_aether": 10, "desc_ja": "四肢や触れた物体に高密度のエーテルを浸透させ、耐久性と威力を大幅に高める。また、強烈な霊圧（Spiritual Pressure）を放って意志の弱い者を圧倒し、強敵をも怯ませる。"}, {"aether_class": "Enchanter", "name_en": "Divine Phyllotaxis", "name_ja": "神聖葉序 (Divine Phyllotaxis)", "max_aether": 8, "desc_ja": "太古の植物と調和したエーテルを持つ。植物として生き（光合成のみで生存可能）、植物の成長を加速させ、その自然能力を強化して助力を得ることができる。ただしその絆を悪用される危険もある。"}, {"aether_class": "Enchanter", "name_en": "The Looking Glass", "name_ja": "鏡の国 (The Looking Glass)", "max_aether": 8, "desc_ja": "エーテル圧で時空を圧縮し、人間サイズの小さなポータルで2地点を一時的に繋ぐ。視界内のエーテル密度が低い場所なら容易だが、大規模・超遠距離・視界外へのポータルは極めて危険で消耗が激しい。"}, {"aether_class": "Enchanter", "name_en": "Luxweaver", "name_ja": "光織り (Luxweaver)", "max_aether": 10, "desc_ja": "周囲の光を自在に操り、眩惑効果や闇の帳を作り出したり、自らを透明化したり、光をレンズのように集束させ波長を変えたりできる。ただし自ら光を生み出すことはできず、環境光のみを操る。"}, {"aether_class": "Enchanter", "name_en": "Telekinesis", "name_ja": "テレキネシス (Telekinesis)", "max_aether": 8, "desc_ja": "周囲に広がるエーテルを通じて対象を浮遊させ、熟練した器用さで操る念動力。動かせる敏捷さ・精密さ・力は、対象の質量や数に反比例する。"}, {"aether_class": "Enchanter", "name_en": "Wanderer's Ken", "name_ja": "放浪者の知見 (Wanderer's Ken)", "max_aether": 8, "desc_ja": "過去に訪れたことのある場所へ瞬時にテレポートできる。近距離なら容易だが、遠距離や連続使用は激しく消耗する。複数人を同時に転移させるのは困難かつ危険。"}, {"aether_class": "Enchanter", "name_en": "Wheel of Life", "name_ja": "生命の車輪 (Wheel of Life)", "max_aether": 8, "desc_ja": "傷の治癒や悪化、老化の加速や逆行、肉体の傀儡化など生と死の輪廻に干渉する（真の蘇生はほぼ不可能）。車輪の理に逆らうほど、肉体と魂に重い代償が課される。"}]};
+
+const SKILLS = [
+  { key: "acrobatics", label: "アクロバット", en: "Acrobatics" },
+  { key: "aim",        label: "エイム",       en: "Aim" },
+  { key: "browbeat",   label: "威圧",         en: "Browbeat" },
+  { key: "conceal",    label: "隠蔽/欺瞞",    en: "Conceal" },
+  { key: "empathize",  label: "共感",         en: "Empathize" },
+  { key: "engineer",   label: "エンジニア",   en: "Engineer" },
+  { key: "explore",    label: "探索",         en: "Explore" },
+  { key: "finesse",    label: "技巧/洗練",    en: "Finesse" },
+  { key: "inspire",    label: "鼓舞/指揮",    en: "Inspire" },
+  { key: "study",      label: "研究/調査",    en: "Study" },
+  { key: "swagger",    label: "魅了",         en: "Swagger" },
+  { key: "wreck",      label: "破壊",         en: "Wreck" },
+];
+
+const ENHANCEMENTS = [
+  { id: "enhAgility",   label: "強化:敏捷", group: "body",   idx: 0 },
+  { id: "enhEndurance", label: "強化:耐久", group: "body",   idx: 1 },
+  { id: "enhStrength",  label: "強化:筋力", group: "body",   idx: 2 },
+  { id: "enhAcuity",    label: "強化:知覚", group: "mind",   idx: 0 },
+  { id: "enhIntuition", label: "強化:直感", group: "mind",   idx: 1 },
+  { id: "enhResolve",   label: "強化:意志", group: "mind",   idx: 2 },
+  { id: "enhCourage",   label: "強化:勇気", group: "heart",  idx: 0 },
+  { id: "enhIntegrity", label: "強化:高潔", group: "heart",  idx: 1 },
+  { id: "enhMoxie",     label: "強化:度胸", group: "heart",  idx: 2 },
+];
+
+const STORAGE_KEY = "fitr_academy_charsheet_v1";
+
+function defaultPB() {
+  return {
+    pbId: "",
+    pbName: "",
+    weight: "",
+    resLabel: "弾薬", // "弾薬" or "EN"
+    resValue: "",
+    talentId: "",
+    talentName: "",
+    talentDesc: "",
+    mods: [
+      { id: "", name: "", desc: "", cost: 0 },
+      { id: "", name: "", desc: "", cost: 0 },
+      { id: "", name: "", desc: "", cost: 0 },
+      { id: "", name: "", desc: "", cost: 0 },
+    ],
+    notes: "",
+  };
+}
+
+function defaultState() {
+  const sk = {};
+  SKILLS.forEach(s => sk[s.key] = 0);
+  const enh = {};
+  ENHANCEMENTS.forEach(e => enh[e.id] = false);
+  return {
+    name: "",
+    gender: "",
+    portraitDataUrl: "",
+    history: "",
+    drive: "",
+    bioNotes: "",
+    aetherClass: "",
+    sparkPreset: "",
+    sparkName: "",
+    maxAether: "10",
+    sparkDesc: "",
+    attrBody: 1,
+    attrMind: 1,
+    attrHeart: 1,
+    enhancements: enh,
+    skills: sk,
+    courseHumanities: "",
+    courseLab: "",
+    courseScience: "",
+    courseSports: "",
+    courseSurvival: "",
+    courseRing: "",
+    weaponName: "",
+    mastery: 1,
+    weaponMake: "",
+    weaponLook: "",
+    weaponQuirks: "",
+    pb1: defaultPB(),
+    pb2: defaultPB(),
+  };
+}
+
+let state = defaultState();
+let portraitImg = null;
+let portraitCrop = null; // { sx, sy, s } ignoring transparent margins
+let hitTargets = []; // clickable regions on canvas
+
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function getPB(pbId) {
+  return GAME_DATA.playbooks.find(p => p.id === pbId) || null;
+}
+
+function buildSparkPresets() {
+  const sel = document.getElementById("sparkPreset");
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">-- プリセットから選択 / 自由入力 --</option>';
+  const clsFilter = state.aetherClass;
+  GAME_DATA.sparks.forEach((sp, i) => {
+    if (clsFilter && !clsFilter.includes(sp.aether_class)) return;
+    const opt = document.createElement("option");
+    opt.value = sp.name_en;
+    opt.textContent = `[${sp.aether_class}] ${sp.name_ja} (最大:${sp.max_aether})`;
+    sel.appendChild(opt);
+  });
+  sel.value = cur;
+}
+
+function buildSkillsEditor() {
+  const wrap = document.getElementById("skillsEditor");
+  wrap.innerHTML = "";
+  SKILLS.forEach(s => {
+    const div = document.createElement("div");
+    div.className = "skill-item";
+    const lbl = document.createElement("span");
+    lbl.textContent = s.label;
+    const boxes = document.createElement("div");
+    boxes.className = "skill-boxes";
+    for (let i = 1; i <= 3; i++) {
+      const sq = document.createElement("div");
+      sq.className = "skill-sq" + ((state.skills[s.key] || 0) >= i ? " filled" : "");
+      sq.onclick = () => {
+        state.skills[s.key] = (state.skills[s.key] === i) ? (i - 1) : i;
+        saveAndRender();
+        buildSkillsEditor();
+      };
+      boxes.appendChild(sq);
+    }
+    div.appendChild(lbl);
+    div.appendChild(boxes);
+    wrap.appendChild(div);
+  });
+}
+
+function buildPBEditor(slotKey, titleLabel) {
+  const container = document.getElementById(slotKey + "Editor");
+  const pbState = state[slotKey];
+  const pbObj = getPB(pbState.pbId);
+
+  let pbOpts = '<option value="">-- プレイブックを選択 --</option>';
+  GAME_DATA.playbooks.forEach(p => {
+    const sel = p.id === pbState.pbId ? "selected" : "";
+    pbOpts += `<option value="${p.id}" ${sel}>${p.name_ja}</option>`;
+  });
+
+  let talentOpts = '<option value="">-- タレントを選択 --</option>';
+  if (pbObj) {
+    pbObj.talents.forEach(t => {
+      const sel = t.id === pbState.talentId ? "selected" : "";
+      talentOpts += `<option value="${t.id}" ${sel}>${t.name_ja}</option>`;
+    });
+  }
+  talentOpts += `<option value="__custom__" ${pbState.talentId === "__custom__" ? "selected" : ""}>（自由入力）</option>`;
+
+  let modHtml = "";
+  const availableMods = [];
+  if (pbObj) {
+    pbObj.mods.forEach(m => availableMods.push({ ...m, group: "固有" }));
+  }
+  GAME_DATA.general_mods.forEach(m => availableMods.push({ ...m, group: "汎用" }));
+
+  for (let i = 0; i < 4; i++) {
+    const mState = pbState.mods[i];
+    let mOpts = '<option value="">-- なし / 選択 --</option>';
+    availableMods.forEach(m => {
+      const sel = m.id === mState.id ? "selected" : "";
+      mOpts += `<option value="${m.id}" ${sel}>[${m.group}/${m.tech_cost}Tech] ${m.name_ja}</option>`;
+    });
+    mOpts += `<option value="__custom__" ${mState.id === "__custom__" ? "selected" : ""}>（自由入力）</option>`;
+
+    modHtml += `
+      <div class="mod-slot">
+        <div class="row-2">
+          <label class="field">MOD ${i+1} 選択
+            <select onchange="onModSelect('${slotKey}', ${i}, this.value)">${mOpts}</select>
+          </label>
+          <label class="field">MOD ${i+1} 表示名
+            <input type="text" value="${escapeHtml(mState.name)}" oninput="state['${slotKey}'].mods[${i}].name=this.value; saveAndRender();" placeholder="MOD名" />
+          </label>
+        </div>
+        <input type="text" value="${escapeHtml(mState.desc)}" oninput="state['${slotKey}'].mods[${i}].desc=this.value; saveAndRender();" placeholder="MOD効果テキスト（シートにも小さく表示）" />
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div style="font-weight:700;color:var(--crimson);font-size:0.9rem;">${titleLabel}</div>
+    <div class="row-2">
+      <label class="field">プレイブック選択
+        <select onchange="onPBSelect('${slotKey}', this.value)">${pbOpts}</select>
+      </label>
+      <label class="field">表示名（自由編集可）
+        <input type="text" value="${escapeHtml(pbState.pbName)}" oninput="state['${slotKey}'].pbName=this.value; saveAndRender();" placeholder="例: ザ・オートマチック" />
+      </label>
+    </div>
+    <div class="row-2">
+      <label class="field">重量
+        <input type="text" value="${escapeHtml(pbState.weight)}" oninput="state['${slotKey}'].weight=this.value; saveAndRender();" placeholder="軽 / 中 / 重" />
+      </label>
+      <label class="field">${pbState.resLabel === "EN" ? "EN (自動: チャージ系)" : "弾薬 (自動: 弾薬系)"}
+        <input type="text" value="${escapeHtml(pbState.resValue)}" oninput="state['${slotKey}'].resValue=this.value; saveAndRender();" placeholder="-" />
+      </label>
+    </div>
+    <div class="row-2">
+      <label class="field">兵装タレント（プルダウン）
+        <select onchange="onTalentSelect('${slotKey}', this.value)">${talentOpts}</select>
+      </label>
+      <label class="field">タレント名（自由編集可）
+        <input type="text" value="${escapeHtml(pbState.talentName)}" oninput="state['${slotKey}'].talentName=this.value; saveAndRender();" placeholder="タレント名" />
+      </label>
+    </div>
+    <label class="field">タレント効果
+      <textarea oninput="state['${slotKey}'].talentDesc=this.value; saveAndRender();" placeholder="タレントの効果">${escapeHtml(pbState.talentDesc)}</textarea>
+    </label>
+    ${modHtml}
+    <label class="field">備考（トレイト自動入力＋自由記入）
+      <textarea oninput="state['${slotKey}'].notes=this.value; saveAndRender();" placeholder="トレイトやメモ">${escapeHtml(pbState.notes)}</textarea>
+    </label>
+  `;
+}
+
+function escapeHtml(s) {
+  return String(s || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function onPBSelect(slotKey, pbId) {
+  const pbObj = getPB(pbId);
+  const pbState = state[slotKey];
+  pbState.pbId = pbId;
+  if (pbObj) {
+    pbState.pbName = pbObj.name_ja;
+    pbState.weight = pbObj.weight_ja;
+    if (pbObj.res_type_en === "Charge") {
+      pbState.resLabel = "EN";
+      pbState.resValue = pbObj.res_max;
+    } else if (pbObj.res_type_en === "Ammo") {
+      pbState.resLabel = "弾薬";
+      pbState.resValue = pbObj.res_max;
+    } else {
+      pbState.resLabel = "弾薬";
+      pbState.resValue = "-";
+    }
+    pbState.talentId = "";
+    pbState.talentName = "";
+    pbState.talentDesc = "";
+    pbState.notes = pbObj.trait
+      ? `【特性: ${pbObj.trait.name_ja}】${pbObj.trait.desc_ja}`
+      : "";
+  } else {
+    pbState.pbName = "";
+  }
+  buildPBEditor(slotKey, slotKey === "pb1" ? "PB1" : "PB2");
+  saveAndRender();
+}
+
+function onTalentSelect(slotKey, talentId) {
+  const pbState = state[slotKey];
+  const pbObj = getPB(pbState.pbId);
+  pbState.talentId = talentId;
+  if (pbObj && talentId && talentId !== "__custom__") {
+    const t = pbObj.talents.find(x => x.id === talentId);
+    if (t) {
+      pbState.talentName = t.name_ja;
+      pbState.talentDesc = t.desc_ja;
+    }
+  }
+  buildPBEditor(slotKey, slotKey === "pb1" ? "PB1" : "PB2");
+  saveAndRender();
+}
+
+function onModSelect(slotKey, idx, modId) {
+  const pbState = state[slotKey];
+  const pbObj = getPB(pbState.pbId);
+  const all = [...(pbObj ? pbObj.mods : []), ...GAME_DATA.general_mods];
+  const found = all.find(m => m.id === modId);
+  if (found) {
+    pbState.mods[idx] = {
+      id: found.id,
+      name: found.name_ja,
+      desc: found.desc_ja,
+      cost: found.tech_cost,
+    };
+  } else if (modId === "__custom__") {
+    pbState.mods[idx].id = "__custom__";
+  } else {
+    pbState.mods[idx] = { id: "", name: "", desc: "", cost: 0 };
+  }
+  // Auto-switch to EN if PB has no Ammo and a selected MOD grants Charge
+  if (!pbObj || pbObj.res_type_en === "") {
+    let totalCharge = 0;
+    pbState.mods.forEach(m => {
+      const match = (m.desc || "").match(/チャージ（Charge）を(\d+)/);
+      if (match) totalCharge += parseInt(match[1], 10);
+    });
+    if (totalCharge > 0) {
+      pbState.resLabel = "EN";
+      pbState.resValue = String(totalCharge);
+    } else {
+      pbState.resLabel = "弾薬";
+      pbState.resValue = "-";
+    }
+  }
+  buildPBEditor(slotKey, slotKey === "pb1" ? "PB1" : "PB2");
+  saveAndRender();
+}
+
+function onAetherClassChange() {
+  state.aetherClass = document.getElementById("aetherClass").value;
+  buildSparkPresets();
+  saveAndRender();
+}
+
+function onSparkPresetChange() {
+  const val = document.getElementById("sparkPreset").value;
+  state.sparkPreset = val;
+  const sp = GAME_DATA.sparks.find(s => s.name_en === val);
+  if (sp) {
+    state.sparkName = sp.name_ja;
+    state.maxAether = String(sp.max_aether);
+    state.sparkDesc = sp.desc_ja;
+    if (!state.aetherClass) {
+      const map = { Adept: "アデプト (Adept)", Evoker: "イヴォーカー (Evoker)", Enchanter: "エンチャンター (Enchanter)" };
+      state.aetherClass = map[sp.aether_class] || "";
+    }
+    loadStateToForm();
+  }
+  saveAndRender();
+}
+
+function handlePortrait(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    state.portraitDataUrl = ev.target.result;
+    loadPortraitImg(() => saveAndRender());
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearPortrait() {
+  state.portraitDataUrl = "";
+  portraitImg = null;
+  portraitCrop = null;
+  document.getElementById("portraitFile").value = "";
+  saveAndRender();
+}
+
+function computeOpaqueTopCenterSquare(img) {
+  const iw = img.width, ih = img.height;
+  const off = document.createElement("canvas");
+  off.width = iw;
+  off.height = ih;
+  const octx = off.getContext("2d");
+  octx.drawImage(img, 0, 0);
+  try {
+    const data = octx.getImageData(0, 0, iw, ih).data;
+    let minX = iw, minY = ih, maxX = -1, maxY = -1;
+    for (let y = 0; y < ih; y++) {
+      const rowOffset = y * iw * 4;
+      for (let x = 0; x < iw; x++) {
+        if (data[rowOffset + x * 4 + 3] > 8) {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (maxX >= minX && maxY >= minY) {
+      const bw = maxX - minX + 1;
+      const bh = maxY - minY + 1;
+      const s = Math.min(bw, bh);
+      return {
+        sx: minX + (bw - s) / 2,
+        sy: minY,
+        s: s,
+      };
+    }
+  } catch (e) {}
+  const s = Math.min(iw, ih);
+  return { sx: (iw - s) / 2, sy: 0, s: s };
+}
+
+function loadPortraitImg(cb) {
+  if (!state.portraitDataUrl) { portraitImg = null; portraitCrop = null; if (cb) cb(); return; }
+  const img = new Image();
+  img.onload = () => {
+    portraitImg = img;
+    portraitCrop = computeOpaqueTopCenterSquare(img);
+    if (cb) cb();
+  };
+  img.src = state.portraitDataUrl;
+}
+
+function syncFromForm() {
+  const ids = [
+    "name", "gender", "history", "drive", "bioNotes",
+    "aetherClass", "sparkName", "maxAether", "sparkDesc",
+    "courseHumanities", "courseLab", "courseScience", "courseSports", "courseSurvival", "courseRing",
+    "weaponName", "weaponMake", "weaponLook", "weaponQuirks"
+  ];
+  ids.forEach(id => { state[id] = document.getElementById(id).value; });
+  state.attrBody = parseInt(document.getElementById("attrBody").value || "0", 10);
+  state.attrMind = parseInt(document.getElementById("attrMind").value || "0", 10);
+  state.attrHeart = parseInt(document.getElementById("attrHeart").value || "0", 10);
+  state.mastery = parseInt(document.getElementById("mastery").value || "0", 10);
+  ENHANCEMENTS.forEach(e => {
+    state.enhancements[e.id] = document.getElementById(e.id).checked;
+  });
+  saveAndRender();
+}
+
+function loadStateToForm() {
+  const ids = [
+    "name", "gender", "history", "drive", "bioNotes",
+    "aetherClass", "sparkPreset", "sparkName", "maxAether", "sparkDesc",
+    "attrBody", "attrMind", "attrHeart",
+    "courseHumanities", "courseLab", "courseScience", "courseSports", "courseSurvival", "courseRing",
+    "weaponName", "mastery", "weaponMake", "weaponLook", "weaponQuirks"
+  ];
+  buildSparkPresets();
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = state[id] ?? "";
+  });
+  ENHANCEMENTS.forEach(e => {
+    document.getElementById(e.id).checked = !!state.enhancements[e.id];
+  });
+  buildSkillsEditor();
+  buildPBEditor("pb1", "PB1");
+  buildPBEditor("pb2", "PB2");
+}
+
+function updateWarnings() {
+  const bar = document.getElementById("warningsBar");
+  const warns = [];
+  if (state.pb1.pbId && state.pb2.pbId && state.pb1.pbId === state.pb2.pbId) {
+    warns.push("PB1とPB2は異なるプレイブックを推奨");
+  }
+  const overSkills = SKILLS.filter(s => (state.skills[s.key] || 0) > 2);
+  if (overSkills.length > 0) {
+    warns.push(`作成時スキル上限2超過: ${overSkills.map(s => s.label).join(", ")}`);
+  }
+  const enhCount = Object.values(state.enhancements).filter(Boolean).length;
+  if (enhCount > 1) {
+    warns.push(`作成時の能力強化は通常1つ（現在 ${enhCount}個）`);
+  }
+  const totalTech = [...state.pb1.mods, ...state.pb2.mods].reduce((acc, m) => acc + (m.cost || 0), 0);
+  if (totalTech > 2) {
+    warns.push(`作成時MOD上限 2 Tech 超過（現在 ${totalTech} Tech）`);
+  }
+
+  if (warns.length === 0) {
+    bar.innerHTML = '<span class="warn-pill warn-ok">作成時ルールチェック: 問題なし</span>';
+  } else {
+    bar.innerHTML = warns.map(w => `<span class="warn-pill warn-alert">⚠ ${w}</span>`).join("");
+  }
+}
+
+function saveAndRender() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  updateWarnings();
+  renderCanvas();
+}
+
+// ===== CANVAS RENDERING (2000 x 2000) =====
+const C_BG = "#efefef";
+const C_CRIMSON = "#a1162c";
+const C_GOLD = "#f9c93d";
+const C_SQ_EMPTY = "#c9c9c9";
+const C_TEXT = "#1f1f1f";
+const FONT = '"Zen Kaku Gothic Antique", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif';
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawBox(ctx, x, y, w, h, r, fill, stroke, lw = 4) {
+  roundRect(ctx, x, y, w, h, r);
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
+}
+
+function wrapText(ctx, text, maxWidth) {
+  if (!text) return [];
+  const paragraphs = String(text).split(/\r?\n/);
+  const lines = [];
+  for (const para of paragraphs) {
+    if (!para) { lines.push(""); continue; }
+    let line = "";
+    for (const ch of para) {
+      const test = line + ch;
+      if (ctx.measureText(test).width > maxWidth && line.length > 0) {
+        lines.push(line);
+        line = ch;
+      } else {
+        line = test;
+      }
+    }
+    if (line) lines.push(line);
+  }
+  return lines;
+}
+
+function drawWrappedText(ctx, text, x, y, maxWidth, maxHeight, fontSize, color, weight = "normal", lineHeightRatio = 1.32) {
+  if (!text) return;
+  let fs = fontSize;
+  ctx.fillStyle = color;
+  ctx.textBaseline = "top";
+  while (fs >= 11) {
+    ctx.font = `${weight} ${fs}px ${FONT}`;
+    const lines = wrapText(ctx, text, maxWidth);
+    const lh = fs * lineHeightRatio;
+    if (lines.length * lh <= maxHeight || fs <= 12) {
+      const maxLines = Math.max(1, Math.floor(maxHeight / lh));
+      lines.slice(0, maxLines).forEach((ln, idx) => {
+        let out = ln;
+        if (idx === maxLines - 1 && lines.length > maxLines) {
+          out = out.slice(0, -1) + "…";
+        }
+        ctx.fillText(out, x, y + idx * lh);
+      });
+      return;
+    }
+    fs -= 2;
+  }
+}
+
+function drawOutlinedText(ctx, text, x, y, fontSize, fill, stroke, lw = 5) {
+  ctx.font = `900 ${fontSize}px ${FONT}`;
+  ctx.lineJoin = "round";
+  ctx.lineWidth = lw;
+  ctx.strokeStyle = stroke;
+  ctx.strokeText(text, x, y);
+  ctx.fillStyle = fill;
+  ctx.fillText(text, x, y);
+}
+
+function renderCanvas() {
+  const canvas = document.getElementById("sheetCanvas");
+  const ctx = canvas.getContext("2d");
+  hitTargets = [];
+
+  ctx.fillStyle = C_BG;
+  ctx.fillRect(0, 0, 2000, 2000);
+
+  // --- TOP LEFT LOGO: FITR Academy ---
+  // Emblem badge (crimson shield/diamond with gold star-crest)
+  ctx.save();
+  drawBox(ctx, 100, 44, 104, 104, 22, C_CRIMSON, C_GOLD, 5);
+  // Inner gold diamond/star emblem
+  ctx.beginPath();
+  ctx.moveTo(152, 62);
+  ctx.lineTo(186, 96);
+  ctx.lineTo(152, 130);
+  ctx.lineTo(118, 96);
+  ctx.closePath();
+  ctx.fillStyle = C_GOLD;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(152, 74);
+  ctx.lineTo(174, 96);
+  ctx.lineTo(152, 118);
+  ctx.lineTo(130, 96);
+  ctx.closePath();
+  ctx.fillStyle = C_CRIMSON;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(152, 96, 8, 0, Math.PI * 2);
+  ctx.fillStyle = C_GOLD;
+  ctx.fill();
+  ctx.restore();
+
+  // "FITR Academy" logotype
+  ctx.textBaseline = "alphabetic";
+  drawOutlinedText(ctx, "FITR", 224, 106, 62, C_GOLD, C_CRIMSON, 8);
+  ctx.fillStyle = C_CRIMSON; ctx.font = `900 54px ${FONT}`;
+  ctx.fillText("Academy", 386, 106);
+  ctx.fillStyle = C_CRIMSON; ctx.font = `700 18px ${FONT}`;
+  ctx.fillText("MAGICAL COMBAT EDUCATION FORGED IN THE RING", 226, 136);
+
+  // --- TOP LEFT: Name, Gender, Portrait, History, Drive, Notes ---
+  drawBox(ctx, 100, 182, 614, 84, 0, C_BG, C_CRIMSON, 4);
+  ctx.fillStyle = C_CRIMSON; ctx.font = `900 28px ${FONT}`; ctx.textBaseline = "middle";
+  ctx.fillText("名前:", 116, 224);
+  ctx.fillStyle = C_TEXT; ctx.font = `700 34px ${FONT}`;
+  ctx.fillText(state.name, 200, 224, 500);
+
+  drawBox(ctx, 732, 182, 218, 84, 0, C_BG, C_CRIMSON, 4);
+  ctx.fillStyle = C_CRIMSON; ctx.font = `900 26px ${FONT}`;
+  ctx.fillText("性別:", 746, 224);
+  ctx.fillStyle = C_TEXT; ctx.font = `700 28px ${FONT}`;
+  ctx.fillText(state.gender, 822, 224, 118);
+
+  // Portrait Box (108, 276, 360, 360)
+  drawBox(ctx, 108, 276, 360, 360, 36, C_GOLD, C_CRIMSON, 5);
+  if (portraitImg && portraitCrop) {
+    ctx.save();
+    roundRect(ctx, 111, 279, 354, 354, 33);
+    ctx.clip();
+    ctx.drawImage(portraitImg, portraitCrop.sx, portraitCrop.sy, portraitCrop.s, portraitCrop.s, 111, 279, 354, 354);
+    ctx.restore();
+    // Redraw border cleanly
+    drawBox(ctx, 108, 276, 360, 360, 36, null, C_CRIMSON, 5);
+  }
+
+  // History, Drive, Bio Notes
+  const bioRows = [
+    { label: "ヒストリー:", val: state.history, y: 276, h: 112 },
+    { label: "ドライブ:",   val: state.drive,   y: 396, h: 112 },
+    { label: "備考:",       val: state.bioNotes, y: 516, h: 120 },
+  ];
+  bioRows.forEach(r => {
+    drawBox(ctx, 480, r.y, 470, r.h, 0, C_BG, C_CRIMSON, 4);
+    ctx.fillStyle = C_CRIMSON; ctx.font = `900 21px ${FONT}`; ctx.textBaseline = "top";
+    ctx.fillText(r.label, 492, r.y + 10);
+    drawWrappedText(ctx, r.val, 494, r.y + 40, 444, r.h - 46, 22, C_TEXT, "500");
+  });
+
+  // --- TOP RIGHT: Aether Class & Spark ---
+  drawBox(ctx, 1012, 112, 856, 140, 70, C_GOLD, C_CRIMSON, 5);
+  ctx.fillStyle = C_CRIMSON; ctx.font = `900 34px ${FONT}`; ctx.textBaseline = "middle";
+  ctx.fillText("エーテルクラス", 1044, 182);
+  drawBox(ctx, 1322, 128, 530, 108, 54, C_BG, C_CRIMSON, 4);
+  ctx.fillStyle = C_TEXT; ctx.font = `900 32px ${FONT}`; ctx.textAlign = "center";
+  ctx.fillText(state.aetherClass || "", 1587, 182, 490);
+  ctx.textAlign = "left";
+
+  // Spark Box
+  drawBox(ctx, 1012, 268, 850, 294, 24, C_BG, C_CRIMSON, 4);
+  ctx.fillStyle = C_GOLD;
+  ctx.fillRect(1036, 290, 790, 82);
+  ctx.fillStyle = C_CRIMSON; ctx.font = `900 32px ${FONT}`; ctx.textBaseline = "middle";
+  ctx.fillText("スパーク:", 1054, 331);
+  // Spark Name
+  ctx.fillStyle = C_TEXT; ctx.font = `900 28px ${FONT}`;
+  ctx.fillText(state.sparkName || "", 1212, 331, 380);
+  // Max Aether Badge inside Spark header bar
+  drawBox(ctx, 1602, 304, 208, 54, 27, C_CRIMSON, "#ffffff", 3);
+  ctx.fillStyle = "#ffffff"; ctx.font = `900 22px ${FONT}`; ctx.textAlign = "center";
+  ctx.fillText(`最大エーテル: ${state.maxAether || "-"}`, 1706, 331, 192);
+  ctx.textAlign = "left";
+  // Spark Description
+  drawWrappedText(ctx, state.sparkDesc, 1042, 386, 784, 164, 22, C_TEXT, "500");
+
+  // --- MIDDLE LEFT: Attributes & Enhancements ---
+  const attrs = [
+    { label: "肉体", val: state.attrBody, y: 696, enhs: ENHANCEMENTS.slice(0, 3) },
+    { label: "精神", val: state.attrMind, y: 882, enhs: ENHANCEMENTS.slice(3, 6) },
+    { label: "心情", val: state.attrHeart, y: 1066, enhs: ENHANCEMENTS.slice(6, 9) },
+  ];
+  attrs.forEach(a => {
+    drawBox(ctx, 104, a.y, 314, 120, 60, C_GOLD, C_CRIMSON, 5);
+    ctx.fillStyle = C_CRIMSON; ctx.font = `900 54px ${FONT}`; ctx.textBaseline = "middle";
+    ctx.fillText(a.label, 146, a.y + 62);
+    // White circle for value
+    ctx.beginPath();
+    ctx.arc(356, a.y + 60, 44, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff"; ctx.fill();
+    ctx.lineWidth = 5; ctx.strokeStyle = C_CRIMSON; ctx.stroke();
+    ctx.fillStyle = C_TEXT; ctx.font = `900 44px ${FONT}`; ctx.textAlign = "center";
+    ctx.fillText(String(a.val ?? 1), 356, a.y + 62);
+    ctx.textAlign = "left";
+
+    // 3 Enhancement bars
+    a.enhs.forEach((e, idx) => {
+      const ey = a.y - 10 + idx * 48;
+      const ex = 432;
+      ctx.fillStyle = C_CRIMSON;
+      ctx.fillRect(ex, ey, 190, 38);
+      // Diamond at (ex + 22, ey + 19)
+      const dx = ex + 24, dy = ey + 19, dr = 12;
+      ctx.beginPath();
+      ctx.moveTo(dx, dy - dr);
+      ctx.lineTo(dx + dr, dy);
+      ctx.lineTo(dx, dy + dr);
+      ctx.lineTo(dx - dr, dy);
+      ctx.closePath();
+      ctx.fillStyle = state.enhancements[e.id] ? C_GOLD : "#ffffff";
+      ctx.fill();
+      // Register click target
+      hitTargets.push({
+        x: ex, y: ey, w: 190, h: 38,
+        onClick: () => {
+          state.enhancements[e.id] = !state.enhancements[e.id];
+          loadStateToForm();
+          saveAndRender();
+        }
+      });
+      ctx.fillStyle = "#ffffff"; ctx.font = `700 22px ${FONT}`; ctx.textBaseline = "middle";
+      ctx.fillText(e.label, ex + 48, ey + 20);
+    });
+  });
+
+  // --- MIDDLE LEFT: 12 Skills ---
+  SKILLS.forEach((s, idx) => {
+    const sy = 708 + idx * 47;
+    ctx.fillStyle = C_CRIMSON; ctx.font = `900 23px ${FONT}`;
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    ctx.fillText(s.label, 804, sy + 18);
+    ctx.textAlign = "left";
+
+    const rating = state.skills[s.key] || 0;
+    for (let b = 1; b <= 3; b++) {
+      const bx = 820 + (b - 1) * 46;
+      drawBox(ctx, bx, sy, 36, 36, 4, rating >= b ? C_CRIMSON : C_SQ_EMPTY, C_CRIMSON, 3);
+      hitTargets.push({
+        x: bx, y: sy, w: 36, h: 36,
+        onClick: () => {
+          state.skills[s.key] = (state.skills[s.key] === b) ? (b - 1) : b;
+          buildSkillsEditor();
+          saveAndRender();
+        }
+      });
+    }
+  });
+
+  // --- BOTTOM LEFT: Course Schedule ---
+  const courses = [
+    { label: "人文学:",     val: state.courseHumanities, x: 96,  y: 1286 },
+    { label: "実験・開発:", val: state.courseLab,        x: 536, y: 1286 },
+    { label: "科学:",       val: state.courseScience,    x: 96,  y: 1494 },
+    { label: "体技:",       val: state.courseSports,     x: 536, y: 1494 },
+    { label: "サバイバル:", val: state.courseSurvival,   x: 96,  y: 1702 },
+    { label: "RING:",   val: state.courseRing,       x: 536, y: 1702 },
+  ];
+  courses.forEach(c => {
+    drawBox(ctx, c.x, c.y, 404, 184, 20, C_CRIMSON, null, 0);
+    ctx.fillStyle = "#ffffff"; ctx.font = `900 22px ${FONT}`; ctx.textBaseline = "top";
+    const lblW = ctx.measureText(c.label).width;
+    ctx.fillText(c.label, c.x + 18, c.y + 18);
+    if (c.val) {
+      ctx.fillStyle = C_GOLD; ctx.font = `900 24px ${FONT}`;
+      ctx.fillText(c.val, c.x + 26 + lblW, c.y + 17, 360 - lblW);
+    }
+  });
+
+  // --- MIDDLE RIGHT: Weapon Name, Mastery, Form Tags ---
+  drawBox(ctx, 1030, 610, 700, 96, 0, C_GOLD, C_CRIMSON, 5);
+  ctx.fillStyle = C_CRIMSON; ctx.font = `900 30px ${FONT}`; ctx.textBaseline = "middle";
+  ctx.fillText("兵装名:", 1044, 658);
+  ctx.fillStyle = C_TEXT; ctx.font = `900 32px ${FONT}`;
+  ctx.fillText(state.weaponName || "", 1168, 658, 544);
+
+  // Mastery circle
+  ctx.beginPath();
+  ctx.arc(1834, 658, 64, 0, Math.PI * 2);
+  ctx.fillStyle = C_CRIMSON; ctx.fill();
+  ctx.fillStyle = C_GOLD; ctx.font = `900 20px ${FONT}`; ctx.textAlign = "center"; ctx.textBaseline = "top";
+  ctx.fillText("熟練", 1834, 603);
+  ctx.fillStyle = "#ffffff"; ctx.font = `900 46px ${FONT}`; ctx.textBaseline = "middle";
+  ctx.fillText(String(state.mastery ?? 1), 1834, 672);
+  ctx.textAlign = "left";
+
+  // Make / Look / Quirks
+  const formRows = [
+    { label: "出自:", val: state.weaponMake,   y: 724 },
+    { label: "外見:", val: state.weaponLook,   y: 766 },
+    { label: "特徴:", val: state.weaponQuirks, y: 808 },
+  ];
+  formRows.forEach(fr => {
+    drawOutlinedText(ctx, fr.label, 1098, fr.y + 18, 25, C_GOLD, C_CRIMSON, 5);
+    drawBox(ctx, 1168, fr.y, 662, 35, 0, C_BG, C_CRIMSON, 4);
+    ctx.fillStyle = C_TEXT; ctx.font = `700 20px ${FONT}`; ctx.textBaseline = "middle";
+    ctx.fillText(fr.val || "", 1180, fr.y + 18, 638);
+  });
+
+  // --- PB1 & PB2 ---
+  drawPBBlock(ctx, state.pb1, "PB1", 872);
+  drawPBBlock(ctx, state.pb2, "PB2", 1392);
+}
+
+function drawPBBlock(ctx, pb, tagLabel, topY) {
+  // PB Tag + Name Box (h=84)
+  ctx.fillStyle = C_CRIMSON;
+  ctx.fillRect(1030, topY, 138, 46);
+  ctx.fillStyle = "#ffffff"; ctx.font = `900 26px ${FONT}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText(tagLabel, 1099, topY + 24);
+  ctx.textAlign = "left";
+
+  drawBox(ctx, 1168, topY, 520, 84, 0, C_GOLD, C_CRIMSON, 4);
+  ctx.fillStyle = C_TEXT; ctx.font = `900 27px ${FONT}`; ctx.textBaseline = "middle";
+  ctx.fillText(pb.pbName || "", 1184, topY + 42, 488);
+
+  // Weight & Ammo/EN boxes (h=84)
+  drawBox(ctx, 1696, topY, 86, 84, 10, C_CRIMSON, null, 0);
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  drawOutlinedText(ctx, "重量", 1739, topY + 4, 23, C_GOLD, C_CRIMSON, 4);
+  ctx.fillStyle = "#ffffff"; ctx.font = `900 19px ${FONT}`; ctx.textBaseline = "middle";
+  ctx.fillText(pb.weight || "-", 1739, topY + 56, 76);
+
+  drawBox(ctx, 1790, topY, 86, 84, 10, C_CRIMSON, null, 0);
+  const resLbl = pb.resLabel === "EN" ? "EN" : "弾薬";
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  drawOutlinedText(ctx, resLbl, 1833, topY + 4, 23, C_GOLD, C_CRIMSON, 4);
+  ctx.fillStyle = "#ffffff"; ctx.font = `900 23px ${FONT}`; ctx.textBaseline = "middle";
+  ctx.fillText(pb.resValue || "-", 1833, topY + 56, 76);
+  ctx.textAlign = "left";
+
+  // Talent bar + box (h=86)
+  const tY = topY + 92;
+  ctx.fillStyle = C_CRIMSON;
+  ctx.fillRect(1168, tY, 192, 38);
+  ctx.fillStyle = "#ffffff"; ctx.font = `900 20px ${FONT}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText("兵装タレント", 1264, tY + 19);
+  ctx.textAlign = "left";
+
+  drawBox(ctx, 1360, tY, 516, 86, 0, C_GOLD, C_CRIMSON, 4);
+  if (pb.talentName || pb.talentDesc) {
+    ctx.fillStyle = C_CRIMSON; ctx.font = `900 18px ${FONT}`; ctx.textBaseline = "top";
+    ctx.fillText(pb.talentName || "", 1370, tY + 6, 496);
+    drawWrappedText(ctx, pb.talentDesc || "", 1370, tY + 28, 496, 54, 15, C_TEXT, "500", 1.2);
+  }
+
+  // 4 MOD boxes (2x2, each 415x92 -> fits 60 chars cleanly!)
+  const modPositions = [
+    { x: 1030, y: topY + 188 },
+    { x: 1461, y: topY + 188 },
+    { x: 1030, y: topY + 288 },
+    { x: 1461, y: topY + 288 },
+  ];
+  modPositions.forEach((pos, i) => {
+    const m = pb.mods[i] || { name: "", desc: "" };
+    drawBox(ctx, pos.x, pos.y, 415, 92, 6, C_CRIMSON, null, 0);
+    ctx.textBaseline = "top";
+    ctx.fillStyle = C_GOLD; ctx.font = `900 17px ${FONT}`;
+    ctx.fillText("MOD:", pos.x + 10, pos.y + 7);
+    if (m.name) {
+      ctx.fillStyle = "#ffffff"; ctx.font = `700 18px ${FONT}`;
+      ctx.fillText(m.name, pos.x + 62, pos.y + 6, 342);
+    }
+    if (m.desc) {
+      drawWrappedText(ctx, m.desc, pos.x + 10, pos.y + 32, 395, 54, 14, "#fff2f4", "400", 1.24);
+    }
+  });
+
+  // Notes / Trait box (h=100)
+  const nY = topY + 390;
+  drawBox(ctx, 1030, nY, 846, 100, 10, C_BG, C_CRIMSON, 4);
+  ctx.fillStyle = C_CRIMSON; ctx.font = `900 18px ${FONT}`; ctx.textBaseline = "top";
+  ctx.fillText("備考:", 1044, nY + 10);
+  drawWrappedText(ctx, pb.notes || "", 1102, nY + 10, 762, 82, 16, C_TEXT, "500", 1.24);
+}
+
+// Canvas click handler for direct Enhancement / Skill toggling
+document.getElementById("sheetCanvas").addEventListener("click", ev => {
+  const canvas = ev.currentTarget;
+  const rect = canvas.getBoundingClientRect();
+  const cx = (ev.clientX - rect.left) * (canvas.width / rect.width);
+  const cy = (ev.clientY - rect.top) * (canvas.height / rect.height);
+  for (const t of hitTargets) {
+    if (cx >= t.x && cx <= t.x + t.w && cy >= t.y && cy <= t.y + t.h) {
+      t.onClick();
+      break;
+    }
+  }
+});
+
+// ===== EXPORTS =====
+function exportPNG() {
+  const canvas = document.getElementById("sheetCanvas");
+  const a = document.createElement("a");
+  const fname = (state.name || "FITR_Character").replace(/[\\/:*?"<>|]/g, "_") + "_Sheet.png";
+  a.download = fname;
+  a.href = canvas.toDataURL("image/png");
+  a.click();
+  showToast("PNG画像をダウンロードしました");
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  const fname = (state.name || "FITR_Character").replace(/[\\/:*?"<>|]/g, "_") + ".json";
+  a.download = fname;
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  showToast("JSONデータを保存しました");
+}
+
+function importJSON(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      state = { ...defaultState(), ...parsed };
+      loadPortraitImg(() => {
+        loadStateToForm();
+        saveAndRender();
+        showToast("JSONデータを読み込みました");
+      });
+    } catch (err) {
+      alert("JSONの読み込みに失敗しました: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function copyCcfolia() {
+  const status = [
+    { label: "HP", value: 6, max: 6 },
+    { label: "ストレス", value: 0, max: 10 },
+    { label: "エーテル", value: parseInt(state.maxAether || "10", 10) || 10, max: parseInt(state.maxAether || "10", 10) || 10 },
+    { label: "モメンタム", value: 0, max: 3 },
+  ];
+  if (state.pb1.resValue && state.pb1.resValue !== "-") {
+    const v = parseInt(state.pb1.resValue, 10) || 0;
+    status.push({ label: `PB1 ${state.pb1.resLabel}`, value: v, max: v });
+  }
+  if (state.pb2.resValue && state.pb2.resValue !== "-") {
+    const v = parseInt(state.pb2.resValue, 10) || 0;
+    status.push({ label: `PB2 ${state.pb2.resLabel}`, value: v, max: v });
+  }
+
+  const params = [
+    { label: "肉体", value: String(state.attrBody ?? 1) },
+    { label: "精神", value: String(state.attrMind ?? 1) },
+    { label: "心情", value: String(state.attrHeart ?? 1) },
+    { label: "熟練", value: String(state.mastery ?? 1) },
+  ];
+
+  const cmdLines = [
+    "// === FITR Academy チャットパレット ===",
+    "// スキル判定（6で成功 / 4-5で代償付き成功 / 1-3で失敗 / 6が2つ以上でCRIT）",
+  ];
+  SKILLS.forEach(s => {
+    const r = state.skills[s.key] || 0;
+    const dice = r > 0 ? `${r}d6` : `2d6kl1`;
+    cmdLines.push(`${dice} 【${s.label}】(${r})`);
+  });
+  cmdLines.push("// === 能力値・抵抗ロール ===");
+  cmdLines.push("{肉体}d6 【肉体抵抗】");
+  cmdLines.push("{精神}d6 【精神抵抗】");
+  cmdLines.push("{心情}d6 【心情抵抗】");
+  cmdLines.push("{熟練}d6 【熟練】");
+  cmdLines.push("// === 状態・リソース ===");
+  cmdLines.push(":ストレス+1");
+  cmdLines.push(":エーテル-1 【アーマー1 / スパーク】");
+  cmdLines.push(":モメンタム-3 【全力攻撃 GO ALL OUT (+1d & 1-3振直)】");
+
+  const memo = [
+    `エーテルクラス: ${state.aetherClass || "-"}`,
+    `スパーク: ${state.sparkName || "-"} (最大エーテル: ${state.maxAether || "-"})`,
+    `兵装名: ${state.weaponName || "-"}`,
+    `PB1: ${state.pb1.pbName || "-"} / タレント: ${state.pb1.talentName || "-"}`,
+    `PB2: ${state.pb2.pbName || "-"} / タレント: ${state.pb2.talentName || "-"}`,
+    `ヒストリー: ${state.history || "-"}`,
+    `ドライブ: ${state.drive || "-"}`,
+  ].join("\n");
+
+  const payload = {
+    kind: "character",
+    data: {
+      name: state.name || "新規ファイター",
+      memo,
+      status,
+      params,
+      commands: cmdLines.join("\n"),
+    }
+  };
+
+  navigator.clipboard.writeText(JSON.stringify(payload)).then(() => {
+    showToast("ココフォリア用コマデータをコピーしました！");
+  }).catch(() => {
+    prompt("以下のJSONをコピーしてココフォリアに貼り付けてください:", JSON.stringify(payload));
+  });
+}
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cell = "", inQuotes = false;
+  const s = text.replace(/^\uFEFF/, "");
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i], next = s[i + 1];
+    if (inQuotes) {
+      if (ch === '"' && next === '"') { cell += '"'; i++; }
+      else if (ch === '"') { inQuotes = false; }
+      else { cell += ch; }
+    } else {
+      if (ch === '"') { inQuotes = true; }
+      else if (ch === ',') { row.push(cell); cell = ""; }
+      else if (ch === '\r' && next === '\n') { row.push(cell); rows.push(row); row = []; cell = ""; i++; }
+      else if (ch === '\n' || ch === '\r') { row.push(cell); rows.push(row); row = []; cell = ""; }
+      else { cell += ch; }
+    }
+  }
+  if (cell.length > 0 || row.length > 0) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+function importModsCSV(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const table = parseCSV(e.target.result);
+      if (table.length < 2) throw new Error("CSVにデータ行がありません");
+      const headers = table[0].map(h => h.trim());
+      const idx = name => headers.indexOf(name);
+      const iId = idx("mod_id"), iScope = idx("scope"), iPb = idx("playbook_id"),
+            iNameJa = idx("mod_name_ja"), iNameEn = idx("mod_name_en"),
+            iCost = idx("tech_cost"), iDescShort = idx("description_ja_short"), iDescJa = idx("description_ja");
+      if (iPb < 0 || iNameJa < 0 || (iDescShort < 0 && iDescJa < 0)) {
+        throw new Error("FITR_Academy_Mods.csv 形式の列が見つかりません");
+      }
+      GAME_DATA.general_mods = [];
+      GAME_DATA.playbooks.forEach(pb => pb.mods = []);
+      let count = 0;
+      for (let r = 1; r < table.length; r++) {
+        const cols = table[r];
+        if (!cols || cols.length < 3) continue;
+        const pbId = (cols[iPb] || "").trim();
+        const scope = iScope >= 0 ? (cols[iScope] || "").trim() : (pbId === "general" ? "general" : "playbook");
+        const shortTxt = iDescShort >= 0 ? (cols[iDescShort] || "").trim() : "";
+        const fullTxt = iDescJa >= 0 ? (cols[iDescJa] || "").trim() : "";
+        const modObj = {
+          id: iId >= 0 ? (cols[iId] || "").trim() : `csv_mod_${r}`,
+          name_ja: (cols[iNameJa] || "").trim(),
+          name_en: iNameEn >= 0 ? (cols[iNameEn] || "").trim() : "",
+          tech_cost: iCost >= 0 ? (parseInt(cols[iCost], 10) || 1) : 1,
+          desc_ja: shortTxt || fullTxt,
+          desc_full_ja: fullTxt || shortTxt,
+          scope,
+        };
+        if (scope === "general" || pbId === "general") {
+          GAME_DATA.general_mods.push(modObj);
+          count++;
+        } else {
+          const targetPb = GAME_DATA.playbooks.find(p => p.id === pbId);
+          if (targetPb) { targetPb.mods.push(modObj); count++; }
+        }
+      }
+      buildPBEditor("pb1", "PB1");
+      buildPBEditor("pb2", "PB2");
+      showToast(`MOD CSVから ${count}件 を読み込みました`);
+    } catch (err) {
+      alert("MOD CSVの読み込みに失敗しました: " + err.message);
+    }
+  };
+  reader.readAsText(file, "utf-8");
+}
+
+// ===== ZOOM MODAL (DRAG & WHEEL ZOOM) =====
+let zoomState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, origX: 0, origY: 0 };
+
+function applyZoomTransform() {
+  const mc = document.getElementById("modalCanvas");
+  mc.style.transform = `translate(${zoomState.x}px, ${zoomState.y}px) scale(${zoomState.scale})`;
+  document.getElementById("zoomPct").textContent = `${Math.round(zoomState.scale * 100)}%`;
+}
+
+function openZoomModal() {
+  const src = document.getElementById("sheetCanvas");
+  const mc = document.getElementById("modalCanvas");
+  mc.getContext("2d").drawImage(src, 0, 0);
+  document.getElementById("zoomModal").classList.add("open");
+  setZoomCentered(1);
+}
+
+function closeZoomModal() {
+  document.getElementById("zoomModal").classList.remove("open");
+}
+
+function setZoomCentered(scale) {
+  const vp = document.getElementById("zoomViewport");
+  const vw = vp.clientWidth, vh = vp.clientHeight;
+  zoomState.scale = scale;
+  zoomState.x = Math.round((vw - 2000 * scale) / 2);
+  zoomState.y = Math.round((vh - 2000 * scale) / 2);
+  applyZoomTransform();
+}
+
+function fitZoom() {
+  const vp = document.getElementById("zoomViewport");
+  const s = Math.min((vp.clientWidth - 32) / 2000, (vp.clientHeight - 32) / 2000);
+  setZoomCentered(Math.max(0.15, Math.min(3, s)));
+}
+
+function zoomBy(factor, clientX, clientY) {
+  const vp = document.getElementById("zoomViewport");
+  const rect = vp.getBoundingClientRect();
+  const cx = clientX !== undefined ? (clientX - rect.left) : (vp.clientWidth / 2);
+  const cy = clientY !== undefined ? (clientY - rect.top) : (vp.clientHeight / 2);
+  const oldScale = zoomState.scale;
+  const newScale = Math.max(0.2, Math.min(3.5, oldScale * factor));
+  const ratio = newScale / oldScale;
+  zoomState.x = cx - (cx - zoomState.x) * ratio;
+  zoomState.y = cy - (cy - zoomState.y) * ratio;
+  zoomState.scale = newScale;
+  applyZoomTransform();
+}
+
+(function bindZoomEvents() {
+  const vp = document.getElementById("zoomViewport");
+  vp.addEventListener("wheel", e => {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.15 : (1 / 1.15);
+    zoomBy(factor, e.clientX, e.clientY);
+  }, { passive: false });
+
+  vp.addEventListener("mousedown", e => {
+    if (e.button !== 0) return;
+    zoomState.dragging = true;
+    zoomState.startX = e.clientX;
+    zoomState.startY = e.clientY;
+    zoomState.origX = zoomState.x;
+    zoomState.origY = zoomState.y;
+    vp.classList.add("dragging");
+  });
+
+  window.addEventListener("mousemove", e => {
+    if (!zoomState.dragging) return;
+    zoomState.x = zoomState.origX + (e.clientX - zoomState.startX);
+    zoomState.y = zoomState.origY + (e.clientY - zoomState.startY);
+    applyZoomTransform();
+  });
+
+  window.addEventListener("mouseup", () => {
+    if (!zoomState.dragging) return;
+    zoomState.dragging = false;
+    vp.classList.remove("dragging");
+  });
+
+  window.addEventListener("keydown", e => {
+    if (e.key === "Escape" && document.getElementById("zoomModal").classList.contains("open")) {
+      closeZoomModal();
+    }
+  });
+})();
+
+function resetAll() {
+  if (!confirm("入力内容をすべて初期化しますか？")) return;
+  state = defaultState();
+  portraitImg = null;
+  document.getElementById("portraitFile").value = "";
+  localStorage.removeItem(STORAGE_KEY);
+  loadStateToForm();
+  saveAndRender();
+  showToast("初期化しました");
+}
+
+// ===== INIT =====
+async function ensureFontsReady() {
+  if (!document.fonts || !document.fonts.check) return;
+  const specs = [
+    '400 20px "Zen Kaku Gothic Antique"',
+    '500 20px "Zen Kaku Gothic Antique"',
+    '700 24px "Zen Kaku Gothic Antique"',
+    '900 32px "Zen Kaku Gothic Antique"',
+  ];
+  // Already cached / loaded -> return immediately without showing loader
+  if (specs.every(s => document.fonts.check(s))) return;
+
+  const loader = document.getElementById("fontLoader");
+  loader.style.display = "flex";
+  const loadPromise = Promise.all(specs.map(s => document.fonts.load(s))).then(() => document.fonts.ready);
+  const timeoutPromise = new Promise(res => setTimeout(res, 4000));
+  try {
+    await Promise.race([loadPromise, timeoutPromise]);
+  } catch (e) {}
+  loader.style.display = "none";
+}
+
+(function init() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = { ...defaultState(), ...JSON.parse(saved) };
+  } catch (e) {}
+  loadPortraitImg(async () => {
+    await ensureFontsReady();
+    document.getElementById("appRoot").style.visibility = "visible";
+    loadStateToForm();
+    updateWarnings();
+    renderCanvas();
+  });
+})();
+</script>
+</body>
+</html>
